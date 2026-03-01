@@ -23,7 +23,7 @@ If you are unable to use GitHub Security Advisories, you can report vulnerabilit
 
 ## Our Process
 
-1. **Acknowledgment**: We will acknowledge receipt of your report within 48 hours.
+1. **Acknowledgment**: We aim to acknowledge receipt of your report within 3 business days (best effort).
 2. **Investigation**: We will investigate the report and determine its severity.
 3. **Fix**: We will work on a fix for the vulnerability.
 4. **Disclosure**: We will coordinate the disclosure of the vulnerability with you.
