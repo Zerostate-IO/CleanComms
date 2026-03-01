@@ -1,0 +1,7 @@
+=== Task 2: Schema Validation ===
+Timestamp: 2026-03-01T06:06:39Z
+Command: python3 -m json.tool data/radios/schema/radio-capability.schema.json >/dev/null
+
+Exit status: 0
+
+RESULT: PASS - Schema is valid JSON

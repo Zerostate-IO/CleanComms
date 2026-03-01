@@ -1,0 +1,226 @@
+================================================================================
+CLEANCOMMS RADIO CAPABILITY KB - FINAL AUDIT SUMMARY
+================================================================================
+Generated: 2026-03-01T06:09:45Z
+Plan: radio-capability-kb.md
+Validator: scripts/validate-radio-kb.sh
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+Overall Status: PASS
+All 5 target radios validated successfully.
+All required evidence files generated.
+
+Note: Schema validation via `jsonschema` Python package is skipped when 
+unavailable (current environment behavior). JSON syntax validation and 
+required field checks are performed as fallback.
+
+================================================================================
+TASK 1: SOURCE LEDGER AND PROVENANCE RUBRIC
+================================================================================
+Requirement: docs/radios/sources.md exists with all five target radios
+Evidence: task-1-kb-source-ledger.txt
+Status: PASS
+
+- [x] sources.md file exists
+- [x] All target radios present: TX-500, TX-500MP, FX-4CR, (tr)uSDX, X6100
+- [x] Source entries include URL + source tier + last-checked date
+- [x] Provenance and confidence rules defined
+
+================================================================================
+TASK 2: MACHINE-READABLE SCHEMA
+================================================================================
+Requirement: data/radios/schema/radio-capability.schema.json validates
+Evidence: task-2-kb-schema-valid.txt, task-2-kb-schema-missing-required.txt
+Status: PASS
+
+- [x] Schema file exists
+- [x] Schema is valid JSON (python3 -m json.tool)
+- [x] Schema requires source_tier and evidence for claim groups
+- [x] Schema supports protocol-mode-specific capability blocks
+- [x] Self-test for missing required fields passes
+
+================================================================================
+TASK 3: KB DOCUMENTATION INDEX AND CONVENTIONS
+================================================================================
+Requirement: docs/radios/README.md with required sections
+Evidence: task-3-kb-doc-index.txt, task-3-kb-uncertainty.txt
+Status: PASS
+
+- [x] README.md exists with sections: Scope, Source Policy, Update Workflow, Phase Depth
+- [x] Explicit rule: official sources define normative claims
+- [x] Explicit rule: community claims require community-verified tag
+- [x] Uncertainty guidance present (unknown, needs-verification)
+
+================================================================================
+TASK 4: KB VALIDATOR SCRIPT
+================================================================================
+Requirement: scripts/validate-radio-kb.sh validates all records
+Evidence: task-4-kb-validator-pass.txt, task-4-kb-validator-malformed.txt
+Status: PASS
+
+- [x] Validator script exists and is executable
+- [x] Script exits 0 on complete valid data
+- [x] Script exits non-zero on missing target radio records
+- [x] Script exits non-zero on malformed JSON
+- [x] Self-test modes verified:
+  - --self-test-malformed-json: PASS
+  - --self-test-missing-required: PASS
+  - --self-test-missing-radio: PASS
+
+================================================================================
+TASK 5: TX-500 PROFILE (DUAL PROTOCOL)
+================================================================================
+Requirement: docs/radios/tx-500.md + data/radios/tx-500.json with dual protocol
+Evidence: task-5-kb-tx500-profile.txt, task-5-kb-tx500-protocol-split.txt
+Status: PASS
+
+- [x] TX-500 markdown + json files exist
+- [x] Profile distinguishes TS-2000 vs LAB599 capabilities
+- [x] Protocol split requirement passes (--require-protocol-split)
+- [x] Recommendation section includes "prefer extended when feasible" logic
+- [x] Provenance blocks at record, profile, and capability levels
+- [x] Known issues have source_tier fields
+
+================================================================================
+TASK 6: TX-500MP (DIGI-LINK) PROFILE
+================================================================================
+Requirement: docs/radios/tx-500mp.md + data/radios/tx-500mp.json
+Evidence: task-6-kb-tx500mp.txt, task-6-kb-tx500mp-unsupported.txt
+Status: PASS
+
+- [x] TX-500MP profile validates (--check-radio tx-500mp)
+- [x] Includes supported command subset
+- [x] Unsupported Controls section present (line 79)
+- [x] Provenance tags present for all capability groups
+- [x] Known issues include source_tier fields
+
+================================================================================
+TASK 7: FX-4CR PROFILE WITH RISK-TAGGED ISSUES
+================================================================================
+Requirement: docs/radios/fx-4cr.md + data/radios/fx-4cr.json with risk tags
+Evidence: task-7-kb-fx4cr-issues.txt, task-7-kb-fx4cr-tier.txt
+Status: PASS
+
+- [x] FX-4CR profile separates official capabilities from community issues
+- [x] Known issue entries include severity, confidence, source_tier
+- [x] JSON validates against required fields
+- [x] --fail-on-official-community-mix check passes (no official sources to conflict)
+
+================================================================================
+TASK 8: (TR)USDX PROFILE WITH CAT AUDIO STREAMING
+================================================================================
+Requirement: docs/radios/trusdx.md + data/radios/trusdx.json with streaming notes
+Evidence: task-8-kb-trusdx-streaming.txt, task-8-kb-trusdx-firmware.txt
+Status: PASS
+
+- [x] Profile captures TS-480 emulation and CAT streaming distinctions
+- [x] cat_audio_streaming: true with firmware dependencies
+- [x] Firmware gates present (--require-firmware-gates finds 3 gates)
+- [x] Provenance tags present for non-vendor claims
+
+================================================================================
+TASK 9: X6100 PROFILE WITH CI-V COMPATIBILITY
+================================================================================
+Requirement: docs/radios/x6100.md + data/radios/x6100.json with CI-V notes
+Evidence: task-9-kb-x6100.txt, task-9-kb-x6100-source-tier.txt
+Status: PASS
+
+- [x] X6100 profile validates (--check-radio x6100)
+- [x] CI-V/IC-7000 compatibility mode documented
+- [x] Known issues with confidence and source_tier
+- [x] --require-known-issue-source-tier check passes
+
+================================================================================
+TASK 10: CROSS-RADIO CAPABILITY MATRIX
+================================================================================
+Requirement: docs/radios/matrix.md with all radios and recommendation table
+Evidence: task-10-kb-matrix.txt, task-10-kb-tx500-policy.txt
+Status: PASS
+
+- [x] Matrix includes all five target radios
+- [x] TX-500 recommendation logic explicit (extended preferred, TS-2000 fallback)
+- [x] Source tier indicators preserved in matrix cells
+- [x] Firmware dependencies table present
+- [x] Risk flags table with full provenance
+
+================================================================================
+TASK 11: PHASE-DEPTH ROADMAP AND COMMAND-TABLE PLACEHOLDERS
+================================================================================
+Requirement: README.md with phase roadmap and placeholder templates
+Evidence: task-11-kb-phase-roadmap.txt, task-11-kb-placeholder-columns.txt
+Status: PASS
+
+- [x] Phase 1/Phase 2 boundary definition present
+- [x] Per-radio command-table placeholder templates exist
+- [x] Placeholder templates include source_tier and confidence columns
+- [x] Provenance requirements documented
+
+================================================================================
+TASK 12: FULL KB VALIDATION AND EVIDENCE PACK
+================================================================================
+Requirement: Validator passes, evidence files exist, final audit complete
+Evidence: task-4-kb-validator-pass.txt (full validation output)
+Status: PASS
+
+Validator Summary:
+- Target radios: 5
+- Validated: 5
+- Missing: 0
+- Overall: PASSED
+
+Self-Test Verification:
+- [x] --self-test-missing-radio: PASS (correctly identifies missing file)
+
+Evidence Files Generated:
+- task-1-kb-source-ledger.txt
+- task-2-kb-schema-valid.txt
+- task-2-kb-schema-missing-required.txt
+- task-3-kb-doc-index.txt
+- task-3-kb-uncertainty.txt
+- task-4-kb-validator-pass.txt
+- task-4-kb-validator-malformed.txt
+- task-5-kb-tx500-profile.txt
+- task-5-kb-tx500-protocol-split.txt
+- task-6-kb-tx500mp.txt
+- task-6-kb-tx500mp-unsupported.txt
+- task-7-kb-fx4cr-issues.txt
+- task-7-kb-fx4cr-tier.txt
+- task-8-kb-trusdx-streaming.txt
+- task-8-kb-trusdx-firmware.txt
+- task-9-kb-x6100.txt
+- task-9-kb-x6100-source-tier.txt
+- task-10-kb-matrix.txt
+- task-10-kb-tx500-policy.txt
+- task-11-kb-phase-roadmap.txt
+- task-11-kb-placeholder-columns.txt
+- task-12-kb-missing-radio-error.txt
+- task-12-kb-final-audit.txt (this file)
+
+================================================================================
+DEFINITION OF DONE VERIFICATION
+================================================================================
+- [x] All targeted radios have both Markdown profile and JSON record
+- [x] JSON records pass required field validation
+- [x] Every normative claim maps to at least one source in provenance
+- [x] Community-derived claims are explicitly tagged
+- [x] TX-500 includes explicit recommendation logic for extended protocol preference
+
+================================================================================
+NOTES
+================================================================================
+1. Schema conformance via jsonschema is skipped when package unavailable.
+   This is acceptable behavior - JSON syntax and required field checks
+   provide baseline validation.
+
+2. FX-4CR has no official CAT documentation; all capability claims are
+   derived from Hamlib with medium/low confidence. This is documented
+   in sources.md and known_issues.
+
+3. TX-500 serial rate was corrected from 38400 to 9600 based on Hamlib
+   tx500.c evidence. See learnings.md for details.
+
+================================================================================
+END OF AUDIT
+================================================================================

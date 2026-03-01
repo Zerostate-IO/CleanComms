@@ -1,0 +1,25 @@
+=== Task 5: TX-500 Profile Verification ===
+Timestamp: 2026-03-01T06:07:36Z
+Command: grep -E 'TS-2000|LAB599|prefer' docs/radios/tx-500.md && grep -E '"protocol_profiles"' data/radios/tx-500.json
+
+=== Markdown grep ===
+| `ts-2000` | Kenwood TS-2000 | Standard Kenwood-compatible mode for broad software compatibility |
+| `lab599-extended` | LAB599 Extended | Proprietary extended mode with additional commands and capabilities |
+The LAB599 extended protocol provides superior control and additional capabilities not available in TS-2000 mode. Use this profile when:
+Use TS-2000 mode when:
+### TS-2000 Profile
+### LAB599 Extended Profile
+### TS-2000 Profile
+| Filter Control | ✗ | Not in TS-2000 emulation |
+### LAB599 Extended Profile
+*Source: [official] LAB599 CAT Protocol Specification*
+*Source: [official] LAB599 CAT Protocol Specification, [hamlib] TX-500 backend*
+| LAB599 Extended Protocol | 1.0.0 | Base extended mode support |
+**Description:** The TX-500 powers up in TS-2000 compatibility mode by default. Extended mode must be explicitly activated via menu setting or CAT command sequence before extended commands are available.
+Hamlib model ID 2054 provides TX-500 support. Both TS-2000 and LAB599 extended protocols are handled by the same backend. Specific version compatibility for extended commands has not been verified against Hamlib release notes.
+| LAB599 CAT Protocol Specification | Official | https://downloads.lab599.com/Lab599-CAT-protocol.pdf |
+
+=== JSON grep ===
+  "protocol_profiles": {
+
+Exit status: 0

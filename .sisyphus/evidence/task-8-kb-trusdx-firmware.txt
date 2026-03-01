@@ -1,0 +1,40 @@
+=== Task 8: (tr)uSDX Firmware Gates Verification ===
+Timestamp: 2026-03-01T06:09:03Z
+Command: bash scripts/validate-radio-kb.sh --check-radio trusdx --require-firmware-gates
+
+========================================
+CleanComms Radio KB Validator
+========================================
+
+=== Schema Check ===
+[0;32m✓[0m Schema file exists: data/radios/schema/radio-capability.schema.json
+
+=== Radio Record Validation ===
+
+--- Validating: trusdx ---
+[0;32m✓[0m JSON syntax valid: data/radios/trusdx.json
+[0;32m✓[0m All required fields present: data/radios/trusdx.json
+[0;34mℹ[0m Skipping schema validation (jsonschema not installed)
+[0;34mℹ[0m Provenance analysis for: data/radios/trusdx.json
+[0;34mℹ[0m   Top-level source_tier: community-verified
+[0;34mℹ[0m   Evidence entries: 3
+[0;34mℹ[0m   Evidence tier breakdown:
+[0;34mℹ[0m     community-verified: 1
+[0;34mℹ[0m     hamlib: 1
+[0;34mℹ[0m     official: 1
+[0;34mℹ[0m   Protocol profiles: 1
+[0;32m✓[0m   All 1 profiles have provenance blocks
+[0;34mℹ[0m   Known issues: 3
+[0;32m✓[0m   All known issues have source_tier
+[0;32m✓[0m Firmware gates found: 3
+
+========================================
+Summary
+========================================
+Target radios: 1
+Validated: 1
+Missing: 0
+
+[0;32mPASSED[0m: All validation checks passed
+
+Exit status: 0

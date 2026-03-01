@@ -25,6 +25,9 @@ set -uo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 DATA_DIR="${REPO_ROOT}/data/radios"
+CATALOG_DIR="${REPO_ROOT}/data/radios/catalog"
+DOCS_DIR="${REPO_ROOT}/docs/radios"
+SCHEMA_FILE="${DATA_DIR}/schema/radio-capability.schema.json"
 SCHEMA_FILE="${DATA_DIR}/schema/radio-capability.schema.json"
 
 # Target radios (Phase 1 scope)
@@ -475,6 +478,112 @@ print(len(d.get('firmware_gates', {})))
 }
 
 # =============================================================================
+# Docs↔Record Provenance Coverage Checks
+# =============================================================================
+
+# Check that a documentation file exists for the given radio
+check_doc_exists() {
+    local radio_id="$1"
+    local doc_file="${DOCS_DIR}/${radio_id}.md"
+    local rel_path="docs/radios/${radio_id}.md"
+    
+    if [[ -f "$doc_file" ]]; then
+        log_pass "Documentation file exists: ${rel_path}"
+        return 0
+    else
+        log_fail "Documentation file missing: ${rel_path}"
+        return 1
+    fi
+}
+
+# Check that documentation has a Sources section
+check_doc_sources_section() {
+    local radio_id="$1"
+    local doc_file="${DOCS_DIR}/${radio_id}.md"
+    local rel_path="docs/radios/${radio_id}.md"
+    
+    if [[ ! -f "$doc_file" ]]; then
+        return 1  # Already reported by check_doc_exists
+    fi
+    
+    # Accept either "## Sources" or "## Source Provenance" as valid source sections
+    if grep -qE "^## (Sources|Source Provenance)" "$doc_file" 2>/dev/null; then
+        log_pass "Sources section found in: ${rel_path}"
+        return 0
+    else
+        log_fail "Missing '## Sources' or '## Source Provenance' section in: ${rel_path}"
+        return 1
+    fi
+}
+
+# Check that documentation has source provenance signals
+check_doc_source_provenance() {
+    local radio_id="$1"
+    local doc_file="${DOCS_DIR}/${radio_id}.md"
+    local rel_path="docs/radios/${radio_id}.md"
+    
+    if [[ ! -f "$doc_file" ]]; then
+        return 1  # Already reported by check_doc_exists
+    fi
+    
+    # Check for source tier indicators: [official], [hamlib], [community-verified], [source:
+    local has_provenance
+    has_provenance=$(grep -cE '\[official\]|\[hamlib\]|\[community-verified\]|\[source:|Source Tier' "$doc_file" 2>/dev/null || echo "0")
+    
+    if [[ "$has_provenance" -gt 0 ]]; then
+        log_pass "Source provenance signals found (${has_provenance}) in: ${rel_path}"
+        return 0
+    else
+        log_fail "No source provenance signals (e.g., [official], [hamlib], [source:) in: ${rel_path}"
+        return 1
+    fi
+}
+
+# Check that catalog record exists
+check_catalog_record_exists() {
+    local radio_id="$1"
+    local catalog_file="${CATALOG_DIR}/${radio_id}.json"
+    local rel_path="data/radios/catalog/${radio_id}.json"
+    
+    if [[ -f "$catalog_file" ]]; then
+        log_pass "Catalog record exists: ${rel_path}"
+        return 0
+    else
+        log_fail "Catalog record missing: ${rel_path}"
+        return 1
+    fi
+}
+
+# Comprehensive docs↔record coverage check for a radio
+check_docs_record_coverage() {
+    local radio_id="$1"
+    local coverage_errors=0
+    
+    # Check doc exists
+    if ! check_doc_exists "$radio_id"; then
+        ((coverage_errors++))
+    fi
+    
+    # Check doc has Sources section
+    if ! check_doc_sources_section "$radio_id"; then
+        ((coverage_errors++))
+    fi
+    
+    # Check doc has source provenance signals
+    if ! check_doc_source_provenance "$radio_id"; then
+        ((coverage_errors++))
+    fi
+    
+    # Check catalog record exists
+    if ! check_catalog_record_exists "$radio_id"; then
+        ((coverage_errors++))
+    fi
+    
+    return $coverage_errors
+}
+
+
+# =============================================================================
 # Main Validation
 # =============================================================================
 validate_radio_file() {
@@ -512,6 +621,9 @@ validate_radio_file() {
     if [[ "$REQUIRE_FIRMWARE_GATES" == "true" ]]; then
         check_firmware_gates "$file" || true
     fi
+    
+    # Docs↔Record provenance coverage check
+    check_docs_record_coverage "$radio_id" || true
 }
 
 # =============================================================================

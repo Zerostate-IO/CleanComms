@@ -1,0 +1,21 @@
+=== Task 11: Provenance Columns Check ===
+Timestamp: 2026-03-01T06:09:31Z
+Command: grep -n 'source_tier\|confidence' docs/radios/README.md
+
+46:- `confidence: "needs-verification"` or `confidence: "low"`
+53:  "source_tier": "community-verified",
+54:  "confidence": "needs-verification"
+158:| `source_tier` | `official`, `hamlib`, `community-verified`, or `unknown`
+159:| `confidence` | `high`, `medium`, `low`, or `needs-verification`
+163:**Important:** All Phase 2 command entries must include `source_tier` and `confidence` fields. No command claims should be made without provenance tracking.
+171:| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+177:| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+185:| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+195:| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+199:**Note:** FX-4CR has limited official CAT documentation. Most command entries will require `hamlib` or `community-verified` source tiers with appropriate confidence levels.
+207:| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+213:| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+223:| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+240:| `known_issues` | Documented problems with severity and confidence |
+
+Exit status: 0

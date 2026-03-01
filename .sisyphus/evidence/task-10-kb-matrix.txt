@@ -1,0 +1,55 @@
+=== Task 10: Cross-Radio Matrix Completeness ===
+Timestamp: 2026-03-01T06:09:31Z
+Command: grep -E 'TX-500|TX-500MP|FX-4CR|uSDX|X6100' docs/radios/matrix.md
+
+| Lab599 TX-500 | 1 (Primary) | Dual: TS-2000 + LAB599 Extended | 2054 | Official |
+| Lab599 TX-500MP | 2 (Community) | TS-2000 | 2050 | Official + Hamlib |
+| FX-4CR | 2 (Community) | TS-480 | 3074 | Hamlib |
+| (tr)uSDX | 2 (Community) | TS-480 | 2055 | Community |
+| Xiegu X6100 | 2 (Community) | CI-V (IC-7000) | 3074 | Official + Hamlib |
+| Capability | TX-500 (Extended) | TX-500 (TS-2000) | TX-500MP | FX-4CR | (tr)uSDX | X6100 |
+- TX-500 Extended: [official] LAB599 CAT Protocol Specification
+- TX-500 TS-2000: [official] LAB599 + [hamlib] tx500.c
+- TX-500MP: [official] User Manual + [hamlib] tx500.c (medium confidence)
+- FX-4CR: [hamlib] Backend only (low confidence)
+- (tr)uSDX: [community-verified] DL2MAN + [hamlib] (medium confidence)
+- X6100: [official] Extended Manual + [hamlib] (medium confidence for CAT subset)
+| Method | TX-500 | TX-500MP | FX-4CR | (tr)uSDX | X6100 |
+- (tr)uSDX: DTR must remain HIGH for proper operation
+- X6100: RTS PTT recommended over CAT PTT for digital modes (timing issues)
+- (tr)uSDX: DTR line cannot be used for PTT; must stay HIGH
+| Capability | TX-500 | TX-500MP | FX-4CR | (tr)uSDX | X6100 |
+- (tr)uSDX is unique: no USB sound card, audio transmitted via CAT serial connection
+- (tr)uSDX CAT streaming: 8-bit unsigned, 46 dB dynamic range
+- X6100: Firmware 1.1.8+ recommended for USB audio stability
+| **TX-500** | Extended Protocol | 1.0.0 | Base extended mode |
+| **TX-500** | Full Extended Metering | 1.1.0 | SWR, ALC, power output |
+| **(tr)uSDX** | 115200 Baud Rate | 2.00t | Higher throughput |
+| **(tr)uSDX** | CAT Audio Streaming | 2.00u | Required for USB-only digital modes |
+| **(tr)uSDX** | Reliable TX-RX Transitions | 2.00u | Alpha firmware has issues |
+| **X6100** | USB Audio Stability | 1.1.8 | Earlier versions may drop audio |
+### TX-500
+### TX-500MP
+### FX-4CR
+### (tr)uSDX
+### X6100
+### TX-500 / TX-500MP
+| **Model ID** | 2054 (TX-500), 2050 (TX-500MP) | N/A |
+### FX-4CR
+### (tr)uSDX
+### X6100
+## TX-500 Protocol Recommendation Table
+The TX-500 supports two protocol profiles. Use this decision matrix to select the appropriate profile.
+> The TX-500 powers up in TS-2000 compatibility mode by default. Extended mode must be explicitly activated via menu setting or CAT command sequence.
+### Primary Target: TX-500
+### TX-500MP
+### FX-4CR
+### (tr)uSDX
+### X6100
+- [TX-500 Profile](tx-500.md)
+- [TX-500MP Profile](tx-500mp.md)
+- [FX-4CR Profile](fx-4cr.md)
+- [(tr)uSDX Profile](trusdx.md)
+- [X6100 Profile](x6100.md)
+
+Exit status: 0

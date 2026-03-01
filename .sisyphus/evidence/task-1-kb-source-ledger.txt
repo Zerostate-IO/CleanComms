@@ -1,0 +1,27 @@
+=== Task 1: Source Ledger Verification ===
+Timestamp: 2026-03-01T06:06:39Z
+Command: test -f docs/radios/sources.md && grep -E 'TX-500|TX-500MP|FX-4CR|uSDX|X6100' docs/radios/sources.md
+
+Output:
+### Lab599 Discovery TX-500
+| TX-500 User Manual | https://www.manualslib.com/manual/1818895/Lab599-Discovery-Tx-500.html | official | 2026-02-28 |
+| Hamlib TX-500 Backend | https://github.com/Hamlib/Hamlib/wiki/Supported-Radios#lab599 | hamlib | 2026-02-28 |
+**Notes:** TX-500 supports two CAT protocol modes: TS-2000 compatible (Kenwood standard) and LAB599 extended mode. Official documentation covers both. Extended mode provides additional commands not available in TS-2000 mode.
+### Digi-link Mobile / TX-500MP
+| TX-500MP User Manual | https://downloads.lab599.com/TX500MP/Lab599-TX500MP-User-Manual-EN.pdf | official | 2026-02-28 |
+| Hamlib TX-500MP Backend | https://github.com/Hamlib/Hamlib/wiki/Supported-Radios#lab599 | hamlib | 2026-02-28 |
+**Notes:** TX-500MP shares the LAB599 CAT protocol family but may have a reduced command subset compared to TX-500. Verify specific command support against official documentation.
+### FX-4CR
+| Hamlib FX-4CR Backend | https://github.com/Hamlib/Hamlib/wiki/Supported-Radios | hamlib | 2026-02-28 |
+### (tr)uSDX
+| (tr)uSDX Technical Details | https://dl2man.de/5-trusdx-details/ | community-verified | 2026-02-28 |
+| Hamlib (tr)uSDX Backend | https://github.com/Hamlib/Hamlib/wiki/Supported-Radios | hamlib | 2026-02-28 |
+**Notes:** (tr)uSDX emulates Kenwood TS-480 CAT protocol. The DL2MAN site is the primary community-maintained reference. CAT audio streaming capability varies by firmware version. Always gate streaming claims with firmware version information.
+### Xiegu X6100
+| X6100 Extended Manual | https://radioddity.s3.amazonaws.com/2024-01-19_Extended_manual_for_Xiegu_X6100_v1.0.pdf | official | 2026-02-28 |
+| Hamlib X6100 Backend | https://github.com/Hamlib/Hamlib/wiki/Supported-Radios | hamlib | 2026-02-28 |
+**Notes:** X6100 uses Icom CI-V protocol with IC-7000 compatibility mode. CAT mode-switch caveats are documented in community reports and should be tagged `community-verified` with confidence levels.
+| FX-4CR | Official CAT command documentation | Needs verification |
+| X6100 | Official CI-V command subset list | Partial - extended manual available |
+
+Exit status: 0

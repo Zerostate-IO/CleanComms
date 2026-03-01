@@ -112,30 +112,119 @@ When researching new capabilities:
 
 The KB is built in two phases with increasing granularity.
 
-### Phase 1: Capability Flags
+### Phase Roadmap
 
-Current phase. Records contain boolean/enum capability indicators:
+#### Phase 1: Capability Synthesis (Current)
 
-- Protocol support (TS-2000, CI-V, etc.)
-- PTT method availability (CAT, RTS, DTR)
-- Audio CODEC presence
-- Known issues with severity
+**Status: Complete.** The [matrix.md](matrix.md) document provides cross-radio capability synthesis for all five target radios:
 
-Phase 1 answers: "Can this radio do X?"
+- CAT protocol support comparison
+- PTT control mechanisms
+- Audio routing capabilities
+- Firmware dependency gates
+- Known risk flags with provenance
+- TX-500 dual-protocol recommendation matrix
 
-### Phase 2: Command-Level Detail
+Phase 1 answers: *"Can this radio do X?"*
 
-Planned phase. Records will include:
+#### Phase 2: Command-Level Deepening (Planned)
 
-- Per-command support tables (e.g., `FA;` frequency read)
-- Response format specifications
-- Timing constraints and quirks
-- Firmware-version-specific behavior
+**Status: Not started.** Phase 2 will extend the KB with per-command documentation:
 
-Phase 2 answers: "How exactly does this radio implement X?"
+- Per-command support tables (e.g., `FA;` frequency read, `MD;` mode set)
+- Response format specifications (byte layouts, terminators)
+- Timing constraints and quirks (inter-command delays, timeouts)
+- Firmware-version-specific behavior differences
+
+Phase 2 answers: *"How exactly does this radio implement X?"*
 
 **Boundary:** Phase 1 records remain valid for Phase 2. The schema supports nested capability structures that Phase 2 will populate with command-level details. No breaking changes to existing Phase 1 data.
 
+---
+
+## Phase 2 Command Table Templates
+
+The following placeholder sections define the structure for Phase 2 command-level documentation. These templates are **not populated** with verified data. They exist to guide future research and maintain consistent column structure across all radios.
+
+### Required Columns
+
+| Column | Description |
+|--------|-------------|
+| `command` | CAT command string (e.g., `FA;`, `MD;`)
+| `direction` | `read`, `write`, or `read/write`
+| `supported` | `yes`, `no`, `partial`, or `unknown`
+| `profile` | Protocol profile this command applies to
+| `firmware_min` | Minimum firmware version required (or `n/a`)
+| `source_tier` | `official`, `hamlib`, `community-verified`, or `unknown`
+| `confidence` | `high`, `medium`, `low`, or `needs-verification`
+| `evidence_url` | Link to source documentation or code
+| `notes` | Caveats, quirks, or implementation details |
+
+**Important:** All Phase 2 command entries must include `source_tier` and `confidence` fields. No command claims should be made without provenance tracking.
+
+---
+
+### TX-500 Command Table (Phase 2 Placeholder)
+
+#### TS-2000 Profile Commands
+
+| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+|---------|-----------|-----------|---------|--------------|-------------|------------|--------------|-------|
+| (placeholder) | (placeholder) | (placeholder) | ts-2000 | (placeholder) | (placeholder) | (placeholder) | (placeholder) | (placeholder) |
+
+#### LAB599 Extended Profile Commands
+
+| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+|---------|-----------|-----------|---------|--------------|-------------|------------|--------------|-------|
+| (placeholder) | (placeholder) | (placeholder) | lab599-extended | (placeholder) | (placeholder) | (placeholder) | (placeholder) | (placeholder) |
+
+---
+
+### TX-500MP Command Table (Phase 2 Placeholder)
+
+| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+|---------|-----------|-----------|---------|--------------|-------------|------------|--------------|-------|
+| (placeholder) | (placeholder) | (placeholder) | ts-2000 | (placeholder) | (placeholder) | (placeholder) | (placeholder) | (placeholder) |
+
+**Note:** TX-500MP extended command support is uncertain. Commands should be verified against TX-500 extended behavior before populating.
+
+---
+
+### FX-4CR Command Table (Phase 2 Placeholder)
+
+| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+|---------|-----------|-----------|---------|--------------|-------------|------------|--------------|-------|
+| (placeholder) | (placeholder) | (placeholder) | ts-480 | (placeholder) | (placeholder) | (placeholder) | (placeholder) | (placeholder) |
+
+**Note:** FX-4CR has limited official CAT documentation. Most command entries will require `hamlib` or `community-verified` source tiers with appropriate confidence levels.
+
+---
+
+### (tr)uSDX Command Table (Phase 2 Placeholder)
+
+#### TS-480 Emulation Commands
+
+| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+|---------|-----------|-----------|---------|--------------|-------------|------------|--------------|-------|
+| (placeholder) | (placeholder) | (placeholder) | ts-480 | (placeholder) | (placeholder) | (placeholder) | (placeholder) | (placeholder) |
+
+#### (tr)uSDX Extended Commands (CAT Audio)
+
+| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+|---------|-----------|-----------|---------|--------------|-------------|------------|--------------|-------|
+| (placeholder) | (placeholder) | (placeholder) | trusdx-extended | (placeholder) | (placeholder) | (placeholder) | (placeholder) | (placeholder) |
+
+**Note:** (tr)uSDX CAT audio commands (`UA0`, `UA1`, `UA2`, `US`) require firmware 2.00u+ and should be documented with `community-verified` source tier.
+
+---
+
+### X6100 Command Table (Phase 2 Placeholder)
+
+| command | direction | supported | profile | firmware_min | source_tier | confidence | evidence_url | notes |
+|---------|-----------|-----------|---------|--------------|-------------|------------|--------------|-------|
+| (placeholder) | (placeholder) | (placeholder) | ci-v-ic7000 | (placeholder) | (placeholder) | (placeholder) | (placeholder) | (placeholder) |
+
+**Note:** X6100 uses CI-V IC-7000 compatibility mode with incomplete command implementation. Not all IC-7000 commands are supported.
 ---
 
 ## Schema Reference

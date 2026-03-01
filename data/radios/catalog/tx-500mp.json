@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "manufacturer": "Lab599",
+    "model": "Digi-link Mobile TX-500MP",
+    "model_code": "tx-500mp",
+    "aliases": ["TX-500MP", "Digi-link Mobile"],
+    "hamlib_model_id": 2050,
+    "introduction_year": 2022
+  },
+  "support_tier": 2,
+  "protocol_profiles": {
+    "ts-2000": {
+      "protocol_type": "kenwood-ts2000",
+      "description": "Kenwood TS-2000 compatible mode. The TX-500MP shares the LAB599 CAT protocol family with the TX-500 but may have a reduced command subset. Extended LAB599 commands may not be fully supported.",
+      "serial": {
+        "default_baud": 9600,
+        "supported_baud_rates": [9600],
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none",
+        "flow_control": "none",
+        "provenance": {
+          "source_tier": "hamlib",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "hamlib",
+              "description": "Hamlib tx500.c backend - serial configuration (shared with TX-500MP)",
+              "url": "https://github.com/Hamlib/Hamlib/blob/master/rigs/kenwood/tx500.c"
+            }
+          ],
+          "notes": "Serial configuration inferred from Hamlib backend. Official documentation should be consulted for verification."
+        }
+      },
+      "cat": {
+        "frequency_control": true,
+        "mode_control": true,
+        "vfo_control": true,
+        "split_control": true,
+        "filter_control": false,
+        "agc_control": false,
+        "power_control": false,
+        "antenna_control": false,
+        "metering": {
+          "smeter": true,
+          "power_output": false,
+          "swr": false,
+          "alc": false
+        },
+        "memory_channels": true,
+        "extended_commands": [],
+        "unsupported_commands": ["TX0", "TX1", "RX", "KI", "PC", "AG"],
+        "provenance": {
+          "source_tier": "hamlib",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "TX-500MP User Manual - basic CAT commands",
+              "url": "https://downloads.lab599.com/TX500MP/Lab599-TX500MP-User-Manual-EN.pdf"
+            },
+            {
+              "source_tier": "hamlib",
+              "description": "Hamlib TX-500 Backend (shared with TX-500MP)",
+              "url": "https://github.com/Hamlib/Hamlib/blob/master/rigs/kenwood/tx500.c"
+            }
+          ],
+          "notes": "Extended LAB599 commands (TX0, TX1, RX, KI, PC, AG) are listed as unsupported pending verification of TX-500MP-specific support. The TX-500MP may have a reduced command subset compared to TX-500 extended mode."
+        }
+      },
+      "ptt": {
+        "cat_ptt": true,
+        "rts_ptt": true,
+        "dtr_ptt": true,
+        "hardware_ptt": true,
+        "vox": true,
+        "ptt_timeout_ms": 0,
+        "ptt_delay_ms": 50,
+        "provenance": {
+          "source_tier": "hamlib",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "TX-500MP User Manual - PTT control methods",
+              "url": "https://downloads.lab599.com/TX500MP/Lab599-TX500MP-User-Manual-EN.pdf"
+            }
+          ],
+          "notes": "PTT methods assumed similar to TX-500. Official verification recommended."
+        }
+      },
+      "audio": {
+        "usb_audio": true,
+        "audio_input": "usb",
+        "audio_output": "usb",
+        "cat_audio_streaming": false,
+        "acc_port": true,
+        "input_level_control": true,
+        "output_level_control": true,
+        "sample_rates": [48000, 44100],
+        "provenance": {
+          "source_tier": "hamlib",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "TX-500MP User Manual - USB audio configuration",
+              "url": "https://downloads.lab599.com/TX500MP/Lab599-TX500MP-User-Manual-EN.pdf"
+            }
+          ],
+          "notes": "Audio capabilities inferred from TX-500 similarity. Official verification recommended."
+        }
+      },
+      "provenance": {
+        "source_tier": "hamlib",
+        "confidence": "medium",
+        "evidence": [
+          {
+            "source_tier": "official",
+            "description": "TX-500MP User Manual",
+            "url": "https://downloads.lab599.com/TX500MP/Lab599-TX500MP-User-Manual-EN.pdf"
+          },
+          {
+            "source_tier": "hamlib",
+            "description": "Hamlib TX-500 Backend (shared with TX-500MP)",
+            "url": "https://github.com/Hamlib/Hamlib/blob/master/rigs/kenwood/tx500.c"
+          }
+        ]
+      }
+    }
+  },
+  "known_issues": [
+    {
+      "id": "TX5MP-0001",
+      "title": "Extended Command Support Uncertain",
+      "description": "The TX-500MP shares the LAB599 CAT protocol family with the TX-500 but may have a reduced command subset. Extended commands (TX0, TX1, RX, KI, PC, AG) available on TX-500 extended mode may not be fully supported on TX-500MP. Verify specific command support against official TX-500MP documentation before relying on extended features.",
+      "severity": "major",
+      "confidence": "low",
+      "source_tier": "hamlib",
+      "affected_versions": ["all"],
+      "workaround": "Use standard TS-2000 commands for maximum compatibility. Consult official TX-500MP documentation for confirmed extended command support.",
+      "impact": ["cat-control", "digital-modes"],
+      "reference_url": "https://github.com/Hamlib/Hamlib/blob/master/rigs/kenwood/tx500.c"
+    },
+    {
+      "id": "TX5MP-0002",
+      "title": "Mobile Installation Power Considerations",
+      "description": "The TX-500MP is designed for mobile installation and may have different power management behavior compared to the portable TX-500. Ensure adequate power supply for full-power operation.",
+      "severity": "minor",
+      "confidence": "medium",
+      "source_tier": "community-verified",
+      "affected_versions": ["all"],
+      "workaround": "Use a dedicated 12V power supply rated for at least 10A continuous. Avoid sharing power with other high-current devices.",
+      "impact": ["hardware"]
+    }
+  ],
+  "recommendations": {
+    "preferred_profile": "ts-2000",
+    "notes": "The TX-500MP shares the LAB599 CAT protocol family with the TX-500 but extended command support is uncertain. Use TS-2000 standard commands for maximum compatibility. Extended LAB599 commands should be verified against official TX-500MP documentation before use. This profile uses conservative capability assumptions pending official verification."
+  },
+  "provenance": {
+    "source_tier": "hamlib",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "source_tier": "official",
+        "description": "TX-500MP User Manual",
+        "url": "https://downloads.lab599.com/TX500MP/Lab599-TX500MP-User-Manual-EN.pdf"
+      },
+      {
+        "source_tier": "official",
+        "description": "LAB599 CAT Protocol Specification",
+        "url": "https://downloads.lab599.com/Lab599-CAT-protocol.pdf"
+      },
+      {
+        "source_tier": "hamlib",
+        "description": "Hamlib TX-500 Backend (shared with TX-500MP)",
+        "url": "https://github.com/Hamlib/Hamlib/blob/master/rigs/kenwood/tx500.c"
+      }
+    ],
+    "last_verified": "2026-02-28",
+    "notes": "Primary sources are official LAB599 documentation and Hamlib backend. Extended command support for TX-500MP specifically requires verification. Conservative capability assumptions applied pending official confirmation of TX-500MP-specific features."
+  }
+}

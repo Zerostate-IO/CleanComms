@@ -1,0 +1,7 @@
+=== Task 10: TX-500 Recommendation Policy Check ===
+Timestamp: 2026-03-01T06:09:31Z
+Command: grep -n 'extended.*preferred\|fallback' docs/radios/matrix.md
+
+248:│ Extended │  │ or use      │  │ (fallback)    │  │ (preferred) │
+
+Exit status: 0

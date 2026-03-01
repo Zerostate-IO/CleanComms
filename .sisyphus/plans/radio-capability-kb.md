@@ -250,7 +250,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `chore(kb): add kb validator script` | Files: `scripts/validate-radio-kb.sh`
 
-- [ ] 5. Author TX-500 profile (dual protocol with recommendation policy)
+- [x] 5. Author TX-500 profile (dual protocol with recommendation policy)
 
   **What to do**: Create `docs/radios/tx-500.md` + `data/radios/catalog/tx-500.json` with separate capability blocks for TS-2000 and LAB599-extended modes, firmware gates, and explicit recommendation: prefer LAB599 extended where environment supports it; fallback to TS-2000 for compatibility.
   **Must NOT do**: Do not claim extended commands are Hamlib-native unless verified.
@@ -289,7 +289,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `docs(kb): add tx-500 dual-protocol profile` | Files: `docs/radios/tx-500.md`, `data/radios/catalog/tx-500.json`
 
-- [ ] 6. Author TX-500MP (Digi-link) profile
+- [x] 6. Author TX-500MP (Digi-link) profile
 
   **What to do**: Create `docs/radios/tx-500mp.md` + `data/radios/catalog/tx-500mp.json` covering CAT command subset, known unsupported controls, serial settings, and interoperability notes.
   **Must NOT do**: Do not conflate TX-500MP behavior with TX-500 extended behavior.
@@ -328,7 +328,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `docs(kb): add tx-500mp capability profile` | Files: `docs/radios/tx-500mp.md`, `data/radios/catalog/tx-500mp.json`
 
-- [ ] 7. Author FX-4CR profile with risk-tagged known issues
+- [x] 7. Author FX-4CR profile with risk-tagged known issues
 
   **What to do**: Create `docs/radios/fx-4cr.md` + `data/radios/catalog/fx-4cr.json` with CAT capability coverage plus known digital-mode issues tagged as `community-verified` with severity and confidence.
   **Must NOT do**: Do not elevate community issue reports to official normative status.
@@ -366,7 +366,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `docs(kb): add fx-4cr profile with risk tags` | Files: `docs/radios/fx-4cr.md`, `data/radios/catalog/fx-4cr.json`
 
-- [ ] 8. Author (tr)uSDX profile including CAT audio-streaming notes
+- [x] 8. Author (tr)uSDX profile including CAT audio-streaming notes
 
   **What to do**: Create `docs/radios/trusdx.md` + `data/radios/catalog/trusdx.json` including TS-480 emulation behavior, baud/version differences, and explicit CAT-audio-streaming capability markers.
   **Must NOT do**: Do not represent CAT audio streaming as universally supported across all firmware.
@@ -405,7 +405,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `docs(kb): add trusdx protocol profile` | Files: `docs/radios/trusdx.md`, `data/radios/catalog/trusdx.json`
 
-- [ ] 9. Author X6100 profile with CI-V compatibility quirks
+- [x] 9. Author X6100 profile with CI-V compatibility quirks
 
   **What to do**: Create `docs/radios/x6100.md` + `data/radios/catalog/x6100.json` documenting CI-V/IC-7000 compatibility behavior, common CAT mode-switch caveats, and recommended interoperability configuration notes.
   **Must NOT do**: Do not claim vendor confirmation for purely community observations.
@@ -443,7 +443,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `docs(kb): add x6100 capability profile` | Files: `docs/radios/x6100.md`, `data/radios/catalog/x6100.json`
 
-- [ ] 10. Build cross-radio capability matrix and protocol recommendation table
+- [x] 10. Build cross-radio capability matrix and protocol recommendation table
 
   **What to do**: Create `docs/radios/matrix.md` comparing CAT protocol support, PTT/audio control, firmware dependencies, known-risk flags, and Hamlib-vs-native notes across all targets. Include explicit TX-500 recommendation table (extended preferred; TS-2000 fallback criteria).
   **Must NOT do**: Do not aggregate without preserving source-tier distinctions.
@@ -481,7 +481,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `docs(kb): add cross-radio capability matrix` | Files: `docs/radios/matrix.md`
 
-- [ ] 11. Integrate phase-depth roadmap and phase 2 command-table placeholders
+- [x] 11. Integrate phase-depth roadmap and phase 2 command-table placeholders
 
   **What to do**: In `docs/radios/README.md`, add phase roadmap and explicit placeholders for phase 2 command-by-command CAT tables per radio (without inventing commands now). Ensure each placeholder lists expected columns and provenance requirements.
   **Must NOT do**: Do not prefill command tables with unverified entries.
@@ -519,7 +519,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `docs(kb): add phase roadmap and command-table placeholders` | Files: `docs/radios/README.md`
 
-- [ ] 12. Run full KB validation and capture evidence pack
+- [x] 12. Run full KB validation and capture evidence pack
 
   **What to do**: Execute validator + grep checks, produce evidence files for all tasks, and create a concise verification summary in `.sisyphus/evidence/task-12-kb-final-audit.txt`.
   **Must NOT do**: Do not mark complete if any target radio record fails schema or provenance checks.
@@ -558,10 +558,10 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
   **Commit**: YES | Message: `chore(kb): validate radio kb and add evidence pack` | Files: `.sisyphus/evidence/*`, `docs/radios/*`, `data/radios/*`, `scripts/validate-radio-kb.sh`
 
 ## Final Verification Wave (4 parallel agents, ALL must APPROVE)
-- [ ] F1. Plan Compliance Audit — oracle
-- [ ] F2. Code Quality Review — unspecified-high
-- [ ] F3. Real Manual QA — unspecified-high (+ playwright if UI)
-- [ ] F4. Scope Fidelity Check — deep
+- [x] F1. Plan Compliance Audit — oracle
+- [x] F2. Code Quality Review — unspecified-high
+- [x] F3. Real Manual QA — unspecified-high (+ playwright if UI)
+- [x] F4. Scope Fidelity Check — deep
 
 ## Commit Strategy
 - Commit 1: docs/radios structure + source ledger + schema + validator script.
