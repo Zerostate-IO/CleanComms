@@ -55,7 +55,7 @@ Severity guidance:
 - If an issue/PR receives no maintainer response after 14 calendar days, escalate to maintainer lead.
 - Escalation path:
   1. Add a concise status comment with links to prior context.
-  2. Tag `@ZeroState-IO/maintainers` once.
+  2. Tag `@Zerostate-IO/maintainers` once.
   3. Open a GitHub Discussion if coordination is needed across multiple threads.
 - Security reports do not follow public escalation; use `SECURITY.md` channels.
 

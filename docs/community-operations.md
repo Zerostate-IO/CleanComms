@@ -83,7 +83,7 @@ Choosing the right channel ensures faster responses and cleaner project organiza
 - No public Discussions posts
 - No comments mentioning vulnerabilities
 
-**Correct path:** Follow the [Security Policy](/SECURITY.md) and use GitHub's private Security Advisory feature at `https://github.com/ZeroState-IO/CleanComms/security/advisories`.
+**Correct path:** Follow the [Security Policy](/SECURITY.md) and use GitHub's private Security Advisory feature at `https://github.com/Zerostate-IO/CleanComms/security/advisories`.
 
 ### Feature Request Flow
 
@@ -152,7 +152,7 @@ All community interactions are governed by our [Code of Conduct](/CODE_OF_CONDUC
 
 ### Reporting Violations
 
-Report Code of Conduct violations to the maintainers. If the issue involves a maintainer, escalate to ZeroState-IO organization admins.
+Report Code of Conduct violations to the maintainers. If the issue involves a maintainer, escalate to Zerostate-IO organization admins.
 
 ---
 
@@ -165,7 +165,7 @@ From [GOVERNANCE.md](/GOVERNANCE.md):
 | Discussion not responded to | Wait 5 business days | Ping maintainers politely |
 | Issue not triaged | Wait 5 business days | Comment asking for status |
 | Policy disagreement | Open a Discussion | Request maintainer mediation |
-| Code of conduct violation | Email maintainers | Contact ZeroState-IO org admins |
+| Code of conduct violation | Email maintainers | Contact Zerostate-IO org admins |
 | Security issue | Follow [SECURITY.md](/SECURITY.md) | Direct contact via security channels |
 
 ### Contributor Etiquette

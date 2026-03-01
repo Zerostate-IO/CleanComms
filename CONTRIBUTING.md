@@ -1,15 +1,15 @@
 # Contributing to CleanComms
 
-Thank you for your interest in contributing to CleanComms! We welcome contributions from everyone. CleanComms is a Linux-first HF operating suite maintained by the ZeroState-IO organization.
+Thank you for your interest in contributing to CleanComms! We welcome contributions from everyone. CleanComms is a Linux-first HF operating suite maintained by the Zerostate-IO organization.
 
 ## How to Contribute
 
 ### Reporting Bugs
-- Check the [Issues](https://github.com/ZeroState-IO/CleanComms/issues) to see if the bug has already been reported.
+- Check the [Issues](https://github.com/Zerostate-IO/CleanComms/issues) to see if the bug has already been reported.
 - If not, create a new issue. Provide as much detail as possible, including steps to reproduce, expected behavior, and actual behavior.
 
 ### Suggesting Enhancements
-- Check the [Discussions](https://github.com/ZeroState-IO/CleanComms/discussions) or [Issues](https://github.com/ZeroState-IO/CleanComms/issues) to see if the enhancement has already been suggested.
+- Check the [Discussions](https://github.com/Zerostate-IO/CleanComms/discussions) or [Issues](https://github.com/Zerostate-IO/CleanComms/issues) to see if the enhancement has already been suggested.
 - If not, create a new discussion or issue to describe your suggestion.
 
 ### Pull Requests
@@ -41,4 +41,4 @@ CleanComms uses a structured planning system. **Any changes to `.sisyphus/plans`
 CleanComms is maintained by volunteers. We aim for a **5 business days first response target**, but this is not guaranteed. We appreciate your patience.
 
 ---
-CleanComms is a project of the ZeroState-IO organization.
+CleanComms is a project of the Zerostate-IO organization.

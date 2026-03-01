@@ -1,8 +1,8 @@
 # CleanComms Public Launch Checklist
 
-This document provides a deterministic, ordered checklist for launching the CleanComms repository publicly under the [ZeroState-IO](https://github.com/ZeroState-IO) organization. It verifies file completeness, policy coherence, and defines the exact GitHub repository configuration sequence.
+This document provides a deterministic, ordered checklist for launching the CleanComms repository publicly under the [Zerostate-IO](https://github.com/Zerostate-IO) organization. It verifies file completeness, policy coherence, and defines the exact GitHub repository configuration sequence.
 
-**Target Organization:** ZeroState-IO  
+**Target Organization:** Zerostate-IO  
 **Repository:** CleanComms  
 **License:** GPL-3.0-or-later  
 **Launch Model:** Public, volunteer-maintained, Linux-first
@@ -30,7 +30,7 @@ Complete this section before making the repository public. All items must be che
 
 | File | Purpose | Status |
 |------|---------|--------|
-| [.github/CODEOWNERS](/.github/CODEOWNERS) | Code review routing to @ZeroState-IO/maintainers | ☐ |
+| [.github/CODEOWNERS](/.github/CODEOWNERS) | Code review routing to @Zerostate-IO/maintainers | ☐ |
 | [.github/PULL_REQUEST_TEMPLATE.md](/.github/PULL_REQUEST_TEMPLATE.md) | PR checklist with scope, tests, plan safekeeping | ☐ |
 | [.github/ISSUE_TEMPLATE/bug_report.yml](/.github/ISSUE_TEMPLATE/bug_report.yml) | Structured bug report form | ☐ |
 | [.github/ISSUE_TEMPLATE/feature_request.yml](/.github/ISSUE_TEMPLATE/feature_request.yml) | Feature request form with impact assessment | ☐ |
@@ -137,21 +137,21 @@ The 14 labels defined in [triage-playbook.md](/docs/triage-playbook.md) must be 
 
 ### 2.6 CODEOWNERS Consistency
 
-CODEOWNERS must reference `@ZeroState-IO/maintainers` for all paths:
+CODEOWNERS must reference `@Zerostate-IO/maintainers` for all paths:
 
 | Path | Owner | Verified |
 |------|-------|----------|
-| `*` (default) | @ZeroState-IO/maintainers | ☐ |
-| `/.github/` | @ZeroState-IO/maintainers | ☐ |
-| `/docs/` | @ZeroState-IO/maintainers | ☐ |
-| `/.sisyphus/` | @ZeroState-IO/maintainers | ☐ |
-| Root governance files | @ZeroState-IO/maintainers | ☐ |
+| `*` (default) | @Zerostate-IO/maintainers | ☐ |
+| `/.github/` | @Zerostate-IO/maintainers | ☐ |
+| `/docs/` | @Zerostate-IO/maintainers | ☐ |
+| `/.sisyphus/` | @Zerostate-IO/maintainers | ☐ |
+| Root governance files | @Zerostate-IO/maintainers | ☐ |
 
 ---
 
 ## 3. GitHub Repository Setup Sequence
 
-**IMPORTANT:** Requires GitHub organization admin access for ZeroState-IO.
+**IMPORTANT:** Requires GitHub organization admin access for Zerostate-IO.
 
 Complete these steps in order. Each step depends on the previous.
 
@@ -159,7 +159,7 @@ Complete these steps in order. Each step depends on the previous.
 
 **Requires:** Org admin access
 
-1. Navigate to https://github.com/orgs/ZeroState-IO/teams
+1. Navigate to https://github.com/orgs/Zerostate-IO/teams
 2. Click "New team"
 3. Configure:
    - **Team name:** `maintainers`
@@ -167,7 +167,7 @@ Complete these steps in order. Each step depends on the previous.
    - **Visibility:** Visible
    - **Team permissions:** Write (or Admin for repo-level override)
 4. Add initial maintainers to the team
-5. Verify team URL: `https://github.com/orgs/ZeroState-IO/teams/maintainers`
+5. Verify team URL: `https://github.com/orgs/Zerostate-IO/teams/maintainers`
 
 **Status:** ☐ Complete
 
@@ -177,7 +177,7 @@ Complete these steps in order. Each step depends on the previous.
 
 **Requires:** Repo admin access
 
-1. Navigate to https://github.com/ZeroState-IO/CleanComms/settings/branches
+1. Navigate to https://github.com/Zerostate-IO/CleanComms/settings/branches
 2. Click "Add branch protection rule"
 3. Configure for `main`:
    - ☐ Require a pull request before merging
@@ -201,10 +201,10 @@ Complete these steps in order. Each step depends on the previous.
 
 **Requires:** Repo admin access
 
-1. Navigate to https://github.com/ZeroState-IO/CleanComms/settings
+1. Navigate to https://github.com/Zerostate-IO/CleanComms/settings
 2. Scroll to "Features" section
 3. Check "Discussions"
-4. Navigate to https://github.com/ZeroState-IO/CleanComms/settings/discussions
+4. Navigate to https://github.com/Zerostate-IO/CleanComms/settings/discussions
 5. Create the following categories:
 
 | Category | Key | Format | Description |
@@ -254,10 +254,10 @@ gh label create "security" --color "B60205" --description "Security-sensitive (u
 
 **Requires:** Repo admin access
 
-1. Navigate to https://github.com/ZeroState-IO/CleanComms/security/advisories
+1. Navigate to https://github.com/Zerostate-IO/CleanComms/security/advisories
 2. Verify "Security Advisories" is enabled
 3. Confirm the advisory creation URL works:
-   - https://github.com/ZeroState-IO/CleanComms/security/advisories/new
+   - https://github.com/Zerostate-IO/CleanComms/security/advisories/new
 4. (Optional) Enable "Private vulnerability reporting" for anonymous submissions
 
 **Reference:** [SECURITY.md](/SECURITY.md) - Reporting a Vulnerability section
@@ -270,10 +270,10 @@ gh label create "security" --color "B60205" --description "Security-sensitive (u
 
 **Requires:** Write access
 
-1. Open https://github.com/ZeroState-IO/CleanComms/blob/main/.github/CODEOWNERS
-2. Verify all paths reference `@ZeroState-IO/maintainers`
+1. Open https://github.com/Zerostate-IO/CleanComms/blob/main/.github/CODEOWNERS
+2. Verify all paths reference `@Zerostate-IO/maintainers`
 3. Create a test PR to any path
-4. Confirm `@ZeroState-IO/maintainers` is automatically requested for review
+4. Confirm `@Zerostate-IO/maintainers` is automatically requested for review
 
 **Reference:** [.github/CODEOWNERS](/.github/CODEOWNERS)
 
@@ -308,14 +308,14 @@ Check that all links in README.md are valid:
 
 | Link | Target | Verified |
 |------|--------|----------|
-| ZeroState-IO org | https://github.com/ZeroState-IO | ☐ |
+| Zerostate-IO org | https://github.com/Zerostate-IO | ☐ |
 | CONTRIBUTING.md | /CONTRIBUTING.md | ☐ |
 | CODE_OF_CONDUCT.md | /CODE_OF_CONDUCT.md | ☐ |
 | SECURITY.md | /SECURITY.md | ☐ |
 | SUPPORT.md | /SUPPORT.md | ☐ |
 | LICENSE | /LICENSE | ☐ |
-| GitHub Discussions | https://github.com/ZeroState-IO/CleanComms/discussions | ☐ |
-| GitHub Issues | https://github.com/ZeroState-IO/CleanComms/issues | ☐ |
+| GitHub Discussions | https://github.com/Zerostate-IO/CleanComms/discussions | ☐ |
+| GitHub Issues | https://github.com/Zerostate-IO/CleanComms/issues | ☐ |
 
 ---
 
@@ -337,7 +337,7 @@ Check that all links in README.md are valid:
 
 ### 4.4 Verify Issue Templates
 
-1. Navigate to https://github.com/ZeroState-IO/CleanComms/issues/new/choose
+1. Navigate to https://github.com/Zerostate-IO/CleanComms/issues/new/choose
 2. Verify three template options appear:
    - ☐ Bug Report
    - ☐ Feature Request
@@ -354,7 +354,7 @@ Check that all links in README.md are valid:
 
 ### 4.5 Verify Discussions Categories
 
-1. Navigate to https://github.com/ZeroState-IO/CleanComms/discussions
+1. Navigate to https://github.com/Zerostate-IO/CleanComms/discussions
 2. Verify four categories exist:
    - ☐ Q&A
    - ☐ Ideas
@@ -367,10 +367,10 @@ Check that all links in README.md are valid:
 
 ### 4.6 Verify Security Advisory Access
 
-1. Navigate to https://github.com/ZeroState-IO/CleanComms/security/advisories
+1. Navigate to https://github.com/Zerostate-IO/CleanComms/security/advisories
 2. Verify "New draft security advisory" button is visible
 3. Verify the security policy renders correctly at:
-   - https://github.com/ZeroState-IO/CleanComms/security/policy
+   - https://github.com/Zerostate-IO/CleanComms/security/policy
 
 **Status:** ☐ Complete
 
@@ -485,7 +485,7 @@ Complete immediately before announcing the public launch.
 | Security Reporting | GitHub Security Advisories (primary), security@zerostate.io (backup) |
 | Merge Strategy | Squash merge only |
 | Branch Protection | Required on `main`: 1 approval, CI passing |
-| CODEOWNERS | @ZeroState-IO/maintainers for all paths |
+| CODEOWNERS | @Zerostate-IO/maintainers for all paths |
 | Discussions Categories | Q&A, Ideas, Announcements, Show & Tell |
 | Labels | 14 labels (type, priority, effort, status, security) |
 | Versioning | SemVer 0.x with conventional commits |

@@ -4,7 +4,7 @@
 ![Status: Pre-Alpha](https://img.shields.io/badge/Status-Pre--Alpha-orange.svg)
 ![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8.svg?logo=go)
 
-CleanComms is a Linux-first amateur radio HF operating suite designed for reliability, modern architecture, and seamless hardware orchestration. Built by [ZeroState-IO](https://github.com/ZeroState-IO), it provides a robust foundation for digital mode operations where the backend daemon maintains strict ownership of CAT control, PTT signaling, and audio routing.
+CleanComms is a Linux-first amateur radio HF operating suite designed for reliability, modern architecture, and seamless hardware orchestration. Built by [Zerostate-IO](https://github.com/Zerostate-IO), it provides a robust foundation for digital mode operations where the backend daemon maintains strict ownership of CAT control, PTT signaling, and audio routing.
 
 ## 📡 Overview
 
@@ -58,7 +58,7 @@ Currently, the project is in a planning and early scaffolding phase. Developers 
 
 ```bash
 # Clone the repository
-git clone https://github.com/ZeroState-IO/CleanComms.git
+git clone https://github.com/Zerostate-IO/CleanComms.git
 cd CleanComms
 
 # Explore the governance and planning
@@ -77,11 +77,11 @@ Security is a priority for CleanComms. If you discover a security vulnerability,
 
 ## 🆘 Support
 
-For usage questions, feature requests, or community discussion, please use [GitHub Discussions](https://github.com/ZeroState-IO/CleanComms/discussions). See [SUPPORT.md](SUPPORT.md) for more details.
+For usage questions, feature requests, or community discussion, please use [GitHub Discussions](https://github.com/Zerostate-IO/CleanComms/discussions). See [SUPPORT.md](SUPPORT.md) for more details.
 
 ## ⚖️ License
 
 CleanComms is licensed under the **GPL-3.0-or-later**. See the [LICENSE](LICENSE) file for the full text.
 
 ---
-*73 de ZeroState-IO*
+*73 de Zerostate-IO*

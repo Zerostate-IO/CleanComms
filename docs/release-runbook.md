@@ -94,7 +94,7 @@ Move items from `[Unreleased]` to the new version section:
 Add the comparison link at the bottom:
 
 ```markdown
-[0.5.0]: https://github.com/ZeroState-IO/CleanComms/compare/v0.4.2...v0.5.0
+[0.5.0]: https://github.com/Zerostate-IO/CleanComms/compare/v0.4.2...v0.5.0
 ```
 
 ### 2. Commit the Changelog Update
@@ -123,7 +123,7 @@ git push origin v0.5.0
 
 ### 1. Draft the Release
 
-1. Navigate to https://github.com/ZeroState-IO/CleanComms/releases/new
+1. Navigate to https://github.com/Zerostate-IO/CleanComms/releases/new
 2. Select the tag you just pushed (e.g., `v0.5.0`)
 3. Release title: `v0.5.0` (match the tag)
 4. Target: `main`
@@ -145,7 +145,7 @@ Copy the relevant section from CHANGELOG.md and format for readability:
 ### Breaking Changes
 - (If any, include migration guidance)
 
-**Full Changelog**: https://github.com/ZeroState-IO/CleanComms/compare/v0.4.2...v0.5.0
+**Full Changelog**: https://github.com/Zerostate-IO/CleanComms/compare/v0.4.2...v0.5.0
 ```
 
 ### 3. Pre-Release Flag
@@ -184,7 +184,7 @@ CleanComms v0.5.0 is now available.
 (Installation instructions or link to README)
 
 ## Full Changelog
-See the [release notes](https://github.com/ZeroState-IO/CleanComms/releases/tag/v0.5.0) for complete details.
+See the [release notes](https://github.com/Zerostate-IO/CleanComms/releases/tag/v0.5.0) for complete details.
 
 As always, feedback is welcome in Discussions → Q&A or Ideas.
 ```
