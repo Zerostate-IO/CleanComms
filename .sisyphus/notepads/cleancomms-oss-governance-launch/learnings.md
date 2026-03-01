@@ -68,3 +68,31 @@
 - **Emergency override process prevents abuse**: Without documented override procedures, maintainers may be tempted to skip rules informally. Explicit steps (document emergency, get consensus, post-mortem) create accountability.
 - **Cross-reference governance docs**: repo-policies.md explicitly references GOVERNANCE.md to avoid duplication and maintain single source of truth for authority.
 - **CODEOWNERS patterns for hidden directories**: Using `/.github/` and `/.sisyphus/` with leading slashes anchors patterns to repo root, preventing accidental matches in subdirectories.
+
+## [2026-02-28T16:20:00Z] Task 5 Complete: Triage Playbook
+
+### Files Created
+- `docs/triage-playbook.md` - Issue/PR triage policy with label taxonomy, SLA framing, escalation, stale handling, and maintainer guardrails
+
+### Learnings
+- **Label cap keeps triage usable**: A compact taxonomy (14 labels) covers type, priority, effort, status, and security without creating label sprawl.
+- **Volunteer SLA consistency matters across docs**: Reusing the exact "5 business days target, not guaranteed" phrasing from governance/security prevents mixed contributor expectations.
+- **Escalation needs a concrete time trigger**: Defining 14 days with no maintainer response gives contributors a clear next step without encouraging premature pings.
+- **Stale policy must include explicit exceptions**: Excluding critical/high priority and security work from stale auto-closure avoids accidental loss of important threads.
+
+## [2026-02-28T16:10:00Z] Task 3 Complete: Issue Templates and PR Template
+
+### Files Created
+- `.github/ISSUE_TEMPLATE/bug_report.yml` - Structured bug report form with repro steps, environment, logs
+- `.github/ISSUE_TEMPLATE/feature_request.yml` - Feature request form with problem/solution/impact
+- `.github/ISSUE_TEMPLATE/question.yml` - Simple Q&A routing form
+- `.github/ISSUE_TEMPLATE/config.yml` - Disables blank issues, links to Discussions and Security
+- `.github/PULL_REQUEST_TEMPLATE.md` - PR checklist with scope, test evidence, plan safekeeping
+
+### Learnings
+- **YAML forms prevent low-quality issues**: Using GitHub's issue form syntax (instead of markdown templates) enforces required fields at the UI level, reducing incomplete bug reports.
+- **Environment fields should be structured**: Providing a template with OS, Go version, CleanComms version, radio model, and connection type prompts users for all relevant diagnostic info.
+- **Impact assessment in feature requests helps prioritization**: Dropdown for impact level (nice-to-have / important / critical) plus use-case selection gives maintainers context for roadmap decisions.
+- **config.yml blank_issues_enabled: false forces template use**: Prevents lazy "it doesn't work" issues by requiring users to pick a template.
+- **Plan safekeeping in PR checklist reinforces workflow**: Including the `.sisyphus/plans` commit requirement in PR template creates a consistent reminder at the point of contribution.
+- **Contact links route before issue creation**: Pointing users to Discussions for Q&A and Security policy for vulnerabilities in config.yml catches issues before they're opened in the wrong place.

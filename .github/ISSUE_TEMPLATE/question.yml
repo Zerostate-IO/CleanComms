@@ -1,0 +1,59 @@
+name: Question
+description: Ask a question about CleanComms usage or configuration
+labels: ["question", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question about CleanComms? We're happy to help!
+        
+        **Tip:** For general questions and community discussion, consider posting in [GitHub Discussions](../../discussions) where others can benefit from the answers.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: |
+        How do I configure CleanComms to work with my Icom IC-7300 over USB?
+        I've installed the package but can't figure out the config file format.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: |
+        Provide any relevant context (what you've tried, documentation you've read, etc.)
+      placeholder: |
+        I read the README and tried running `cleancomms init` but it asks for 
+        values I don't understand...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic Area
+      description: What area does your question relate to?
+      options:
+        - "Installation and setup"
+        - "Radio configuration"
+        - "Command usage"
+        - "Digital modes (VARA, Winlink)"
+        - "Troubleshooting"
+        - "Other"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: pre-submission
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I checked the README and documentation first
+          required: true
+        - label: I searched existing issues and discussions for similar questions
+          required: true

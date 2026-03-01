@@ -1,0 +1,97 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for CleanComms
+labels: ["enhancement", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please describe your idea clearly so we can evaluate it.
+        
+        **Before submitting:** Check if this feature has already been requested in [existing issues](../../issues).
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: |
+        What problem does this feature solve? Why do you need it?
+        Tip: Focus on the problem, not the solution.
+      placeholder: |
+        As a ham radio operator, I often need to quickly switch between multiple 
+        saved frequencies. Currently, I have to manually type each frequency 
+        every time, which is slow during emergency operations.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like this to work?
+      placeholder: |
+        Add a `cleancomms memory` command that can:
+        - Save current frequency to a named memory slot
+        - Recall frequencies by name
+        - List all saved memories
+        - Import/export memories as JSON
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered other ways to solve this problem?
+      placeholder: |
+        I could write a shell script to handle this, but native support would 
+        be more reliable and work across all platforms.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact Assessment
+      description: How important is this feature to you?
+      options:
+        - "Nice to have - would improve my workflow"
+        - "Important - significantly impacts my ability to use CleanComms"
+        - "Critical - blocking my use case entirely"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: use-case
+    attributes:
+      label: Primary Use Case
+      description: What's your primary use case for CleanComms?
+      options:
+        - "Emergency communications (ARES/RACES)"
+        - "Field operations / portable station"
+        - "Home station automation"
+        - "Contest operations"
+        - "Digital modes (VARA, Winlink, etc.)"
+        - "Other (specify in additional context)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: |
+        Any other details? Mockups, examples from other software, related issues?
+      placeholder: "Similar to the memory functionality in fldigi's rig control..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: pre-submission
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
+        - label: I am willing to submit a PR to implement this feature
+          required: false

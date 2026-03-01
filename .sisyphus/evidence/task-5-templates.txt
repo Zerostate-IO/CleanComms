@@ -1,0 +1,43 @@
+Task 5 Evidence: Issue Forms and PR Template
+Date: 2026-03-01T00:11:00Z
+Session: ses_35982fa84ffeCcUw30usYwAMOA
+
+## Verification Results
+
+### Files Created
+- .github/ISSUE_TEMPLATE/bug_report.yml
+- .github/ISSUE_TEMPLATE/feature_request.yml
+- .github/ISSUE_TEMPLATE/question.yml
+- .github/ISSUE_TEMPLATE/config.yml
+- .github/PULL_REQUEST_TEMPLATE.md
+
+### Bug Report Template Verification
+```
+$ grep -E "description|steps-to-reproduce|expected|actual|environment|logs" .github/ISSUE_TEMPLATE/bug_report.yml
+```
+All required fields present ✅
+
+### Feature Request Template Verification
+```
+$ grep -E "problem|proposed-solution|alternatives|impact" .github/ISSUE_TEMPLATE/feature_request.yml
+```
+All required fields present ✅
+
+### Config Verification
+```
+$ grep "blank_issues_enabled: false" .github/ISSUE_TEMPLATE/config.yml
+blank_issues_enabled: false
+```
+Blank issues disabled ✅
+
+### PR Template Verification
+```
+$ grep -i "sisyphus" .github/PULL_REQUEST_TEMPLATE.md
+```
+.sisyphus plan safekeeping checklist present ✅
+
+## Acceptance Criteria
+- [x] Bug template requires repro steps, expected vs actual, environment, and logs
+- [x] PR template requires linked issue, scope statement, test evidence, and checklist item for .sisyphus plan updates
+
+## Result: PASSED

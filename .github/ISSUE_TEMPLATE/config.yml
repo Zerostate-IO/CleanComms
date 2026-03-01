@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/ZeroState-IO/CleanComms/discussions
+    about: |
+      Ask questions, share ideas, and connect with other CleanComms users.
+      General Q&A and community discussion happens here.
+
+  - name: Security Policy
+    url: https://github.com/ZeroState-IO/CleanComms/security/policy
+    about: |
+      Found a security vulnerability? Please report it responsibly through 
+      our security policy rather than opening a public issue.
+
+  - name: Documentation
+    url: https://github.com/ZeroState-IO/CleanComms#readme
+    about: Check the README and documentation before submitting an issue.

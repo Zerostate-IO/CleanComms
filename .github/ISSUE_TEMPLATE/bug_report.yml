@@ -1,0 +1,112 @@
+name: Bug Report
+description: Report a problem with CleanComms
+labels: ["bug", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this issue. Please fill out the sections below to help us fix it quickly.
+        
+        **Before submitting:** Check if this bug has already been reported in [existing issues](../../issues).
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear, concise description of what the bug is.
+      placeholder: "When I run cleancomms connect, it crashes with..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this behavior?
+      placeholder: |
+        1. Run `cleancomms config set radio-model ic-7300`
+        2. Connect the radio via USB
+        3. Run `cleancomms connect`
+        4. See error
+      value: |
+        1.
+        2.
+        3.
+        4.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: "The radio should connect successfully and show status..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: "The command exits with error code 1 and displays..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Please provide your system details.
+      placeholder: |
+        - OS: Ubuntu 24.04 LTS
+        - Go version: 1.22.0
+        - CleanComms version: v0.1.0
+        - Radio model: Icom IC-7300
+        - Connection type: USB
+      value: |
+        - OS:
+        - Go version:
+        - CleanComms version:
+        - Radio model:
+        - Connection type:
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and Output
+      description: |
+        Paste relevant log output. Run with `--verbose` or `-v` flag for detailed logs.
+        **Note:** Remove any sensitive information (callsigns if private, passwords, API keys).
+      placeholder: |
+        $ cleancomms connect -v
+        DEBUG: Initializing radio interface...
+        ERROR: Failed to open serial port: permission denied
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context, screenshots, or workarounds you've tried.
+      placeholder: "I also tried running with sudo, same result..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: pre-submission
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
+        - label: I removed sensitive information from logs
+          required: true
+        - label: I can reproduce this issue consistently
+          required: false

@@ -249,7 +249,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `docs(repo): add codeowners and branch policy baseline` | Files: [.github/CODEOWNERS, docs/repo-policies.md]
 
-- [ ] 5. Implement issue forms and PR template for structured intake
+- [x] 5. Implement issue forms and PR template for structured intake
 
   **What to do**: Add `.github/ISSUE_TEMPLATE/*` (bug, feature request, question) and `.github/PULL_REQUEST_TEMPLATE.md` with required reproduction, impact, checklist, and evidence fields.
   **Must NOT do**: Do not allow empty free-form bug reports by default.
@@ -267,8 +267,9 @@ Wave 3: Versioning/release controls and final hardening
   - Pattern: `.sisyphus/plans/cleancomms-oss-governance-launch.md` - required `.sisyphus` safekeeping behavior.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] Bug template requires repro steps, expected vs actual, environment, and logs.
-  - [ ] PR template requires linked issue, scope statement, test evidence, and checklist item for `.sisyphus` plan updates.
+  - [x] Bug template requires repro steps, expected vs actual, environment, and logs.
+
+  - [x] PR template requires linked issue, scope statement, test evidence, and checklist item for `.sisyphus` plan updates.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash
@@ -287,7 +288,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `docs(templates): add issue forms and pr template` | Files: [.github/ISSUE_TEMPLATE/*, .github/PULL_REQUEST_TEMPLATE.md]
 
-- [ ] 6. Define label taxonomy, severity model, and triage playbook
+- [x] 6. Define label taxonomy, severity model, and triage playbook
 
   **What to do**: Add `docs/triage-playbook.md` with label set, severity/priority matrix, response SLA, escalation thresholds, stale policy, and maintainer rotation/WIP guardrails.
   **Must NOT do**: Do not set SLAs that imply guaranteed response windows beyond volunteer capacity.
@@ -304,8 +305,9 @@ Wave 3: Versioning/release controls and final hardening
   - Pattern: `.sisyphus/plans/cleancomms-oss-governance-launch.md` - volunteer SLA and maintainer guardrails.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] Playbook defines first-response target, escalation triggers, and stale handling rules.
-  - [ ] Label taxonomy includes bug, enhancement, docs, question, good-first-issue, help-wanted, security, blocked/external.
+  - [x] Playbook defines first-response target, escalation triggers, and stale handling rules.
+
+  - [x] Label taxonomy includes bug, enhancement, docs, question, good-first-issue, help-wanted, security, blocked/external.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash
