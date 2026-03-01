@@ -1,0 +1,44 @@
+# Task 9: SemVer Pre-1.0 Versioning Policy
+## Status: COMPLETE
+
+## Evidence
+
+### File Created
+- docs/versioning-policy.md (43 lines)
+
+### Required Sections Verified
+```bash
+$ grep -c "## 0.x Semantics" docs/versioning-policy.md
+1
+$ grep -c "## Version Bump Rules" docs/versioning-policy.md
+1
+$ grep -c "### Breaking Change Signaling" docs/versioning-policy.md
+1
+$ grep -c "## 1.0.0 Graduation Criteria" docs/versioning-policy.md
+1
+$ grep -c "## Release Cadence" docs/versioning-policy.md
+1
+```
+
+### Policy Content Summary
+1. **0.x Semantics**: Explicit "no stability guarantee" - anything can change
+2. **Version Bump Rules Table**:
+   - `fix` → 0.x.PATCH
+   - `feat` → 0.MINOR.x
+   - `breaking` → 0.MINOR.x (explicitly documented)
+3. **Breaking Change Signaling**: Conventional Commits (`feat!:` or `BREAKING CHANGE` footer)
+4. **1.0.0 Graduation Criteria** (5 objective conditions):
+   - API stability for 3+ consecutive releases
+   - Production use with positive feedback
+   - 80% test coverage
+   - Complete documentation
+   - No planned breaking changes
+5. **Release Cadence**: Readiness-based (no date commitments)
+
+### Verification
+- [x] All required sections present
+- [x] Breaking change rules explicit for pre-1.0
+- [x] No date-based 1.0.0 commitments
+- [x] References SemVer 2.0.0 and Conventional Commits
+
+## Timestamp: 2026-03-01T00:15:46Z

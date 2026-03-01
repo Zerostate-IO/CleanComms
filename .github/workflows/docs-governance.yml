@@ -1,0 +1,39 @@
+name: Docs Governance
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**.md'
+      - '.github/CODEOWNERS'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - 'scripts/check-governance.sh'
+
+permissions:
+  contents: read
+
+jobs:
+  governance-checks:
+    name: Validate Governance Files
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Make check script executable
+        run: chmod +x scripts/check-governance.sh
+      
+      - name: Run governance validation
+        run: ./scripts/check-governance.sh
+      
+      - name: Validate YAML syntax for issue templates
+        run: |
+          for file in .github/ISSUE_TEMPLATE/*.yml .github/ISSUE_TEMPLATE/*.yaml; do
+            if [ -f "$file" ]; then
+              python3 -c "import yaml; yaml.safe_load(open('$file'))" || exit 1
+              echo "✓ $file is valid YAML"
+            fi
+          done

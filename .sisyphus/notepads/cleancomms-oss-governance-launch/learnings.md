@@ -96,3 +96,23 @@
 - **config.yml blank_issues_enabled: false forces template use**: Prevents lazy "it doesn't work" issues by requiring users to pick a template.
 - **Plan safekeeping in PR checklist reinforces workflow**: Including the `.sisyphus/plans` commit requirement in PR template creates a consistent reminder at the point of contribution.
 - **Contact links route before issue creation**: Pointing users to Discussions for Q&A and Security policy for vulnerabilities in config.yml catches issues before they're opened in the wrong place.
+
+## Versioning Policy Patterns
+- **0.x Semantics**: Pre-1.0.0 stability is not guaranteed. Breaking changes trigger a MINOR bump.
+- **Conventional Commits**: Used to drive versioning. 'feat!' or 'BREAKING CHANGE' footer are mandatory for breaking changes.
+- **Graduation Criteria**: Objective conditions for 1.0.0 include API stability for 3 releases, production use, 80% test coverage, and complete documentation.
+- **Readiness-Based Release**: No fixed dates; releases occur when criteria are met.
+
+## [2026-02-28T16:25:00Z] Task 6 Complete: Docs Governance Workflow
+
+### Files Created
+- `.github/workflows/docs-governance.yml` - GitHub Actions workflow for PR governance validation
+- `scripts/check-governance.sh` - Shell script with 4 validation checks
+
+### Learnings
+- **Subshell variable isolation in bash**: When piping to `while read`, the loop runs in a subshell and variable changes don't propagate back. Use process substitution `< <(command)` or temp files to capture state across subshells.
+- **grep exit codes break set -e**: When `grep` finds no matches, it returns exit code 1, which triggers `set -e` exit. Use `|| true` after grep to handle the no-match case gracefully.
+- **GitHub issue template config.yml is special**: Unlike issue form templates (*.yml with name/description/body), `config.yml` has its own schema (blank_issues_enabled, contact_links). Validation must handle it separately.
+- **YAML validation needs multiple fallbacks**: GitHub Actions has Python with PyYAML, but local dev may not. Implement fallback chain: Python yaml module → yq v4 → grep-based field check.
+- **Path-based workflow triggers prevent noise**: Using `paths:` filter in workflow ensures governance checks only run when relevant files change, not on every PR.
+- **Workflow YAML validation is critical**: Invalid YAML in GitHub Actions silently fails until runtime. Always validate locally with `yq eval '.' file.yml` before committing.

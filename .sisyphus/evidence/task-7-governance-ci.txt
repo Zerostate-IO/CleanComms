@@ -1,0 +1,48 @@
+# Task 7: CI Workflow for Governance/Docs Quality Gates
+## Status: COMPLETE
+
+## Files Created
+- `.github/workflows/docs-governance.yml` (39 lines)
+- `scripts/check-governance.sh` (284 lines, executable)
+
+## Functionality Verified
+
+### Check 1: Required Governance Files (8 files)
+✓ GOVERNANCE.md exists
+✓ LICENSE exists
+✓ CODE_OF_CONDUCT.md exists
+✓ CONTRIBUTING.md exists
+✓ SECURITY.md exists
+✓ SUPPORT.md exists
+✓ README.md exists
+✓ .github/CODEOWNERS exists
+
+### Check 2: Markdown Local Links
+✓ All local markdown links are valid
+
+### Check 3: Issue Template YAML Validation
+✓ .github/ISSUE_TEMPLATE/feature_request.yml has required issue template fields
+✓ .github/ISSUE_TEMPLATE/bug_report.yml has required issue template fields
+✓ .github/ISSUE_TEMPLATE/config.yml has valid config structure
+✓ .github/ISSUE_TEMPLATE/question.yml has required issue template fields
+
+### Check 4: PR Template Structure
+✓ PR template has 'Linked Issue' section
+✓ PR template has 'Scope Statement' section
+✓ PR template has 'Test Evidence' section
+✓ PR template has 'Checklist' section
+✓ PR template structure is valid
+
+## Script Features
+- Multi-method YAML validation (Python > yq > grep fallback)
+- Special handling for config.yml (not an issue form)
+- Temp file for broken link collection (avoids subshell issues)
+- Colorized output for CI readability
+- Path-based workflow triggers (reduces CI noise)
+
+## Workflow Triggers
+- PRs to main branch
+- Paths: **.md, .github/CODEOWNERS, .github/ISSUE_TEMPLATE/**, 
+         .github/PULL_REQUEST_TEMPLATE.md, scripts/check-governance.sh
+
+## Timestamp: 2026-03-01T00:21:19Z
