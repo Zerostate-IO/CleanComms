@@ -160,3 +160,18 @@
 - **GitHub Actions PR comment on failure improves UX**: Using `actions/github-script` to post a formatted comment when checks fail gives contributors immediate, actionable feedback in the PR UI.
 - **Environment variable fallbacks enable local testing**: The script checks for `GITHUB_EVENT_PATH` and falls back to `PR_TITLE`/`PR_BODY` env vars, enabling `PR_TITLE="feat: test" ./check-pr-policy.sh` for local validation.
 - **Breaking change marker detection**: The `!` marker before `:` (e.g., `feat(api)!:`) is captured separately in the regex, allowing future enhancement to warn about breaking changes in release notes.
+
+
+## [2026-02-28T16:38:00Z] Task 12 Complete: Launch Checklist
+
+### Files Created
+- `docs/launch-checklist.md` - Comprehensive public launch checklist with file verification, policy audit, GitHub setup sequence, and post-launch verification
+
+### Learnings
+- **Checklists need checkbox format for verification**: Using `☐` checkboxes in markdown creates a scannable, verifiable format that can be literally checked during the launch process.
+- **Policy consistency audit prevents launch surprises**: Explicitly listing where each policy (SLA, security routing, versioning) appears across documents catches contradictions before they confuse contributors.
+- **GitHub setup sequence must be ordered**: Steps like "create team" before "configure CODEOWNERS" and "enable branch protection" after "workflows exist" are dependencies that must be documented explicitly.
+- **Label creation via CLI is reproducible**: Including `gh label create` commands with exact colors and descriptions ensures consistent label setup across repos.
+- **Cross-document link table catches orphan references**: A table of From/To document links systematically verifies the document graph is connected.
+- **Post-launch verification includes test PR**: Creating a test PR to verify CI workflows pass is essential validation that can't be done with just static checks.
+- **Launch day checklist is a separate phase**: Distinguishing "pre-launch" (file verification) from "launch day" (final checks + announcement) creates a clear go/no-go decision point.
