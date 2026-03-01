@@ -85,7 +85,7 @@ check_markdown_links() {
         local file_dir
         file_dir=$(dirname "$md_file")
         
-        grep -oE '\[[^\]]+\]\(([^)]+)\)' "$md_file" 2>/dev/null || true | while read -r match; do
+        while read -r match; do
             local link
             link=$(echo "$match" | sed -E 's/.*\]\(([^)]+)\).*/\1/')
             

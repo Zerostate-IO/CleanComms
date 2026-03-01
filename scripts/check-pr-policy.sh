@@ -66,8 +66,9 @@ get_pr_data() {
     PR_NUMBER=$(jq -r '.pull_request.number // 0' "${GITHUB_EVENT_PATH}" 2>/dev/null || echo "0")
     PR_BASE_REF=$(jq -r '.pull_request.base.ref // "main"' "${GITHUB_EVENT_PATH}" 2>/dev/null || echo "main")
     
-    # Get list of changed files
-    CHANGED_FILES=$(jq -r '.pull_request.changed_files // [] | .[]' "${GITHUB_EVENT_PATH}" 2>/dev/null || true)
+    # Note: .pull_request.changed_files is an integer count in the event payload,
+    # not an array. To get actual filenames, we'd need to call the GitHub API.
+    # Since plan-safekeeping is a warning-only check, we output a generic reminder.
 }
 
 # =============================================================================
@@ -99,7 +100,7 @@ check_conventional_commit() {
     # - scope: optional, in parentheses
     # - !: optional, indicates breaking change
     # - : followed by space and description (at least 1 char)
-    local pattern="^(${CONVENTIONAL_TYPES})(\([^)]+\))?!?: .+"
+    local pattern="^(${CONVENTIONAL_TYPES})(\([^)]+\))?(!)?: .+"
     
     if [[ "${PR_TITLE}" =~ ${pattern} ]]; then
         log_pass "PR title follows conventional commit format"
@@ -218,41 +219,15 @@ check_plan_safekeeping() {
     echo ""
     echo "=== Check 3: Plan Safekeeping (Warning Only) ==="
     
-    # In GitHub Actions, we need to fetch the actual changed files
-    # For now, we check if the event contains file info or warn generally
+    # Note: .pull_request.changed_files in the GitHub event payload is an integer count,
+    # not an array of filenames. To get actual filenames, we'd need to call the GitHub API:
+    #   curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+    #     "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files" | jq -r '.[].filename'
+    # Since this is a warning-only check, we output a generic reminder instead.
     
-    local plans_touched=false
-    local plans_changed=false
-    
-    # Check if running in GitHub Actions with full event data
-    if [[ -n "${GITHUB_EVENT_PATH:-}" ]] && [[ -f "${GITHUB_EVENT_PATH:-}" ]]; then
-        # Check if any changed files are in .sisyphus/plans/
-        if jq -e '.pull_request.changed_files[] | select(startswith(".sisyphus/plans/"))' "${GITHUB_EVENT_PATH}" &>/dev/null; then
-            plans_touched=true
-            plans_changed=true
-        fi
-        
-        # Check for plan markers in changed files (look for references to .sisyphus/plans)
-        # This is a heuristic - actual implementation would need to read the files
-        local code_files
-        code_files=$(jq -r '.pull_request.changed_files[] | select(endswith(".go") or endswith(".ts") or endswith(".js") or endswith(".py"))' "${GITHUB_EVENT_PATH}" 2>/dev/null || true)
-        
-        if [[ -n "${code_files}" ]] && [[ "${plans_changed}" == false ]]; then
-            # Code files changed but no plan update - warn about potential safekeeping
-            log_warn "Code files changed but .sisyphus/plans/ has no changes in this PR"
-            log_info "If this work is tracked in a plan, ensure the plan is updated alongside code changes"
-            log_info "See CONTRIBUTING.md: 'Plan Safekeeping' section"
-            return
-        fi
-    fi
-    
-    # General reminder
-    if [[ "${plans_changed}" == true ]]; then
-        log_pass "Plan files included in this PR"
-    else
-        log_info "Reminder: If this PR includes work tracked in .sisyphus/plans/, commit plan updates too"
-        log_info "  See: CONTRIBUTING.md - Plan Safekeeping"
-    fi
+    # Output a generic reminder about plan safekeeping
+    log_info "Reminder: If this PR includes work tracked in .sisyphus/plans/, commit plan updates too"
+    log_info "  See: CONTRIBUTING.md - Plan Safekeeping"
 }
 
 # =============================================================================

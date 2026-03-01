@@ -1,6 +1,6 @@
 # CleanComms Governance
 
-This document defines the governance model, decision authority, maintainer responsibilities, and operational policies for the CleanComms open source project under [ZeroState-IO](https://github.com/ZeroState-IO).
+This document defines the governance model, decision authority, maintainer responsibilities, and operational policies for the CleanComms open source project under [Zerostate-IO](https://github.com/Zerostate-IO).
 
 ---
 
@@ -21,7 +21,7 @@ CleanComms is a Linux-first amateur radio HF operating suite with backend-manage
 
 ### Maintainer
 
-Maintainers are responsible for project health, code quality, and community support. The maintainer team is identified via the GitHub team `@ZeroState-IO/maintainers`.
+Maintainers are responsible for project health, code quality, and community support. The maintainer team is identified via the GitHub team `@Zerostate-IO/maintainers`.
 
 **Responsibilities:**
 
@@ -150,7 +150,7 @@ To prevent maintainer burnout, we set explicit expectations:
 
 ## CODEOWNERS
 
-The `.github/CODEOWNERS` file defines which individuals or teams are automatically requested for review on changes to specific paths. The primary CODEOWNERS target is `@ZeroState-IO/maintainers`.
+The `.github/CODEOWNERS` file defines which individuals or teams are automatically requested for review on changes to specific paths. The primary CODEOWNERS target is `@Zerostate-IO/maintainers`.
 
 All paths not explicitly assigned default to the maintainer team.
 

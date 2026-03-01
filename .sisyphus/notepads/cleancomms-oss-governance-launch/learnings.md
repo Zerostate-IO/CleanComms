@@ -175,3 +175,71 @@
 - **Cross-document link table catches orphan references**: A table of From/To document links systematically verifies the document graph is connected.
 - **Post-launch verification includes test PR**: Creating a test PR to verify CI workflows pass is essential validation that can't be done with just static checks.
 - **Launch day checklist is a separate phase**: Distinguishing "pre-launch" (file verification) from "launch day" (final checks + announcement) creates a clear go/no-go decision point.
+
+## [2026-03-01T00:56:05Z] Final Verification F1: Plan Compliance Audit
+
+### Audit Scope
+- Verified all 12 governance tasks in `.sisyphus/plans/cleancomms-oss-governance-launch.md` against acceptance criteria.
+- Reviewed governance files, templates, docs, workflows, and scripts.
+- Ran `./scripts/check-governance.sh` (PASS).
+
+### Verdict Snapshot
+- APPROVE: Tasks 1-10
+- REJECT: Tasks 11-12
+
+### Key Gaps Found
+- Task 11 gap: PR governance checks do not validate required PR evidence/checklist completion; script only checks title + issue reference and optional warning for plan safekeeping.
+- Task 11 gap: plan safekeeping logic uses `.pull_request.changed_files[]`, but GitHub payload provides `changed_files` as a count (number), so changed-file detection is ineffective.
+- Task 11 gap: acceptance mentions PR title/commit format; current implementation enforces PR title only.
+- Task 12 gap: launch-readiness criterion for zero unresolved policy contradictions is not met due to SLA inconsistencies (e.g., SECURITY.md includes 48h acknowledgment + 5 business day framing, while other docs use different security-response targets).
+
+### Additional Consistency Note
+- Local markdown cross-links validated by script; no broken local links detected.
+
+## [2026-03-01T01:15:00Z] Final Verification F3: Real Manual QA
+
+### Test Matrix Results
+
+| Test Case | Expected | Actual | Verdict |
+|-----------|----------|--------|---------|
+| `check-governance.sh` on clean repo | exit 0, all ✓ | exit 0, 17 passes | ✅ PASS |
+| `check-pr-policy.sh` valid conv commit + issue ref | exit 0 | exit 0, all checks pass | ✅ PASS |
+| `check-pr-policy.sh` opt-out issue ref | exit 0 | exit 0, "explicitly skipped" | ✅ PASS |
+| `check-pr-policy.sh` invalid title + no issue | exit 1 | exit 1, 2 errors | ✅ PASS |
+| `check-pr-policy.sh` valid title, missing issue | exit 1 | exit 1, 1 error | ✅ PASS |
+| `check-pr-policy.sh` docs PR, no issue | exit 0 + warning | exit 0, 1 warning (non-blocking) | ✅ PASS |
+| Remove SECURITY.md → check-governance.sh | exit 1 | exit 1, "SECURITY.md is missing" | ✅ PASS |
+| Restore SECURITY.md after test | file present | file restored, verified | ✅ PASS |
+| README.md local links resolve | all 5 links valid | CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, SUPPORT.md, LICENSE all exist | ✅ PASS |
+| All 17 governance files readable | non-empty, proper headers | All present, 14-496 lines each, proper markdown headings | ✅ PASS |
+| check-governance.sh markdown link scan | no broken links | "All local markdown links are valid" | ✅ PASS |
+
+### Behavioral Notes
+- `check-pr-policy.sh` uses `${PR_TITLE:-default}` (bash `:-` operator): empty string env vars get replaced by defaults. This is intentional for local dev workflow — script always has sensible fallback data.
+- `check-governance.sh` uses grep-based YAML validation fallback (no python/yq needed). Fields checked: `name`, `description`, `body` for issue templates; `blank_issues_enabled`, `contact_links` for config.yml.
+- docs/chore PRs get soft warnings (not failures) for missing issue references — good UX for minor contributions.
+
+### QA Verdict: ✅ APPROVE
+
+All governance scripts work correctly from a contributor's perspective:
+- Happy paths pass cleanly
+- Error cases fail with actionable messages
+- File removal is correctly detected
+- All document links resolve
+- All 17 governance documents are well-formed and readable
+- No artifacts left behind from testing
+
+## [2026-03-01T02:05:00Z] Final Verification F4: Scope Fidelity Check
+
+### Guardrail Results
+- **No over-engineered RFC bureaucracy at launch:** PASS. Governance explicitly rejects RFC-heavy launch process (`GOVERNANCE.md`:88).
+- **No 24/7 maintainer response expectation:** PASS. No 24/7 language found; docs use volunteer-target framing.
+- **Security reporting path documented and correct:** PASS. Private reporting path exists and is consistently routed to GitHub Security Advisories, with email backup (`SECURITY.md`:19-23; `SUPPORT.md`:14; `docs/community-operations.md`:86).
+- **Concrete governance ownership (not vague best effort):** PARTIAL PASS. Ownership is concrete (maintainer team + escalation tables), but org/team identifier is inconsistent across docs (`@ZeroState-IO/maintainers` vs `@Zerostate-IO/maintainers`), which introduces ambiguity.
+- **Volunteer-friendly SLA consistency across docs:** FAIL. SLA wording/timing is inconsistent: `SECURITY.md` states hard "within 48 hours" acknowledgment (`SECURITY.md`:26) while governance/community tables use 3-business-day best-effort security acknowledgment (`GOVERNANCE.md`:121, `docs/community-operations.md`:120) and 5-business-day first-response target elsewhere.
+
+### Scope Boundary Result
+- **Scope creep beyond the 12 defined tasks:** PASS. Implemented artifacts align with task-defined outputs (governance files, templates, policies, workflows, scripts, launch checklist) without obvious extra framework/process expansion beyond plan scope.
+
+### Verdict
+- **REJECT** for scope fidelity at this stage due to SLA inconsistency and ownership identifier inconsistency across governance docs.
