@@ -1,0 +1,39 @@
+# Task 8: Discussions Categories and Support Routing Policy
+## Status: COMPLETE
+
+## File Created
+- docs/community-operations.md (195 lines)
+
+## Required Sections Verified
+✓ GitHub Discussions Categories (4 categories)
+✓ Issue vs Discussion Routing (decision matrix)
+✓ Security Reports (GitHub Security Advisory ONLY)
+✓ Moderation Responsibilities
+✓ Code of Conduct Enforcement
+✓ Escalation Path
+✓ Cross-References
+
+## Discussions Categories Defined
+1. Q&A - Questions, how-to, troubleshooting
+2. Ideas - Feature discussions, roadmap input
+3. Announcements - Maintainer-only posts
+4. Show & Tell - Community showcase
+
+## Routing Rules Verified
+| Situation | Channel |
+|-----------|---------|
+| Bug/crash | GitHub Issues (bug_report.yml) |
+| Security | GitHub Security Advisory (PRIVATE) |
+| Feature idea (early) | Discussions → Ideas |
+| Feature request (approved) | GitHub Issues |
+| Question/how-to | Discussions → Q&A |
+
+## Consistency Checks Passed
+- SLA language matches GOVERNANCE.md: "5 business days target, not guaranteed"
+- Security routing matches SECURITY.md and SUPPORT.md
+- Escalation table references GOVERNANCE.md
+- Cross-references to all related docs included
+
+## No TODOs, FIXMEs, or placeholders found
+
+## Timestamp: 2026-03-01T00:25:00Z

@@ -116,3 +116,16 @@
 - **YAML validation needs multiple fallbacks**: GitHub Actions has Python with PyYAML, but local dev may not. Implement fallback chain: Python yaml module → yq v4 → grep-based field check.
 - **Path-based workflow triggers prevent noise**: Using `paths:` filter in workflow ensures governance checks only run when relevant files change, not on every PR.
 - **Workflow YAML validation is critical**: Invalid YAML in GitHub Actions silently fails until runtime. Always validate locally with `yq eval '.' file.yml` before committing.
+
+## [2026-02-28T17:00:00Z] Task 8 Complete: Community Operations Guide
+
+### Files Created
+- `docs/community-operations.md` - Discussions category model, issue/discussion routing, moderation responsibilities, escalation paths
+
+### Learnings
+- **Routing matrix prevents confusion**: A decision matrix table (Situation | Channel | Why) gives contributors an immediate answer to "where do I post this?" without reading paragraphs of text.
+- **Security routing must be explicit and repeated**: The "never post security in public" rule appears in SUPPORT.md, SECURITY.md, and community-operations.md. Repetition prevents accidental disclosure.
+- **Feature request flow needs a gate**: Requiring Ideas discussion before formal issue creation prevents backlog bloat and ensures roadmap alignment.
+- **Announcements category as maintainer-only**: Explicitly stating who can post in each category prevents community confusion about announcement permissions.
+- **Cross-reference section creates document graph**: A dedicated cross-references section at the end of governance docs helps readers navigate the policy web and reinforces single source of truth.
+- **SLA consistency across all docs is critical**: Using the exact "5 business days target, not guaranteed" phrasing from GOVERNANCE.md in community-operations.md prevents mixed expectations.
