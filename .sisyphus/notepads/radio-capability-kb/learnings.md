@@ -59,3 +59,36 @@
 - Schema referenced as authoritative structure definition
 - sources.md linked for authoritative source ledger
 - CONTRIBUTING.md and repo-policies.md linked for general guidelines
+
+## 2026-02-28 Task 4: KB Validator Script
+
+### Validator Architecture
+- Script location: `scripts/validate-radio-kb.sh`
+- Fail-fast with clear error messages and color-coded output
+- Python fallback for JSON parsing (portable, no external dependencies beyond stdlib)
+- Optional jsonschema for full schema validation
+
+### Target Radio List (Phase 1 Scope)
+- tx-500, tx-500mp, fx-4cr, trusdx, x6100
+- Enforced via `TARGET_RADIOS` array in script
+
+### Validation Layers
+1. **JSON Syntax**: `python3 -m json.tool` for basic parseability
+2. **Required Fields**: Manual check for schema_version, identity, support_tier, protocol_profiles, provenance
+3. **Schema Conformance**: Optional with `jsonschema` package
+4. **Provenance Coverage**: Analyzes evidence tiers, profile provenance blocks, known issue source_tier
+
+### Self-Test Flags for CI/CD QA
+- `--self-test-malformed-json`: Exits 0 when malformed JSON correctly rejected
+- `--self-test-missing-required`: Exits 0 when missing fields detected
+- `--self-test-missing-radio`: Exits 0 when missing radio file detected
+
+### Policy Enforcement Flags
+- `--require-protocol-split`: Fails if radio has only one protocol profile
+- `--require-firmware-gates`: Fails if no firmware gates defined
+- `--require-known-issue-source-tier`: Fails if known issues lack source_tier
+- `--fail-on-official-community-mix`: Fails if record mixes official + community sources
+
+### Portability Notes
+- Use `mktemp "${TMPDIR:-/tmp}/prefix.XXXXXX"` for macOS/Linux compatibility
+- `--suffix` option not portable across mktemp implementations

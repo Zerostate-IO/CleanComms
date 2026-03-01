@@ -40,3 +40,24 @@
 - Phase 1 vs Phase 2 boundary explicitly defined
 - Uncertainty labeling rules documented
 - Contribution workflow documented for adding/updating records
+
+## 2026-02-28 Task 4: KB Validator Script
+
+### Portability Issue Resolved
+- **Issue**: `mktemp --suffix=.json` not portable on macOS
+- **Resolution**: Changed to `mktemp "${TMPDIR:-/tmp}/radio-kb-validate.XXXXXX"` pattern
+
+### Current State: No Radio Files Exist
+- Validator correctly detects all 5 target radios as missing
+- Exits with code 1 when target radio files don't exist
+- This is expected behavior - radio capability records will be created in subsequent tasks
+
+### Self-Test Verification
+- All three self-test modes verified:
+  - `--self-test-malformed-json`: Passes (correctly rejects bad JSON)
+  - `--self-test-missing-required`: Passes (correctly detects missing fields)
+  - `--self-test-missing-radio`: Passes (correctly identifies missing files)
+
+### No Blockers
+- Task completed without blocking issues
+- Script ready for CI/CD integration

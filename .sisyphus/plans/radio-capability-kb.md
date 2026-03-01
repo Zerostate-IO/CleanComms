@@ -212,7 +212,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `docs(radios): add kb index and authoring conventions` | Files: `docs/radios/README.md`
 
-- [ ] 4. Build validator script for KB integrity checks
+- [x] 4. Build validator script for KB integrity checks
 
   **What to do**: Implement `scripts/validate-radio-kb.sh` to verify required files, JSON parseability, schema conformance, and provenance coverage checks between docs and catalog records.
   **Must NOT do**: Do not rely on non-portable tooling only; provide python fallback if `jq`/`yq` missing.
