@@ -174,7 +174,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `feat(kb): add radio capability JSON schema` | Files: `data/radios/schema/radio-capability.schema.json`, `scripts/validate-radio-kb.sh`
 
-- [ ] 3. Create KB documentation index and authoring conventions
+- [x] 3. Create KB documentation index and authoring conventions
 
   **What to do**: Create `docs/radios/README.md` describing KB scope, phase 1 vs phase 2 depth, source policy, and contribution rules for adding/updating radio records.
   **Must NOT do**: Do not hide uncertainty; must include explicit "unknown/needs verification" guidance.

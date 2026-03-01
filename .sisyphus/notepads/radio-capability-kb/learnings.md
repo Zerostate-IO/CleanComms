@@ -42,3 +42,20 @@
 - `python3 -m json.tool` for basic JSON validity
 - Schema uses JSON Schema Draft 2020-12 with `$defs` for modularity
 
+
+## 2026-02-28 Task 3: KB Documentation Index
+
+### Documentation Structure
+- README.md serves as entry point for radio KB with four core sections: Scope, Source Policy, Update Workflow, Phase Depth
+- Provenance hierarchy echoed from sources.md with normative vs non-normative claim distinction
+- Phase boundary clearly defined: Phase 1 (capability flags) vs Phase 2 (command-level detail)
+
+### Key Conventions Documented
+- Uncertainty labels: `unknown`, `needs-verification`, `conflicting` - never leave uncertain data untagged
+- Community claims require `confidence: "needs-verification"` or `confidence: "low"` tagging
+- Validation commands documented for contributors (python3 -m json.tool + jsonschema)
+
+### Cross-References Established
+- Schema referenced as authoritative structure definition
+- sources.md linked for authoritative source ledger
+- CONTRIBUTING.md and repo-policies.md linked for general guidelines
