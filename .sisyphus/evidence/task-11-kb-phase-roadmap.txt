@@ -1,0 +1,20 @@
+=== Task 11: Phase Roadmap Check ===
+Timestamp: 2026-03-01T06:09:31Z
+Command: grep -E 'Phase 1|Phase 2|command table' docs/radios/README.md
+
+#### Phase 1: Capability Synthesis (Current)
+Phase 1 answers: *"Can this radio do X?"*
+#### Phase 2: Command-Level Deepening (Planned)
+**Status: Not started.** Phase 2 will extend the KB with per-command documentation:
+Phase 2 answers: *"How exactly does this radio implement X?"*
+**Boundary:** Phase 1 records remain valid for Phase 2. The schema supports nested capability structures that Phase 2 will populate with command-level details. No breaking changes to existing Phase 1 data.
+## Phase 2 Command Table Templates
+The following placeholder sections define the structure for Phase 2 command-level documentation. These templates are **not populated** with verified data. They exist to guide future research and maintain consistent column structure across all radios.
+**Important:** All Phase 2 command entries must include `source_tier` and `confidence` fields. No command claims should be made without provenance tracking.
+### TX-500 Command Table (Phase 2 Placeholder)
+### TX-500MP Command Table (Phase 2 Placeholder)
+### FX-4CR Command Table (Phase 2 Placeholder)
+### (tr)uSDX Command Table (Phase 2 Placeholder)
+### X6100 Command Table (Phase 2 Placeholder)
+
+Exit status: 0

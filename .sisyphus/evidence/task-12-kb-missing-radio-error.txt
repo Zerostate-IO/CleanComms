@@ -1,0 +1,14 @@
+=== Task 12: Missing Radio Self-Test ===
+Timestamp: 2026-03-01T06:09:44Z
+Command: bash scripts/validate-radio-kb.sh --self-test-missing-radio
+
+========================================
+CleanComms Radio KB Validator
+========================================
+
+=== Self-Test: Missing Target Radio Detection ===
+[0;32m✓[0m Self-test passed: missing radio file correctly identified
+
+Exit status: 0
+
+RESULT: PASS - Self-test correctly identifies missing radio file

@@ -1,0 +1,205 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "manufacturer": "BG2FX",
+    "model": "FX-4CR",
+    "model_code": "fx-4cr",
+    "aliases": ["FX4CR"],
+    "hamlib_model_id": 3074,
+    "introduction_year": 2017
+  },
+  "support_tier": 2,
+  "protocol_profiles": {
+    "kenwood-ts480": {
+      "protocol_type": "kenwood-ts480",
+      "description": "Kenwood TS-480 compatible CAT protocol. The FX-4CR emulates a subset of TS-480 commands for frequency, mode, and PTT control. Full command compatibility with official TS-480 specification has not been verified.",
+      "serial": {
+        "default_baud": 38400,
+        "supported_baud_rates": [4800, 9600, 19200, 38400, 57600],
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none",
+        "flow_control": "none",
+        "provenance": {
+          "source_tier": "hamlib",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "hamlib",
+              "description": "Hamlib FX-4CR backend serial configuration",
+              "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+            }
+          ],
+          "notes": "Serial parameters derived from Hamlib implementation. Official vendor documentation not readily available."
+        }
+      },
+      "cat": {
+        "frequency_control": true,
+        "mode_control": true,
+        "vfo_control": false,
+        "split_control": false,
+        "filter_control": false,
+        "agc_control": false,
+        "power_control": false,
+        "antenna_control": false,
+        "metering": {
+          "smeter": true,
+          "power_output": false,
+          "swr": false,
+          "alc": false
+        },
+        "memory_channels": false,
+        "extended_commands": [],
+        "unsupported_commands": [],
+        "provenance": {
+          "source_tier": "hamlib",
+          "confidence": "low",
+          "evidence": [
+            {
+              "source_tier": "hamlib",
+              "description": "Hamlib FX-4CR backend capability implementation",
+              "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+            }
+          ],
+          "notes": "Capability flags derived from Hamlib backend. Official CAT command documentation is not available. Some capabilities may be incomplete or require verification."
+        }
+      },
+      "ptt": {
+        "cat_ptt": true,
+        "rts_ptt": true,
+        "dtr_ptt": false,
+        "hardware_ptt": true,
+        "vox": true,
+        "ptt_timeout_ms": 0,
+        "ptt_delay_ms": 50,
+        "provenance": {
+          "source_tier": "community-verified",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "hamlib",
+              "description": "Hamlib FX-4CR PTT implementation",
+              "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+            },
+            {
+              "source_tier": "community-verified",
+              "description": "User reports confirming PTT methods"
+            }
+          ],
+          "notes": "PTT capabilities inferred from Hamlib and community reports. DTR PTT not confirmed."
+        }
+      },
+      "audio": {
+        "usb_audio": true,
+        "audio_input": "usb",
+        "audio_output": "usb",
+        "cat_audio_streaming": false,
+        "acc_port": true,
+        "input_level_control": true,
+        "output_level_control": true,
+        "sample_rates": [48000, 44100],
+        "provenance": {
+          "source_tier": "community-verified",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "community-verified",
+              "description": "Community reports on USB audio functionality"
+            }
+          ],
+          "notes": "USB audio capabilities based on community reports. Official documentation not available."
+        }
+      },
+      "provenance": {
+        "source_tier": "hamlib",
+        "confidence": "low",
+        "evidence": [
+          {
+            "source_tier": "hamlib",
+            "description": "Hamlib FX-4CR backend",
+            "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+          }
+        ],
+        "notes": "Primary source is Hamlib implementation. Official CAT protocol specification is not publicly available. All capability claims require validation."
+      }
+    }
+  },
+  "known_issues": [
+    {
+      "id": "FX4-0001",
+      "title": "Limited Official Documentation",
+      "description": "The FX-4CR lacks publicly available official CAT protocol documentation. All capability claims are derived from Hamlib implementation and community reports, which may be incomplete or contain inaccuracies. Users should verify critical capabilities before deployment.",
+      "severity": "major",
+      "confidence": "high",
+      "source_tier": "hamlib",
+      "affected_versions": ["all"],
+      "workaround": "Cross-reference Hamlib source code and community forums for specific command behavior. Test thoroughly before field deployment.",
+      "impact": ["cat-control", "digital-modes"]
+    },
+    {
+      "id": "FX4-0002",
+      "title": "Digital Mode Audio Latency",
+      "description": "Community reports indicate the FX-4CR may exhibit higher audio latency than expected during digital mode operations. This can affect timing-sensitive modes like FT8 or JS8Call. The exact cause and affected firmware versions are not well documented.",
+      "severity": "minor",
+      "confidence": "low",
+      "source_tier": "community-verified",
+      "affected_versions": ["unknown"],
+      "workaround": "Test audio latency with intended digital mode software before field use. Consider buffer size adjustments in audio configuration.",
+      "impact": ["audio", "digital-modes"]
+    },
+    {
+      "id": "FX4-0003",
+      "title": "CAT Command Subset Uncertainty",
+      "description": "The exact subset of Kenwood TS-480 commands supported by the FX-4CR is not documented. Some standard TS-480 commands may not be implemented or may behave differently than expected. Hamlib implements a basic set, but full compatibility is not guaranteed.",
+      "severity": "major",
+      "confidence": "medium",
+      "source_tier": "hamlib",
+      "affected_versions": ["all"],
+      "workaround": "Test specific CAT commands required by your application before relying on them. Consult Hamlib source code for implemented command list.",
+      "impact": ["cat-control"]
+    },
+    {
+      "id": "FX4-0004",
+      "title": "USB Serial Port Enumeration",
+      "description": "Some users report USB serial port enumeration issues on Linux systems, similar to other Chinese-manufactured radios. The port may require udev rule configuration or may not enumerate consistently across reboots.",
+      "severity": "minor",
+      "confidence": "low",
+      "source_tier": "community-verified",
+      "affected_versions": ["unknown"],
+      "workaround": "Create udev rules to assign consistent device names. Use USB ID-based identification rather than /dev/ttyUSB* enumeration.",
+      "impact": ["cat-control"]
+    },
+    {
+      "id": "FX4-0005",
+      "title": "VFO Control Not Confirmed",
+      "description": "VFO A/B switching and split mode capabilities are not confirmed. Hamlib implementation suggests limited VFO support. Users requiring split operation should verify functionality independently.",
+      "severity": "minor",
+      "confidence": "needs-verification",
+      "source_tier": "unknown",
+      "affected_versions": ["all"],
+      "workaround": "Test VFO and split operations before relying on them in the field.",
+      "impact": ["cat-control"]
+    }
+  ],
+  "recommendations": {
+    "preferred_profile": "kenwood-ts480",
+    "notes": "The FX-4CR is a community-validated radio with limited official documentation. All users should thoroughly test capabilities before field deployment. The Hamlib backend provides the most reliable CAT control method currently available. Consider contributing verified capability data to improve this knowledge base."
+  },
+  "provenance": {
+    "source_tier": "hamlib",
+    "confidence": "low",
+    "evidence": [
+      {
+        "source_tier": "hamlib",
+        "description": "Hamlib FX-4CR Backend",
+        "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+      },
+      {
+        "source_tier": "community-verified",
+        "description": "Community reports on FX-4CR behavior and quirks"
+      }
+    ],
+    "last_verified": "2026-02-28",
+    "notes": "FX-4CR has the weakest official documentation among CleanComms target radios. No official CAT protocol specification is publicly available. All capability claims are derived from Hamlib implementation and community reports. Confidence levels are intentionally conservative. Users should validate all capabilities independently before field deployment."
+  }
+}

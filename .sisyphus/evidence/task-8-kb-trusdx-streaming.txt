@@ -1,0 +1,9 @@
+=== Task 8: (tr)uSDX CAT Streaming Verification ===
+Timestamp: 2026-03-01T06:09:03Z
+Command: grep -E 'cat_audio_streaming|default_baud|firmware_gates' data/radios/trusdx.json
+
+        "default_baud": 38400,
+        "cat_audio_streaming": true,
+  "firmware_gates": {
+
+Exit status: 0

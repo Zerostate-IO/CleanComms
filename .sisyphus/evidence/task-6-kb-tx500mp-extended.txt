@@ -1,0 +1,21 @@
+=== Task 6: TX-500MP Extended Command Status ===
+Timestamp: 2026-03-01T06:07:52Z
+Command: grep -n -E 'extended|Extended|unverified' docs/radios/tx-500mp.md
+
+29:The TX-500MP uses Kenwood TS-2000 compatible CAT protocol. While it shares the LAB599 CAT protocol family with the TX-500, extended command support may differ.
+41:The TX-500MP shares the LAB599 CAT protocol family with the TX-500 but extended command support is uncertain. Use TS-2000 standard commands for maximum compatibility.
+68:| Filter Control | No | Requires extended mode (unverified) |
+69:| AGC Control | No | Requires extended mode (unverified) |
+70:| Power Control | No | Requires extended mode (unverified) |
+83:### Extended Commands (Status Uncertain)
+94:### Extended Metering (Status Uncertain)
+96:| Capability | TX-500 Extended | TX-500MP Status |
+102:> **Important:** The TX-500MP may have a reduced command subset compared to TX-500 extended mode. Verify specific command support against official TX-500MP documentation before relying on extended features.
+144:### TX5MP-0001: Extended Command Support Uncertain
+149:| **Title** | Extended Command Support Uncertain |
+156:**Description:** The TX-500MP shares the LAB599 CAT protocol family with the TX-500 but may have a reduced command subset. Extended commands (TX0, TX1, RX, KI, PC, AG) available on TX-500 extended mode may not be fully supported on TX-500MP.
+158:**Workaround:** Use standard TS-2000 commands for maximum compatibility. Consult official TX-500MP documentation for confirmed extended command support.
+190:| Extended Mode | Dual protocol (TS-2000 + LAB599 extended) | Single protocol (TS-2000) |
+191:| Extended Commands | Fully supported | Status uncertain |
+
+Exit status: 0

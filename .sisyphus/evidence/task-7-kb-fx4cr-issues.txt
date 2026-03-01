@@ -1,0 +1,30 @@
+=== Task 7: FX-4CR Known Issues Verification ===
+Timestamp: 2026-03-01T06:08:26Z
+Command: grep -E '"known_issues"|"severity"|"confidence"|"community-verified"' data/radios/fx-4cr.json
+
+          "confidence": "medium",
+          "confidence": "low",
+          "source_tier": "community-verified",
+          "confidence": "medium",
+              "source_tier": "community-verified",
+          "source_tier": "community-verified",
+          "confidence": "medium",
+              "source_tier": "community-verified",
+        "confidence": "low",
+  "known_issues": [
+      "severity": "major",
+      "confidence": "high",
+      "severity": "minor",
+      "confidence": "low",
+      "source_tier": "community-verified",
+      "severity": "major",
+      "confidence": "medium",
+      "severity": "minor",
+      "confidence": "low",
+      "source_tier": "community-verified",
+      "severity": "minor",
+      "confidence": "needs-verification",
+    "confidence": "low",
+        "source_tier": "community-verified",
+
+Exit status: 0

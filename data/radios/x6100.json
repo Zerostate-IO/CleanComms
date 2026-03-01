@@ -1,0 +1,208 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "manufacturer": "Xiegu",
+    "model": "X6100",
+    "model_code": "x6100",
+    "aliases": ["Xiegu X6100"],
+    "hamlib_model_id": 3074,
+    "introduction_year": 2021
+  },
+  "support_tier": 2,
+  "protocol_profiles": {
+    "ic7000-ci-v": {
+      "protocol_type": "icom-ci-v",
+      "description": "Icom CI-V protocol with IC-7000 compatibility mode. X6100 implements a subset of IC-7000 CI-V commands.",
+      "serial": {
+        "default_baud": 19200,
+        "supported_baud_rates": [4800, 9600, 19200, 38400],
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none",
+        "flow_control": "none",
+        "provenance": {
+          "source_tier": "official",
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "X6100 Extended Manual - Serial communication parameters",
+              "url": "https://radioddity.s3.amazonaws.com/2024-01-19_Extended_manual_for_Xiegu_X6100_v1.0.pdf"
+            }
+          ]
+        }
+      },
+      "cat": {
+        "frequency_control": true,
+        "mode_control": true,
+        "vfo_control": true,
+        "split_control": true,
+        "filter_control": false,
+        "agc_control": false,
+        "power_control": true,
+        "antenna_control": false,
+        "metering": {
+          "smeter": true,
+          "power_output": false,
+          "swr": true,
+          "alc": false
+        },
+        "memory_channels": false,
+        "unsupported_commands": [
+          "if-filter-bandwidth",
+          "agc-control",
+          "memory-channels",
+          "alc-metering"
+        ],
+        "provenance": {
+          "source_tier": "hamlib",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "hamlib",
+              "description": "Hamlib X6100 backend implementation",
+              "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+            },
+            {
+              "source_tier": "community-verified",
+              "description": "Community reports on CI-V subset limitations",
+              "confidence": "needs-verification"
+            }
+          ],
+          "notes": "Official documentation does not provide complete CI-V command subset list. CAT capabilities inferred from Hamlib implementation and community testing."
+        }
+      },
+      "ptt": {
+        "cat_ptt": true,
+        "rts_ptt": true,
+        "dtr_ptt": false,
+        "hardware_ptt": true,
+        "vox": true,
+        "ptt_delay_ms": 50,
+        "provenance": {
+          "source_tier": "official",
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "X6100 Extended Manual - PTT control methods"
+            }
+          ]
+        }
+      },
+      "audio": {
+        "usb_audio": true,
+        "audio_input": "usb",
+        "audio_output": "usb",
+        "cat_audio_streaming": false,
+        "acc_port": true,
+        "input_level_control": true,
+        "output_level_control": true,
+        "sample_rates": [48000, 44100],
+        "provenance": {
+          "source_tier": "official",
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "X6100 Extended Manual - USB audio configuration"
+            }
+          ]
+        }
+      },
+      "provenance": {
+        "source_tier": "hamlib",
+        "confidence": "medium",
+        "evidence": [
+          {
+            "source_tier": "official",
+            "description": "X6100 Extended Manual v1.0",
+            "url": "https://radioddity.s3.amazonaws.com/2024-01-19_Extended_manual_for_Xiegu_X6100_v1.0.pdf"
+          },
+          {
+            "source_tier": "hamlib",
+            "description": "Hamlib X6100 backend (rig model 3074)",
+            "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+          }
+        ],
+        "notes": "X6100 implements CI-V protocol in IC-7000 compatibility mode. Official documentation provides partial CI-V command coverage; complete subset requires Hamlib source or community verification."
+      }
+    }
+  },
+  "firmware_gates": {
+    "usb_audio_fix": {
+      "capability": "USB audio stability",
+      "minimum_version": "1.1.8",
+      "notes": "Earlier firmware versions may have USB audio dropouts during digital mode operation"
+    }
+  },
+  "known_issues": [
+    {
+      "id": "X61-0001",
+      "title": "CI-V mode-switch response delay",
+      "description": "When switching operating modes via CI-V, the X6100 may exhibit response delays of 200-500ms before the mode change is reflected. This can cause timing issues in automated CAT sequences.",
+      "severity": "minor",
+      "source_tier": "community-verified",
+      "confidence": "medium",
+      "affected_versions": ["all"],
+      "workaround": "Add 500ms delay after mode-switch commands before sending subsequent CAT queries.",
+      "impact": ["cat-control", "digital-modes"]
+    },
+    {
+      "id": "X61-0002",
+      "title": "CI-V address not configurable",
+      "description": "The X6100 uses a fixed CI-V address and does not support address configuration. This may cause conflicts when multiple Icom-compatible radios are on the same CI-V bus.",
+      "severity": "minor",
+      "source_tier": "community-verified",
+      "confidence": "low",
+      "affected_versions": ["all"],
+      "workaround": "Use separate serial interfaces for each radio when operating multiple CI-V devices.",
+      "impact": ["cat-control"]
+    },
+    {
+      "id": "X61-0003",
+      "title": "Incomplete IC-7000 command compatibility",
+      "description": "While X6100 advertises IC-7000 CI-V compatibility, not all IC-7000 commands are implemented. Commands for IF filter control, AGC settings, and some metering functions are missing or behave differently.",
+      "severity": "major",
+      "source_tier": "hamlib",
+      "confidence": "medium",
+      "affected_versions": ["all"],
+      "workaround": "Verify command support against Hamlib backend source or test manually before relying on specific CI-V commands.",
+      "impact": ["cat-control"]
+    },
+    {
+      "id": "X61-0004",
+      "title": "Firmware update resets CAT settings",
+      "description": "After firmware updates, CAT/serial communication settings may reset to defaults. Users should verify and reconfigure baud rate and other serial parameters after updates.",
+      "severity": "minor",
+      "source_tier": "community-verified",
+      "confidence": "medium",
+      "affected_versions": ["all"],
+      "workaround": "Document CAT settings before firmware updates and verify after restart.",
+      "impact": ["cat-control", "firmware"]
+    }
+  ],
+  "recommendations": {
+    "preferred_profile": "ic7000-ci-v",
+    "notes": "Use 19200 baud for optimal CI-V responsiveness. Enable RTS PTT for digital modes to avoid CAT PTT timing issues. Hamlib rigctld recommended for command abstraction."
+  },
+  "provenance": {
+    "source_tier": "hamlib",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "source_tier": "official",
+        "description": "X6100 Extended Manual v1.0 (Radioddity)",
+        "url": "https://radioddity.s3.amazonaws.com/2024-01-19_Extended_manual_for_Xiegu_X6100_v1.0.pdf",
+        "reference": "CAT/Serial communication section"
+      },
+      {
+        "source_tier": "hamlib",
+        "description": "Hamlib X6100 backend source code and wiki",
+        "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+      }
+    ],
+    "last_verified": "2026-02-28",
+    "notes": "Official CI-V command subset documentation is partial. Community-verified issues require independent validation. Known issues tagged with appropriate confidence levels."
+  }
+}

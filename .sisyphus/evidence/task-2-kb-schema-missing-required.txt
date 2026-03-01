@@ -1,0 +1,12 @@
+=== Task 2: Missing Required Fields Self-Test ===
+Timestamp: 2026-03-01T06:06:39Z
+Command: bash scripts/validate-radio-kb.sh --self-test-missing-required
+
+========================================
+CleanComms Radio KB Validator
+========================================
+
+=== Self-Test: Missing Required Fields Detection ===
+[0;32m✓[0m Self-test passed: missing required fields detected
+
+Exit status: 0

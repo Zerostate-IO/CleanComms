@@ -1,0 +1,38 @@
+=== Task 6: TX-500MP Profile Verification ===
+Timestamp: 2026-03-01T06:07:36Z
+Command: bash scripts/validate-radio-kb.sh --check-radio tx-500mp
+
+========================================
+CleanComms Radio KB Validator
+========================================
+
+=== Schema Check ===
+[0;32m✓[0m Schema file exists: data/radios/schema/radio-capability.schema.json
+
+=== Radio Record Validation ===
+
+--- Validating: tx-500mp ---
+[0;32m✓[0m JSON syntax valid: data/radios/tx-500mp.json
+[0;32m✓[0m All required fields present: data/radios/tx-500mp.json
+[0;34mℹ[0m Skipping schema validation (jsonschema not installed)
+[0;34mℹ[0m Provenance analysis for: data/radios/tx-500mp.json
+[0;34mℹ[0m   Top-level source_tier: hamlib
+[0;34mℹ[0m   Evidence entries: 3
+[0;34mℹ[0m   Evidence tier breakdown:
+[0;34mℹ[0m     hamlib: 1
+[0;34mℹ[0m     official: 2
+[0;34mℹ[0m   Protocol profiles: 1
+[0;32m✓[0m   All 1 profiles have provenance blocks
+[0;34mℹ[0m   Known issues: 2
+[0;32m✓[0m   All known issues have source_tier
+
+========================================
+Summary
+========================================
+Target radios: 1
+Validated: 1
+Missing: 0
+
+[0;32mPASSED[0m: All validation checks passed
+
+Exit status: 0

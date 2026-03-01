@@ -1,0 +1,12 @@
+=== Task 4: Malformed JSON Detection Self-Test ===
+Timestamp: 2026-03-01T06:07:06Z
+Command: bash scripts/validate-radio-kb.sh --self-test-malformed-json
+
+========================================
+CleanComms Radio KB Validator
+========================================
+
+=== Self-Test: Malformed JSON Detection ===
+[0;32m✓[0m Self-test passed: malformed JSON correctly rejected
+
+Exit status: 0

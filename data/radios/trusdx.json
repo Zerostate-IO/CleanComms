@@ -1,0 +1,216 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "manufacturer": "DL2MAN / PE1NNZ",
+    "model": "(tr)uSDX",
+    "model_code": "trusdx",
+    "aliases": ["truSDX", "trusdx"],
+    "hamlib_model_id": 2055,
+    "introduction_year": 2021
+  },
+  "support_tier": 2,
+  "protocol_profiles": {
+    "ts-480": {
+      "protocol_type": "kenwood-ts480",
+      "description": "Kenwood TS-480 command subset emulation for CAT control. Provides broad software compatibility with a limited command set optimized for the (tr)uSDX's compact firmware.",
+      "serial": {
+        "default_baud": 38400,
+        "supported_baud_rates": [38400, 115200],
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none",
+        "flow_control": "none",
+        "provenance": {
+          "source_tier": "community-verified",
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_tier": "community-verified",
+              "description": "DL2MAN Technical Details - Serial configuration",
+              "url": "https://dl2man.de/5-trusdx-details/"
+            }
+          ],
+          "notes": "115200 baud requires firmware 2.00t or newer. DTR must be HIGH, RTS LOW on RX (may be HIGH for CW/PTT)."
+        }
+      },
+      "cat": {
+        "frequency_control": true,
+        "mode_control": true,
+        "vfo_control": false,
+        "split_control": false,
+        "filter_control": false,
+        "agc_control": false,
+        "power_control": false,
+        "antenna_control": false,
+        "metering": {
+          "smeter": true,
+          "power_output": false,
+          "swr": false,
+          "alc": false
+        },
+        "memory_channels": false,
+        "extended_commands": ["UA0", "UA1", "UA2", "US"],
+        "unsupported_commands": ["FB", "FR", "FT", "ML", "MR", "MW", "RC", "RD", "RS", "RT", "RX", "SC", "SD", "SL", "SM", "SQ", "ST", "SV", "TX", "VR", "XS"],
+        "provenance": {
+          "source_tier": "community-verified",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "community-verified",
+              "description": "DL2MAN Technical Details - Supported TS-480 CAT commands",
+              "url": "https://dl2man.de/5-trusdx-details/"
+            },
+            {
+              "source_tier": "official",
+              "description": "Kenwood TS-480 Command Reference - Base protocol",
+              "url": "https://www.kenwood.com/i/products/info/amateur/ts_480/pdf/ts_480_pc.pdf"
+            },
+            {
+              "source_tier": "hamlib",
+              "description": "Hamlib (tr)uSDX Backend - Implementation reference",
+              "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+            }
+          ],
+          "notes": "Extended commands UA0/UA1/UA2/US are (tr)uSDX-specific for CAT audio streaming, not part of TS-480 standard."
+        }
+      },
+      "ptt": {
+        "cat_ptt": true,
+        "rts_ptt": true,
+        "dtr_ptt": false,
+        "hardware_ptt": true,
+        "vox": true,
+        "ptt_timeout_ms": 0,
+        "ptt_delay_ms": 50,
+        "provenance": {
+          "source_tier": "community-verified",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "community-verified",
+              "description": "DL2MAN Technical Details - PTT control via TX0/TX1/TX2/RX commands and RTS line",
+              "url": "https://dl2man.de/5-trusdx-details/"
+            }
+          ],
+          "notes": "DTR must remain HIGH for proper operation and cannot be used for PTT."
+        }
+      },
+      "audio": {
+        "usb_audio": false,
+        "audio_input": "none",
+        "audio_output": "none",
+        "cat_audio_streaming": true,
+        "acc_port": false,
+        "input_level_control": false,
+        "output_level_control": false,
+        "sample_rates": [7825, 11520],
+        "provenance": {
+          "source_tier": "community-verified",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "community-verified",
+              "description": "DL2MAN Technical Details - CAT audio streaming specifications",
+              "url": "https://dl2man.de/5-trusdx-details/"
+            }
+          ],
+          "notes": "CAT audio streaming requires firmware 2.00u or newer. RX sample rate: 7825 Hz. TX sample rate: 11520 Hz (or lower). 8-bit unsigned samples with 46 dB dynamic range."
+        }
+      },
+      "provenance": {
+        "source_tier": "community-verified",
+        "confidence": "medium",
+        "evidence": [
+          {
+            "source_tier": "community-verified",
+            "description": "DL2MAN Technical Details - Primary community reference",
+            "url": "https://dl2man.de/5-trusdx-details/"
+          },
+          {
+            "source_tier": "hamlib",
+            "description": "Hamlib (tr)uSDX Backend",
+            "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+          }
+        ]
+      }
+    }
+  },
+  "firmware_gates": {
+    "cat-audio-streaming": {
+      "capability": "CAT audio streaming for digital modes over USB only",
+      "minimum_version": "2.00u",
+      "notes": "Firmware 2.00u or newer required for reliable CAT audio streaming. Allows digital mode operation without separate audio cables or sound cards."
+    },
+    "high-baud-rate": {
+      "capability": "115200 baud serial rate",
+      "minimum_version": "2.00t",
+      "notes": "Firmware 2.00t introduced 115200 baud support. Earlier versions support only 38400 baud."
+    },
+    "alpha-firmware-tx-rx": {
+      "capability": "Reliable TX-RX state transitions",
+      "minimum_version": "2.00u",
+      "notes": "Some alpha firmware versions have issues with TX to RX state transitions. Use stable releases for digital mode operation."
+    }
+  },
+  "known_issues": [
+    {
+      "id": "TRU-0001",
+      "title": "Hamlib Port Reset on Connection",
+      "description": "When Hamlib connects to the (tr)uSDX, it resets the serial port. This causes the radio to reset, and it is not yet available when Hamlib tries to connect. This results in connection failures.",
+      "severity": "minor",
+      "confidence": "medium",
+      "source_tier": "community-verified",
+      "affected_versions": ["all"],
+      "workaround": "Run rigctld as a TCP server separately, keeping the port open before WSJT-X or other applications connect. This prevents Hamlib from resetting the port.",
+      "impact": ["cat-control"],
+      "reference_url": "https://gist.github.com/relistan/bd9c4b8bab55b81c0374f30bf565bbe0"
+    },
+    {
+      "id": "TRU-0002",
+      "title": "Alpha Firmware TX-RX Transition Issues",
+      "description": "Some alpha firmware versions do not properly transition from TX to RX state, causing issues with digital mode operation.",
+      "severity": "major",
+      "confidence": "medium",
+      "source_tier": "community-verified",
+      "affected_versions": ["alpha"],
+      "workaround": "Use stable firmware releases (2.00u or newer recommended) for digital mode operation.",
+      "impact": ["digital-modes", "ptt"],
+      "reference_url": "https://github.com/olgierd/trusdx-audio"
+    },
+    {
+      "id": "TRU-0003",
+      "title": "Clone/Knockoff Quality Issues",
+      "description": "Many reported issues with (tr)uSDX performance are traced to clone or knockoff units with poor quality control. These units may not accept firmware updates or may have substandard components.",
+      "severity": "major",
+      "confidence": "high",
+      "source_tier": "community-verified",
+      "affected_versions": ["n/a"],
+      "workaround": "Purchase only from official suppliers listed on the DL2MAN website to ensure quality components and firmware upgrade capability.",
+      "impact": ["hardware"],
+      "reference_url": "https://dl2man.de/where-to-buy-trusdx/"
+    }
+  ],
+  "provenance": {
+    "source_tier": "community-verified",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "source_tier": "community-verified",
+        "description": "DL2MAN Technical Details - Primary community-maintained reference",
+        "url": "https://dl2man.de/5-trusdx-details/"
+      },
+      {
+        "source_tier": "official",
+        "description": "Kenwood TS-480 Command Reference - Base protocol specification",
+        "url": "https://www.kenwood.com/i/products/info/amateur/ts_480/pdf/ts_480_pc.pdf"
+      },
+      {
+        "source_tier": "hamlib",
+        "description": "Hamlib (tr)uSDX Backend - Model 2055",
+        "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios"
+      }
+    ],
+    "last_verified": "2026-02-28",
+    "notes": "Primary source is DL2MAN community documentation. Official Kenwood TS-480 reference provides base protocol context. Hamlib provides implementation reference. CAT audio streaming capability is firmware-dependent and gated appropriately."
+  }
+}

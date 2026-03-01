@@ -1,0 +1,296 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "manufacturer": "Lab599",
+    "model": "Discovery TX-500",
+    "model_code": "tx-500",
+    "aliases": ["TX-500 Discovery", "Discovery TX-500"],
+    "hamlib_model_id": 2054,
+    "introduction_year": 2019
+  },
+  "support_tier": 1,
+  "protocol_profiles": {
+    "ts-2000": {
+      "protocol_type": "kenwood-ts2000",
+      "description": "Kenwood TS-2000 compatible mode for broad software compatibility. Supports standard Kenwood CAT commands without LAB599 proprietary extensions.",
+      "serial": {
+        "default_baud": 9600,
+        "supported_baud_rates": [9600],
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none",
+        "flow_control": "none",
+        "provenance": {
+          "source_tier": "hamlib",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "hamlib",
+              "description": "Hamlib tx500.c backend - serial_rate_min/max = 9600",
+              "url": "https://github.com/Hamlib/Hamlib/blob/master/rigs/kenwood/tx500.c"
+            }
+          ],
+          "notes": "Official documentation not consulted for serial rate; Hamlib backend evidence used. Needs verification against LAB599 CAT Protocol Specification."
+        }
+      },
+      "cat": {
+        "frequency_control": true,
+        "mode_control": true,
+        "vfo_control": true,
+        "split_control": true,
+        "filter_control": false,
+        "agc_control": false,
+        "power_control": false,
+        "antenna_control": false,
+        "metering": {
+          "smeter": true,
+          "power_output": false,
+          "swr": false,
+          "alc": false
+        },
+        "memory_channels": true,
+        "extended_commands": [],
+        "unsupported_commands": [],
+        "provenance": {
+          "source_tier": "official",
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "LAB599 CAT Protocol Specification - TS-2000 compatibility section",
+              "url": "https://downloads.lab599.com/Lab599-CAT-protocol.pdf"
+            }
+          ]
+        }
+      },
+      "ptt": {
+        "cat_ptt": true,
+        "rts_ptt": true,
+        "dtr_ptt": true,
+        "hardware_ptt": true,
+        "vox": true,
+        "ptt_timeout_ms": 0,
+        "ptt_delay_ms": 50,
+        "provenance": {
+          "source_tier": "official",
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "TX-500 User Manual - PTT control methods",
+              "url": "https://www.manualslib.com/manual/1818895/Lab599-Discovery-Tx-500.html"
+            }
+          ]
+        }
+      },
+      "audio": {
+        "usb_audio": true,
+        "audio_input": "usb",
+        "audio_output": "usb",
+        "cat_audio_streaming": false,
+        "acc_port": true,
+        "input_level_control": true,
+        "output_level_control": true,
+        "sample_rates": [48000, 44100],
+        "provenance": {
+          "source_tier": "official",
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "TX-500 User Manual - USB audio configuration",
+              "url": "https://www.manualslib.com/manual/1818895/Lab599-Discovery-Tx-500.html"
+            }
+          ]
+        }
+      },
+      "provenance": {
+        "source_tier": "official",
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_tier": "official",
+            "description": "LAB599 CAT Protocol Specification",
+            "url": "https://downloads.lab599.com/Lab599-CAT-protocol.pdf"
+          }
+        ]
+      }
+    },
+    "lab599-extended": {
+      "protocol_type": "lab599-extended",
+      "description": "LAB599 proprietary extended CAT protocol. Provides additional commands for enhanced metering (SWR, ALC, power output), filter control, AGC adjustment, and power control not available in TS-2000 mode.",
+      "firmware_minimum": "1.0.0",
+      "serial": {
+        "default_baud": 9600,
+        "supported_baud_rates": [9600],
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity": "none",
+        "flow_control": "none",
+        "provenance": {
+          "source_tier": "hamlib",
+          "confidence": "medium",
+          "evidence": [
+            {
+              "source_tier": "hamlib",
+              "description": "Hamlib tx500.c backend - serial_rate_min/max = 9600",
+              "url": "https://github.com/Hamlib/Hamlib/blob/master/rigs/kenwood/tx500.c"
+            }
+          ],
+          "notes": "Official documentation not consulted for serial rate; Hamlib backend evidence used. Needs verification against LAB599 CAT Protocol Specification."
+        }
+      },
+      "cat": {
+        "frequency_control": true,
+        "mode_control": true,
+        "vfo_control": true,
+        "split_control": true,
+        "filter_control": true,
+        "agc_control": true,
+        "power_control": true,
+        "antenna_control": false,
+        "metering": {
+          "smeter": true,
+          "power_output": true,
+          "swr": true,
+          "alc": true
+        },
+        "memory_channels": true,
+        "extended_commands": ["TX0", "TX1", "RX", "KI", "PC", "AG"],
+        "unsupported_commands": [],
+        "provenance": {
+          "source_tier": "official",
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "LAB599 CAT Protocol Specification - Extended command section",
+              "url": "https://downloads.lab599.com/Lab599-CAT-protocol.pdf"
+            }
+          ]
+        }
+      },
+      "ptt": {
+        "cat_ptt": true,
+        "rts_ptt": true,
+        "dtr_ptt": true,
+        "hardware_ptt": true,
+        "vox": true,
+        "ptt_timeout_ms": 0,
+        "ptt_delay_ms": 50,
+        "provenance": {
+          "source_tier": "official",
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "TX-500 User Manual - PTT control methods",
+              "url": "https://www.manualslib.com/manual/1818895/Lab599-Discovery-Tx-500.html"
+            }
+          ]
+        }
+      },
+      "audio": {
+        "usb_audio": true,
+        "audio_input": "usb",
+        "audio_output": "usb",
+        "cat_audio_streaming": false,
+        "acc_port": true,
+        "input_level_control": true,
+        "output_level_control": true,
+        "sample_rates": [48000, 44100],
+        "provenance": {
+          "source_tier": "official",
+          "confidence": "high",
+          "evidence": [
+            {
+              "source_tier": "official",
+              "description": "TX-500 User Manual - USB audio configuration",
+              "url": "https://www.manualslib.com/manual/1818895/Lab599-Discovery-Tx-500.html"
+            }
+          ]
+        }
+      },
+      "provenance": {
+        "source_tier": "official",
+        "confidence": "high",
+        "evidence": [
+          {
+            "source_tier": "official",
+            "description": "LAB599 CAT Protocol Specification - Extended protocol section",
+            "url": "https://downloads.lab599.com/Lab599-CAT-protocol.pdf"
+          }
+        ]
+      }
+    }
+  },
+  "firmware_gates": {
+    "extended-protocol": {
+      "capability": "LAB599 extended CAT protocol",
+      "minimum_version": "1.0.0",
+      "notes": "Base extended mode support available from initial firmware"
+    },
+    "extended-metering": {
+      "capability": "Full extended metering (SWR, ALC, power output)",
+      "minimum_version": "1.1.0",
+      "notes": "Enhanced metering commands require firmware 1.1.0 or later"
+    }
+  },
+  "known_issues": [
+    {
+      "id": "TX5-0001",
+      "title": "Serial Port Enumeration Race",
+      "description": "On some Linux systems, the TX-500 USB serial port may not enumerate immediately after power-on. A brief delay (1-2 seconds) may be required before opening the serial port.",
+      "severity": "minor",
+      "confidence": "medium",
+      "source_tier": "community-verified",
+      "affected_versions": ["all"],
+      "workaround": "Add a startup delay in configuration or use udev rules with appropriate settle time.",
+      "impact": ["cat-control"]
+    },
+    {
+      "id": "TX5-0002",
+      "title": "Extended Mode Requires Explicit Activation",
+      "description": "The TX-500 powers up in TS-2000 compatibility mode by default. Extended mode must be explicitly activated via menu setting or CAT command sequence before extended commands are available.",
+      "severity": "minor",
+      "confidence": "high",
+      "source_tier": "official",
+      "affected_versions": ["all"],
+      "workaround": "Ensure extended mode is enabled in radio menu before using extended profile capabilities.",
+      "impact": ["cat-control", "digital-modes"],
+      "reference_url": "https://downloads.lab599.com/Lab599-CAT-protocol.pdf"
+    }
+  ],
+  "recommendations": {
+    "preferred_profile": "lab599-extended",
+    "fallback_profile": "ts-2000",
+    "fallback_criteria": [
+      "Third-party software requires Kenwood standard protocol",
+      "Maximum compatibility with legacy CAT applications is needed"
+    ],
+    "notes": "The LAB599 extended protocol provides superior control and additional capabilities including filter control, AGC adjustment, power control, and enhanced metering (SWR, ALC, power output). Use extended mode when running CleanComms with direct Hamlib integration. Fall back to TS-2000 mode for maximum compatibility with third-party software or older Hamlib versions."
+  },
+  "provenance": {
+    "source_tier": "official",
+    "confidence": "high",
+    "evidence": [
+      {
+        "source_tier": "official",
+        "description": "LAB599 CAT Protocol Specification",
+        "url": "https://downloads.lab599.com/Lab599-CAT-protocol.pdf"
+      },
+      {
+        "source_tier": "official",
+        "description": "TX-500 User Manual",
+        "url": "https://www.manualslib.com/manual/1818895/Lab599-Discovery-Tx-500.html"
+      },
+      {
+        "source_tier": "hamlib",
+        "description": "Hamlib TX-500 Backend",
+        "url": "https://github.com/Hamlib/Hamlib/wiki/Supported-Radios#lab599"
+      }
+    ],
+    "last_verified": "2026-02-28",
+    "notes": "Primary source is official LAB599 documentation. Hamlib backend provides implementation reference. Community-verified issues tagged with appropriate confidence levels."
+  }
+}

@@ -1,0 +1,11 @@
+=== Task 3: Uncertainty Guidance Check ===
+Timestamp: 2026-03-01T06:07:06Z
+Command: grep -n 'unknown\|needs verification' docs/radios/README.md
+
+39:| 4 | `unknown` | Unverified claims, single-source reports |
+45:**Community claims require tagging.** Any claim from `community-verified` or `unknown` tier sources must include:
+64:| `unknown` | No reliable source available |
+155:| `supported` | `yes`, `no`, `partial`, or `unknown`
+158:| `source_tier` | `official`, `hamlib`, `community-verified`, or `unknown`
+
+Exit status: 0
