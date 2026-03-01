@@ -131,7 +131,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `docs(governance): define authority and decision model` | Files: [GOVERNANCE.md]
 
-- [ ] 2. Create public README with clear onboarding and project direction
+- [x] 2. Create public README with clear onboarding and project direction
 
   **What to do**: Write `README.md` covering project vision, current status, supported radios tier policy, architecture snapshot, quickstart, and links to governance/contribution/security/support docs.
   **Must NOT do**: Do not present unsupported features as currently available.
@@ -149,8 +149,9 @@ Wave 3: Versioning/release controls and final hardening
   - External: `https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes`.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] `README.md` includes sections: Overview, Status, Quickstart, Contribution, Security, Support, License.
-  - [ ] README links resolve to existing local governance/community files.
+  - [x] `README.md` includes sections: Overview, Status, Quickstart, Contribution, Security, Support, License.
+
+  - [x] README links resolve to existing local governance/community files.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash
@@ -169,7 +170,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `docs(readme): publish public onboarding and direction` | Files: [README.md]
 
-- [ ] 3. Add core community health files and legal baseline
+- [x] 3. Add core community health files and legal baseline
 
   **What to do**: Add `LICENSE` (GPL-3.0-or-later), `CODE_OF_CONDUCT.md` (Contributor Covenant), `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`.
   **Must NOT do**: Do not include ambiguous security reporting instructions.
@@ -187,9 +188,11 @@ Wave 3: Versioning/release controls and final hardening
   - External: `https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository`.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] All community-health files exist in valid discoverable locations.
-  - [ ] `SECURITY.md` includes private reporting instructions and embargo behavior.
-  - [ ] `CONTRIBUTING.md` includes requirement that `.sisyphus/plans` changes are committed with related work.
+  - [x] All community-health files exist in valid discoverable locations.
+
+  - [x] `SECURITY.md` includes private reporting instructions and embargo behavior.
+
+  - [x] `CONTRIBUTING.md` includes requirement that `.sisyphus/plans` changes are committed with related work.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash

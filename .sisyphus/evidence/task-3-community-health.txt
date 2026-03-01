@@ -1,0 +1,59 @@
+Task 3 Evidence: Core Community Health Files
+Date: 2026-02-28T23:59:00Z
+Session: ses_35982fa84ffeCcUw30usYwAMOA
+
+## Verification Results
+
+### Files Created
+- /Users/legend/projects/CleanComms/LICENSE (GPL-3.0-or-later)
+- /Users/legend/projects/CleanComms/CODE_OF_CONDUCT.md (Contributor Covenant v2.1)
+- /Users/legend/projects/CleanComms/CONTRIBUTING.md
+- /Users/legend/projects/CleanComms/SECURITY.md
+- /Users/legend/projects/CleanComms/SUPPORT.md
+
+### LICENSE Verification
+```
+$ head -1 LICENSE
+GNU GENERAL PUBLIC LICENSE
+```
+GPL-3.0 full text present ✅
+
+### CODE_OF_CONDUCT.md Verification
+```
+$ grep "Contributor Covenant" CODE_OF_CONDUCT.md
+# Contributor Covenant Code of Conduct
+```
+Contributor Covenant v2.1 present ✅
+
+### SECURITY.md Verification
+```
+$ grep -E "Security Advisories|embargo|security@zerostate.io" SECURITY.md
+GitHub Security Advisories
+embargo
+security@zerostate.io
+```
+Private reporting instructions present ✅
+Embargo expectations present ✅
+
+### CONTRIBUTING.md Verification
+```
+$ grep ".sisyphus/plans" CONTRIBUTING.md
+Any changes to `.sisyphus/plans` must be committed along with the related work.
+```
+Plan safekeeping requirement present ✅
+
+### SUPPORT.md Verification
+```
+$ grep -E "Discussions|Issues|SECURITY.md" SUPPORT.md
+GitHub Discussions
+GitHub Issues
+Security Policy
+```
+Support channels defined ✅
+
+## Acceptance Criteria
+- [x] All community-health files exist in valid discoverable locations
+- [x] SECURITY.md includes private reporting instructions and embargo behavior
+- [x] CONTRIBUTING.md includes requirement that .sisyphus/plans changes are committed with related work
+
+## Result: PASSED
