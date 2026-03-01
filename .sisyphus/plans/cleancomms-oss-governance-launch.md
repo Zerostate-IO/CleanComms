@@ -326,7 +326,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `docs(triage): add labels severity and maintainer workflow` | Files: [docs/triage-playbook.md]
 
-- [ ] 7. Add CI workflow for governance/docs quality gates
+- [x] 7. Add CI workflow for governance/docs quality gates
 
   **What to do**: Create `.github/workflows/docs-governance.yml` to validate markdown links, required file presence, template syntax, and policy check scripts on PRs.
   **Must NOT do**: Do not add flaky external checks that block contribution flow.
@@ -343,9 +343,9 @@ Wave 3: Versioning/release controls and final hardening
   - External: `https://docs.github.com/en/actions` - GitHub Actions fundamentals.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] PR CI fails if required governance files are missing.
-  - [ ] PR CI fails on broken local markdown links.
-  - [ ] PR CI validates issue forms and PR template structure.
+  - [x] PR CI fails if required governance files are missing.
+  - [x] PR CI fails on broken local markdown links.
+  - [x] PR CI validates issue forms and PR template structure.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash
@@ -364,7 +364,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `ci(docs): enforce governance and template quality gates` | Files: [.github/workflows/docs-governance.yml, scripts/*]
 
-- [ ] 8. Configure Discussions categories and support routing policy
+- [x] 8. Configure Discussions categories and support routing policy
 
   **What to do**: Document Discussions category model (Q&A, Ideas, Announcements), issue-vs-discussion routing rules, and moderation/escalation responsibilities in `docs/community-operations.md`.
   **Must NOT do**: Do not allow support/security reports to be routed through public bug template by default.
@@ -382,8 +382,8 @@ Wave 3: Versioning/release controls and final hardening
   - Pattern: `SUPPORT.md` - support channel routing rules.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] Community operations doc defines category purposes and moderation flow.
-  - [ ] Support/security routing is explicitly documented and consistent with templates.
+  - [x] Community operations doc defines category purposes and moderation flow.
+  - [x] Support/security routing is explicitly documented and consistent with templates.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash
@@ -402,7 +402,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `docs(community): add discussions and support routing operations` | Files: [docs/community-operations.md]
 
-- [ ] 9. Define SemVer pre-1.0 policy and versioning decision matrix
+- [x] 9. Define SemVer pre-1.0 policy and versioning decision matrix
 
   **What to do**: Create `docs/versioning-policy.md` covering `0.x` semantics, bump rules by change type, breaking-change signaling, and `0.x -> 1.0` graduation criteria.
   **Must NOT do**: Do not leave breaking-change interpretation ambiguous for pre-1.0 APIs.
@@ -420,8 +420,8 @@ Wave 3: Versioning/release controls and final hardening
   - Pattern: `.sisyphus/plans/cleancomms-oss-governance-launch.md` - readiness-based release decision.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] Policy maps `feat`, `fix`, and breaking changes to explicit version bump behavior in `0.x`.
-  - [ ] Policy defines objective conditions for `1.0.0` readiness.
+  - [x] Policy maps `feat`, `fix`, and breaking changes to explicit version bump behavior in `0.x`.
+  - [x] Policy defines objective conditions for `1.0.0` readiness.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash
@@ -440,7 +440,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `docs(versioning): define semver pre-1.0 and graduation policy` | Files: [docs/versioning-policy.md]
 
-- [ ] 10. Add changelog and release runbook structure
+- [x] 10. Add changelog and release runbook structure
 
   **What to do**: Create `CHANGELOG.md` (Keep a Changelog format) and `docs/release-runbook.md` covering readiness-based release steps, tagging convention (`v0.x.y`), release notes process, and rollback procedure.
   **Must NOT do**: Do not publish release process without rollback steps.
@@ -458,8 +458,8 @@ Wave 3: Versioning/release controls and final hardening
   - Pattern: `docs/versioning-policy.md` - version bump rules feeding release decisions.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] Changelog has `Unreleased` plus categorized sections.
-  - [ ] Runbook includes preflight checks, tagging, publishing, and rollback procedure.
+  - [x] Changelog has `Unreleased` plus categorized sections.
+  - [x] Runbook includes preflight checks, tagging, publishing, and rollback procedure.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash
@@ -478,7 +478,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `docs(release): add changelog and readiness-based runbook` | Files: [CHANGELOG.md, docs/release-runbook.md]
 
-- [ ] 11. Implement PR/commit governance checks including `.sisyphus` safekeeping rule
+- [x] 11. Implement PR/commit governance checks including `.sisyphus` safekeeping rule
 
   **What to do**: Add policy-check scripts and CI logic ensuring PRs reference issue IDs, include evidence links, follow conventional commit title rules, and do not omit `.sisyphus/plans` changes when plan-governed work is updated.
   **Must NOT do**: Do not block PRs on unavailable external APIs/services.
@@ -496,9 +496,9 @@ Wave 3: Versioning/release controls and final hardening
   - External: `https://www.conventionalcommits.org/en/v1.0.0/`.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] CI fails when PR title/commit format violates policy.
-  - [ ] CI fails when required evidence/checklist fields are missing in PR template output.
-  - [ ] CI warns or fails according to policy when plan-linked changes omit `.sisyphus/plans` updates.
+  - [x] CI fails when PR title/commit format violates policy.
+  - [x] CI fails when required evidence/checklist fields are missing in PR template output.
+  - [x] CI warns or fails according to policy when plan-linked changes omit `.sisyphus/plans` updates.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash
@@ -517,7 +517,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `ci(policy): enforce pr governance and plan safekeeping checks` | Files: [scripts/policy/*, .github/workflows/*]
 
-- [ ] 12. Final governance consistency audit and launch-readiness bundle
+- [x] 12. Final governance consistency audit and launch-readiness bundle
 
   **What to do**: Produce `docs/launch-checklist.md` that cross-links all governance files, confirms policy coherence, and defines the exact GitHub repo setup sequence (labels, discussions categories, branch protection, project board bootstrap).
   **Must NOT do**: Do not leave setup steps as unordered bullet ideas.
@@ -535,9 +535,9 @@ Wave 3: Versioning/release controls and final hardening
   - External: `https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/accessing-a-projects-community-profile`.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] Launch checklist includes deterministic ordered steps for GitHub setup under ZeroState-IO.
-  - [ ] Checklist verifies all community profile files and governance docs are present and cross-linked.
-  - [ ] Audit output identifies zero unresolved policy contradictions.
+  - [x] Launch checklist includes deterministic ordered steps for GitHub setup under ZeroState-IO.
+  - [x] Checklist verifies all community profile files and governance docs are present and cross-linked.
+  - [x] Audit output identifies zero unresolved policy contradictions.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash
@@ -557,10 +557,26 @@ Wave 3: Versioning/release controls and final hardening
   **Commit**: YES | Message: `docs(launch): finalize governance audit and setup checklist` | Files: [docs/launch-checklist.md]
 
 ## Final Verification Wave (4 parallel agents, ALL must APPROVE)
-- [ ] F1. Plan Compliance Audit - oracle
-- [ ] F2. Code Quality Review - unspecified-high
-- [ ] F3. Real Manual QA - unspecified-high (+ playwright if UI)
-- [ ] F4. Scope Fidelity Check - deep
+- [x] F1. Plan Compliance Audit - oracle (REJECT → Fixed)
+- [x] F2. Code Quality Review - unspecified-high (APPROVE)
+- [x] F3. Real Manual QA - unspecified-high (APPROVE - 11/11 tests)
+- [x] F4. Scope Fidelity Check - deep (REJECT → Fixed)
+
+### Verification Issues Fixed (PR #2)
+| Bug | Fix | File |
+|-----|-----|------|
+| BUG-1 | Added `pull-requests: write` permission | `.github/workflows/pr-governance.yml` |
+| BUG-2 | Simplified plan-safekeeping to generic reminder | `scripts/check-pr-policy.sh` |
+| BUG-3 | Removed dead code (discarded pipe) | `scripts/check-governance.sh` |
+| BUG-4 | Fixed breaking change capture group `(!)?` | `scripts/check-pr-policy.sh` |
+| F4-org | Aligned to `@Zerostate-IO/maintainers` | `GOVERNANCE.md` |
+| F4-SLA | Changed "48 hours" to "3 business days (best effort)" | `SECURITY.md` |
+
+### Launch Status
+- ✅ All 12 governance tasks complete
+- ✅ All verification issues fixed
+- ✅ PR #2 merged (c9039dc)
+- ⏳ GitHub Discussions: **MANUAL STEP REQUIRED** (enable at repo settings)
 
 ## Commit Strategy
 - One commit per completed governance task, using conventional commit types.
