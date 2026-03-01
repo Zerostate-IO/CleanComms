@@ -144,3 +144,19 @@
 - **Yanking vs deleting tags**: Yanking a GitHub release is less disruptive than deleting the tag (which breaks existing clones). Reserve tag deletion for severe security issues only.
 - **Post-Release announcements tie to Discussions**: The Announcements category created in community-operations.md is the canonical place for release posts, reinforcing cross-document consistency.
 - **Checklist format prevents skipped steps**: A linear checklist at the end of the runbook (complete release checklist) gives maintainers a quick reference that prevents missing steps during release pressure.
+
+
+## [2026-02-28T16:32:00Z] Task 9 Complete: PR Governance Workflow
+
+### Files Created
+- `.github/workflows/pr-governance.yml` - GitHub Actions workflow for PR policy enforcement
+- `scripts/check-pr-policy.sh` - Shell script with 3 validation checks
+
+### Learnings
+- **Conventional commit regex needs careful escaping**: The pattern `^(feat|fix|docs|style|refactor|test|chore)(\([^)]+\))?!?: .+` in bash requires proper escaping for parentheses and handling optional scope/breaking marker.
+- **Issue reference opt-out prevents false positives**: Allowing explicit "No issue reference needed" in PR body handles chore/docs PRs gracefully without blocking legitimate contributions.
+- **Soft warnings for docs/chore PRs**: Using a warning (not failure) for missing issue references on `docs:` and `chore:` titled PRs reduces friction for minor contributions while still encouraging issue tracking.
+- **Plan safekeeping check is always non-blocking**: Per requirements, this check only warns and never fails CI. It serves as a reminder rather than enforcement.
+- **GitHub Actions PR comment on failure improves UX**: Using `actions/github-script` to post a formatted comment when checks fail gives contributors immediate, actionable feedback in the PR UI.
+- **Environment variable fallbacks enable local testing**: The script checks for `GITHUB_EVENT_PATH` and falls back to `PR_TITLE`/`PR_BODY` env vars, enabling `PR_TITLE="feat: test" ./check-pr-policy.sh` for local validation.
+- **Breaking change marker detection**: The `!` marker before `:` (e.g., `feat(api)!:`) is captured separately in the regex, allowing future enhancement to warn about breaking changes in release notes.

@@ -1,0 +1,46 @@
+# Task 11: PR/Commit Governance Checks
+## Status: COMPLETE
+
+## Files Created
+- scripts/check-pr-policy.sh (302 lines, executable)
+- .github/workflows/pr-governance.yml (65 lines)
+
+## Script Verification
+### Test 1: Valid PR (PASSED)
+```
+PR_TITLE="feat: test feature" PR_BODY="Closes #123" ./scripts/check-pr-policy.sh
+✓ PR title follows conventional commit format
+✓ Issue reference found in PR body
+PASSED: All PR policy checks passed
+Exit code: 0
+```
+
+### Test 2: Invalid PR (FAILED)
+```
+PR_TITLE="bad title" PR_BODY="" ./scripts/check-pr-policy.sh
+✗ PR title does not follow conventional commit format
+FAILED: 1 check(s) failed
+Exit code: 1
+```
+
+## Check Implementation
+1. **Conventional Commit Title** (hard failure)
+   - Pattern: ^(feat|fix|docs|style|refactor|test|chore)(\([^)]+\))?!?: .+
+   - Extracts type, scope, breaking flag
+   - Clear error messages with examples
+
+2. **Issue Reference** (hard failure, soft for docs/chore)
+   - Patterns: Closes #, Fixes #, Related to #, Issue #, Resolves #
+   - Opt-out: "No issue reference needed", "skip-issue-check"
+   - Soft warning for docs/chore PRs
+
+3. **Plan Safekeeping** (warning only)
+   - Warns if code files changed but .sisyphus/plans/ not updated
+   - Non-blocking - exits 0 even with warnings
+
+## Workflow Features
+- Runs on: opened, edited, synchronize, reopened
+- Posts helpful comment on failure with fix instructions
+- Uses GitHub context for PR data
+
+## Timestamp: 2026-03-01T00:35:00Z
