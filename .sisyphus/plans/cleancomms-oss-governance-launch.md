@@ -211,7 +211,7 @@ Wave 3: Versioning/release controls and final hardening
 
   **Commit**: YES | Message: `docs(community): add license conduct contributing security support` | Files: [LICENSE, CODE_OF_CONDUCT.md, CONTRIBUTING.md, SECURITY.md, SUPPORT.md]
 
-- [ ] 4. Define CODEOWNERS and branch protection policy-as-code docs
+- [x] 4. Define CODEOWNERS and branch protection policy-as-code docs
 
   **What to do**: Add `.github/CODEOWNERS` and `docs/repo-policies.md` documenting trunk-based flow, squash merge requirement, required checks, and no-direct-push policy.
   **Must NOT do**: Do not set branch rules that require unavailable checks.
@@ -228,8 +228,9 @@ Wave 3: Versioning/release controls and final hardening
   - Pattern: `.sisyphus/plans/cleancomms-oss-governance-launch.md` - selected git flow and merge policy.
 
   **Acceptance Criteria** (agent-executable only):
-  - [ ] `.github/CODEOWNERS` includes org/team ownership entries.
-  - [ ] Policy doc explicitly states `main` protected + squash-only + CI required.
+  - [x] `.github/CODEOWNERS` includes org/team ownership entries.
+
+  - [x] Policy doc explicitly states `main` protected + squash-only + CI required.
 
   **QA Scenarios** (MANDATORY - task incomplete without these):
   ```bash

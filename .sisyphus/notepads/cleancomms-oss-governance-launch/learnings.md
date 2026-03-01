@@ -56,3 +56,15 @@
 - **GitHub Security Advisories as Primary Path**: Modern OSS projects should prefer GitHub's native private reporting tools over email-only paths to leverage built-in coordination features.
 - **Embargo Language Prevents Zero-Days**: Explicitly defining "embargo expectations" in `SECURITY.md` sets clear boundaries for researchers and protects the user base during the fix window.
 - **Placeholder Replacement is Critical**: When fetching standard templates (like Contributor Covenant), always ensure placeholders like `[INSERT CONTACT METHOD]` are replaced with project-specific info (e.g., `community@zerostate.io`).
+## [2026-02-28T16:04:00Z] Task 4 Complete: CODEOWNERS and repo-policies.md
+
+### Files Created
+- `.github/CODEOWNERS` - Code ownership definitions
+- `docs/repo-policies.md` - Branch protection and merge policies
+
+### Learnings
+- **CODEOWNERS wildcard placement matters**: The `*` wildcard must come first as a default, then more specific paths follow. GitHub uses last-matching pattern, but for clarity and maintainability, default first is cleaner.
+- **Policy docs need explicit enforcement status**: Using tables with "Enforced" vs "Optional" vs "Disabled" makes it immediately clear what's active vs aspirational.
+- **Emergency override process prevents abuse**: Without documented override procedures, maintainers may be tempted to skip rules informally. Explicit steps (document emergency, get consensus, post-mortem) create accountability.
+- **Cross-reference governance docs**: repo-policies.md explicitly references GOVERNANCE.md to avoid duplication and maintain single source of truth for authority.
+- **CODEOWNERS patterns for hidden directories**: Using `/.github/` and `/.sisyphus/` with leading slashes anchors patterns to repo root, preventing accidental matches in subdirectories.

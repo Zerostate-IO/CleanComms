@@ -1,0 +1,44 @@
+Task 4 Evidence: CODEOWNERS and Branch Protection Policy
+Date: 2026-02-29T00:03:00Z
+Session: ses_35982fa84ffeCcUw30usYwAMOA
+
+## Verification Results
+
+### Files Created
+- /Users/legend/projects/CleanComms/.github/CODEOWNERS
+- /Users/legend/projects/CleanComms/docs/repo-policies.md
+
+### CODEOWNERS Verification
+```
+$ grep "@ZeroState-IO/maintainers" .github/CODEOWNERS
+* @ZeroState-IO/maintainers
+/.github/ @ZeroState-IO/maintainers
+/docs/ @ZeroState-IO/maintainers
+/.sisyphus/ @ZeroState-IO/maintainers
+```
+Default owner present ✅
+Path-specific entries present ✅
+
+### docs/repo-policies.md Verification
+```
+$ grep -E "main.*protected|squash.?merge|CI.*(required|must)" docs/repo-policies.md
+The `main` branch is protected and follows trunk-based development practices.
+| Require status checks | **Enforced** | CI must pass before merge |
+All merges to `main` use **squash merge** to maintain a linear, readable history.
+```
+Main protected ✅
+Squash merge ✅
+CI required ✅
+
+### Additional Policy Content
+- Branch protection rules for main ✅
+- Merge strategy (squash merge only) ✅
+- Required checks table ✅
+- Check failure handling ✅
+- Emergency override process ✅
+
+## Acceptance Criteria
+- [x] `.github/CODEOWNERS` includes org/team ownership entries
+- [x] Policy doc explicitly states `main` protected + squash-only + CI required
+
+## Result: PASSED

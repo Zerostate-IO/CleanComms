@@ -1,0 +1,28 @@
+# CODEOWNERS - CleanComms
+#
+# This file defines which individuals or teams are automatically requested
+# for review on changes to specific paths. See GOVERNANCE.md for authority
+# and decision processes.
+#
+# Syntax: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repo
+* @ZeroState-IO/maintainers
+
+# Governance and CI/CD configuration requires maintainer review
+/.github/ @ZeroState-IO/maintainers
+
+# Documentation changes
+/docs/ @ZeroState-IO/maintainers
+
+# Planning and internal workflows
+/.sisyphus/ @ZeroState-IO/maintainers
+
+# Root-level configuration files
+/GOVERNANCE.md @ZeroState-IO/maintainers
+/LICENSE @ZeroState-IO/maintainers
+/README.md @ZeroState-IO/maintainers
+/CONTRIBUTING.md @ZeroState-IO/maintainers
+/CODE_OF_CONDUCT.md @ZeroState-IO/maintainers
+/SECURITY.md @ZeroState-IO/maintainers
+/SUPPORT.md @ZeroState-IO/maintainers
