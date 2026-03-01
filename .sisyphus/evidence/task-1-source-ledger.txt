@@ -1,0 +1,25 @@
+Task 1: Source Ledger and Provenance Rubric
+Date: 2026-02-28
+Status: PASS
+
+Verification Commands:
+1. test -f docs/radios/sources.md
+   Result: PASS (file exists)
+
+2. grep -E "TX-500|TX-500MP|FX-4CR|uSDX|X6100" docs/radios/sources.md
+   Result: PASS (all 5 target radios present)
+
+3. grep -n "^### " docs/radios/sources.md | grep -E "TX-500|TX-500MP|FX-4CR|uSDX|X6100"
+   Result: PASS (each radio has dedicated section)
+
+Acceptance Criteria:
+[x] docs/radios/sources.md exists
+[x] All five target radios present (TX-500, TX-500MP, FX-4CR, (tr)uSDX, X6100)
+[x] Every source entry includes URL + source tier + last-checked date
+[x] Provenance section defines tiers: official, hamlib, community-verified, unknown
+[x] Confidence guidance section present
+
+Notes:
+- Created directory docs/radios/ (did not exist)
+- Source ledger includes 5 radio sections + cross-radio sources + gap tracking
+- Provenance rubric includes tier definitions, confidence guidance, and source tagging format
