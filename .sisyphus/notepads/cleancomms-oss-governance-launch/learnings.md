@@ -129,3 +129,18 @@
 - **Announcements category as maintainer-only**: Explicitly stating who can post in each category prevents community confusion about announcement permissions.
 - **Cross-reference section creates document graph**: A dedicated cross-references section at the end of governance docs helps readers navigate the policy web and reinforces single source of truth.
 - **SLA consistency across all docs is critical**: Using the exact "5 business days target, not guaranteed" phrasing from GOVERNANCE.md in community-operations.md prevents mixed expectations.
+
+
+## [2026-02-28T17:15:00Z] Task 10 Complete: Changelog and Release Runbook
+
+### Files Created
+- `CHANGELOG.md` - Keep a Changelog format with Unreleased section and version comparison links
+- `docs/release-runbook.md` - Full release process with preflight, tagging, GitHub release, post-release, and rollback
+
+### Learnings
+- **Keep a Changelog structure matters**: The [Unreleased] section at top allows continuous accumulation of changes between releases, making release prep a matter of moving items rather than writing from scratch.
+- **Version comparison links enable traceability**: Including `[version]: https://github.com/org/repo/compare/vX...vY` links at the bottom of CHANGELOG.md creates automatic diff navigation for each release.
+- **Rollback needs severity tiers**: Not all bad releases warrant the same response. Defining minor/major/security severity levels with corresponding actions prevents overreaction to minor issues.
+- **Yanking vs deleting tags**: Yanking a GitHub release is less disruptive than deleting the tag (which breaks existing clones). Reserve tag deletion for severe security issues only.
+- **Post-Release announcements tie to Discussions**: The Announcements category created in community-operations.md is the canonical place for release posts, reinforcing cross-document consistency.
+- **Checklist format prevents skipped steps**: A linear checklist at the end of the runbook (complete release checklist) gives maintainers a quick reference that prevents missing steps during release pressure.
