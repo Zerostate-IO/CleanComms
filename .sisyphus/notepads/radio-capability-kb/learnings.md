@@ -18,3 +18,27 @@
 - X6100 uses CI-V/IC-7000 compatibility mode with known caveats
 - FX-4CR has the most documentation gaps among target radios
 
+## 2026-02-28 Task 2: Radio Capability Schema
+
+### Schema Design Patterns
+- Protocol profiles as nested objects keyed by profile name (e.g., `ts-2000`, `lab599-extended`)
+- Each profile has independent capability blocks: serial, cat, ptt, audio
+- Provenance blocks attached at multiple levels: record, profile, and capability group
+- Evidence array pattern: each claim group can have multiple evidence sources
+
+### Enum Constraints
+- `source_tier`: official | hamlib | community-verified | unknown
+- `confidence`: high | medium | low | needs-verification
+- `severity`: critical | major | minor | cosmetic
+- `support_tier`: 1 (Primary) | 2 (Community-Validated)
+
+### Key Schema Structures
+- `$defs` for reusable components (source_tier, confidence, provenance_block, evidence_entry)
+- Firmware gates as optional top-level object with capability-specific constraints
+- Known issues require all four fields: description, severity, source_tier, confidence
+- Recommendations block supports preferred/fallback profile pattern for TX-500 dual-protocol
+
+### Validation Approach
+- `python3 -m json.tool` for basic JSON validity
+- Schema uses JSON Schema Draft 2020-12 with `$defs` for modularity
+

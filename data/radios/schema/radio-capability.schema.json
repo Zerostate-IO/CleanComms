@@ -1,0 +1,546 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Zerostate-IO/CleanComms/schemas/radio-capability.schema.json",
+  "title": "Radio Capability Record",
+  "description": "Machine-readable capability record for amateur radio transceivers in the CleanComms knowledge base. Supports protocol-mode-specific capability blocks, firmware gating, and source provenance tracking.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "identity",
+    "support_tier",
+    "protocol_profiles",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Schema version in semver-minor format (e.g., '1.0')",
+      "examples": ["1.0"]
+    },
+    "identity": {
+      "type": "object",
+      "description": "Radio identification and classification",
+      "required": ["manufacturer", "model", "model_code"],
+      "additionalProperties": false,
+      "properties": {
+        "manufacturer": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Radio manufacturer name",
+          "examples": ["Lab599", "Xiegu", "BG2FX"]
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Full model name",
+          "examples": ["Discovery TX-500", "X6100"]
+        },
+        "model_code": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Lowercase hyphenated model code for file naming and references",
+          "examples": ["tx-500", "x6100", "fx-4cr"]
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Alternative names or designations",
+          "examples": [["TX-500MP", "Digi-link Mobile"]]
+        },
+        "hamlib_model_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Hamlib rig model number (if supported)",
+          "examples": [2054, 3074]
+        },
+        "introduction_year": {
+          "type": "integer",
+          "minimum": 1900,
+          "maximum": 2100,
+          "description": "Year of product introduction"
+        }
+      }
+    },
+    "support_tier": {
+      "type": "integer",
+      "enum": [1, 2],
+      "description": "CleanComms support tier: 1=Primary (CI-gated, core team validated), 2=Community-Validated (best-effort)"
+    },
+    "protocol_profiles": {
+      "type": "object",
+      "description": "CAT protocol profiles supported by this radio. Keys are profile names (e.g., 'ts-2000', 'lab599-extended').",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/protocol_profile"
+      },
+      "propertyNames": {
+        "pattern": "^[a-z0-9-]+$"
+      }
+    },
+    "firmware_gates": {
+      "type": "object",
+      "description": "Firmware version constraints for specific capabilities",
+      "additionalProperties": {
+        "$ref": "#/$defs/firmware_gate"
+      }
+    },
+    "known_issues": {
+      "type": "array",
+      "description": "Known issues, limitations, or quirks affecting this radio",
+      "items": {
+        "$ref": "#/$defs/known_issue"
+      }
+    },
+    "recommendations": {
+      "type": "object",
+      "description": "Operational recommendations and preferred configurations",
+      "additionalProperties": false,
+      "properties": {
+        "preferred_profile": {
+          "type": "string",
+          "description": "Recommended protocol profile when multiple are available",
+          "examples": ["lab599-extended"]
+        },
+        "fallback_profile": {
+          "type": "string",
+          "description": "Fallback profile when preferred is unavailable",
+          "examples": ["ts-2000"]
+        },
+        "fallback_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Conditions under which fallback profile should be used",
+          "examples": [["Hamlib version < 4.5", "Third-party software requires Kenwood standard"]]
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional operational guidance"
+        }
+      }
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance_block"
+    }
+  },
+  "$defs": {
+    "source_tier": {
+      "type": "string",
+      "enum": ["official", "hamlib", "community-verified", "unknown"],
+      "description": "Provenance tier indicating source authority level"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "needs-verification"],
+      "description": "Confidence level in the claim based on source corroboration"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "major", "minor", "cosmetic"],
+      "description": "Issue severity classification"
+    },
+    "provenance_block": {
+      "type": "object",
+      "description": "Source attribution and evidence tracking for capability claims",
+      "required": ["source_tier", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "source_tier": {
+          "$ref": "#/$defs/source_tier"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/evidence_entry"
+          },
+          "description": "List of evidence sources supporting claims in this record"
+        },
+        "last_verified": {
+          "type": "string",
+          "format": "date",
+          "description": "Date of last verification against sources"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional provenance notes or caveats"
+        }
+      }
+    },
+    "evidence_entry": {
+      "type": "object",
+      "description": "Single evidence source reference",
+      "required": ["source_tier", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "source_tier": {
+          "$ref": "#/$defs/source_tier"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Brief description of the source",
+          "examples": ["LAB599 CAT protocol v1.2"]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the source document"
+        },
+        "reference": {
+          "type": "string",
+          "description": "Specific section or page reference",
+          "examples": ["Section 4.2", "p.23"]
+        }
+      }
+    },
+    "protocol_profile": {
+      "type": "object",
+      "description": "CAT protocol profile with mode-specific capabilities",
+      "required": ["protocol_type", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "protocol_type": {
+          "type": "string",
+          "minLength": 1,
+          "description": "CAT protocol type/standard",
+          "examples": ["kenwood-ts2000", "lab599-extended", "icom-ci-v", "kenwood-ts480"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of this protocol profile"
+        },
+        "serial": {
+          "$ref": "#/$defs/serial_config"
+        },
+        "cat": {
+          "$ref": "#/$defs/cat_capabilities"
+        },
+        "ptt": {
+          "$ref": "#/$defs/ptt_capabilities"
+        },
+        "audio": {
+          "$ref": "#/$defs/audio_capabilities"
+        },
+        "firmware_minimum": {
+          "type": "string",
+          "description": "Minimum firmware version required for this profile",
+          "examples": ["1.2.0"]
+        },
+        "firmware_maximum": {
+          "type": "string",
+          "description": "Maximum firmware version this profile applies to (if deprecated)"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance_block"
+        }
+      }
+    },
+    "serial_config": {
+      "type": "object",
+      "description": "Serial port configuration",
+      "additionalProperties": false,
+      "properties": {
+        "default_baud": {
+          "type": "integer",
+          "enum": [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200],
+          "description": "Default baud rate"
+        },
+        "supported_baud_rates": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "enum": [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200]
+          },
+          "description": "List of supported baud rates"
+        },
+        "data_bits": {
+          "type": "integer",
+          "enum": [7, 8],
+          "default": 8
+        },
+        "stop_bits": {
+          "type": "integer",
+          "enum": [1, 2],
+          "default": 1
+        },
+        "parity": {
+          "type": "string",
+          "enum": ["none", "even", "odd"],
+          "default": "none"
+        },
+        "flow_control": {
+          "type": "string",
+          "enum": ["none", "hardware", "software"],
+          "default": "none"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance_block"
+        }
+      }
+    },
+    "cat_capabilities": {
+      "type": "object",
+      "description": "CAT (Computer Aided Transceiver) control capabilities",
+      "additionalProperties": false,
+      "properties": {
+        "frequency_control": {
+          "type": "boolean",
+          "description": "Can set/read VFO frequency"
+        },
+        "mode_control": {
+          "type": "boolean",
+          "description": "Can set/read operating mode (USB, LSB, CW, etc.)"
+        },
+        "vfo_control": {
+          "type": "boolean",
+          "description": "Can switch between VFO A/B"
+        },
+        "split_control": {
+          "type": "boolean",
+          "description": "Can enable/disable split mode"
+        },
+        "filter_control": {
+          "type": "boolean",
+          "description": "Can adjust IF filter bandwidth"
+        },
+        "agc_control": {
+          "type": "boolean",
+          "description": "Can adjust AGC settings"
+        },
+        "power_control": {
+          "type": "boolean",
+          "description": "Can set RF power output level"
+        },
+        "antenna_control": {
+          "type": "boolean",
+          "description": "Can select antenna port"
+        },
+        "metering": {
+          "type": "object",
+          "description": "Signal metering capabilities",
+          "additionalProperties": false,
+          "properties": {
+            "smeter": {
+              "type": "boolean",
+              "description": "Can read S-meter value"
+            },
+            "power_output": {
+              "type": "boolean",
+              "description": "Can read TX power output"
+            },
+            "swr": {
+              "type": "boolean",
+              "description": "Can read SWR"
+            },
+            "alc": {
+              "type": "boolean",
+              "description": "Can read ALC level"
+            }
+          }
+        },
+        "memory_channels": {
+          "type": "boolean",
+          "description": "Can read/write memory channels"
+        },
+        "extended_commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of extended/proprietary commands supported",
+          "examples": [["TX0", "TX1", "RX", "KI"]]
+        },
+        "unsupported_commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Commands from base protocol not supported by this radio"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance_block"
+        }
+      }
+    },
+    "ptt_capabilities": {
+      "type": "object",
+      "description": "PTT (Push-To-Talk) control capabilities",
+      "additionalProperties": false,
+      "properties": {
+        "cat_ptt": {
+          "type": "boolean",
+          "description": "Software PTT via CAT command"
+        },
+        "rts_ptt": {
+          "type": "boolean",
+          "description": "PTT via RTS serial line control"
+        },
+        "dtr_ptt": {
+          "type": "boolean",
+          "description": "PTT via DTR serial line control"
+        },
+        "hardware_ptt": {
+          "type": "boolean",
+          "description": "Dedicated hardware PTT line"
+        },
+        "vox": {
+          "type": "boolean",
+          "description": "VOX (voice-activated transmit) support"
+        },
+        "ptt_timeout_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Maximum continuous TX time in milliseconds (0 = unlimited)"
+        },
+        "ptt_delay_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Recommended PTT delay before TX audio"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance_block"
+        }
+      }
+    },
+    "audio_capabilities": {
+      "type": "object",
+      "description": "Audio input/output capabilities",
+      "additionalProperties": false,
+      "properties": {
+        "usb_audio": {
+          "type": "boolean",
+          "description": "USB audio device support (sound card mode)"
+        },
+        "audio_input": {
+          "type": "string",
+          "enum": ["usb", "acc-port", "mic-jack", "none"],
+          "description": "Primary digital mode audio input method"
+        },
+        "audio_output": {
+          "type": "string",
+          "enum": ["usb", "acc-port", "speaker", "headphone", "none"],
+          "description": "Primary digital mode audio output method"
+        },
+        "cat_audio_streaming": {
+          "type": "boolean",
+          "description": "Audio streaming via CAT protocol (not USB)"
+        },
+        "acc_port": {
+          "type": "boolean",
+          "description": "Accessory port for audio I/O"
+        },
+        "input_level_control": {
+          "type": "boolean",
+          "description": "Software input gain control"
+        },
+        "output_level_control": {
+          "type": "boolean",
+          "description": "Software output gain control"
+        },
+        "sample_rates": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Supported audio sample rates in Hz",
+          "examples": [[48000, 44100]]
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance_block"
+        }
+      }
+    },
+    "firmware_gate": {
+      "type": "object",
+      "description": "Firmware version constraint for a specific capability",
+      "required": ["capability", "minimum_version"],
+      "additionalProperties": false,
+      "properties": {
+        "capability": {
+          "type": "string",
+          "description": "Name of the gated capability"
+        },
+        "minimum_version": {
+          "type": "string",
+          "description": "Minimum firmware version required"
+        },
+        "maximum_version": {
+          "type": "string",
+          "description": "Maximum firmware version (for deprecated features)"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional context about this gate"
+        }
+      }
+    },
+    "known_issue": {
+      "type": "object",
+      "description": "Known issue or limitation",
+      "required": ["description", "severity", "source_tier", "confidence"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z]{2,4}-[0-9]{3,4}$",
+          "description": "Unique issue identifier",
+          "examples": ["TX5-0001", "X61-0002"]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Short issue title"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Detailed issue description"
+        },
+        "severity": {
+          "$ref": "#/$defs/severity"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "source_tier": {
+          "$ref": "#/$defs/source_tier"
+        },
+        "affected_versions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Affected firmware versions"
+        },
+        "workaround": {
+          "type": "string",
+          "description": "Known workaround if available"
+        },
+        "impact": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["cat-control", "ptt", "audio", "digital-modes", "firmware", "hardware"]
+          },
+          "description": "Areas affected by this issue"
+        },
+        "reference_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to issue discussion or report"
+        }
+      }
+    }
+  }
+}

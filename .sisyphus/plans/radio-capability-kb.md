@@ -136,7 +136,7 @@ Wave 3: matrix/policy synthesis + validation hardening + release notes for KB
 
   **Commit**: YES | Message: `docs(radios): add source ledger and provenance rubric` | Files: `docs/radios/sources.md`
 
-- [ ] 2. Define machine-readable schema for radio capabilities
+- [x] 2. Define machine-readable schema for radio capabilities
 
   **What to do**: Create `data/radios/schema/radio-capability.schema.json` with fields for identity, tier, protocol profiles, firmware gates, CAT/PTT/audio capabilities, known issues, source provenance, and confidence.
   **Must NOT do**: Do not make protocol fields free-form; enforce enums where possible.
