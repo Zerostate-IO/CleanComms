@@ -227,3 +227,184 @@
 - Tests for Start/Stop lifecycle, health check loop, default mode setting
 - Concurrent access test verifies thread safety
 - Benchmark tests for Health() and Status() methods
+
+## 2026-03-02 Task 6: Modem Service Integration
+
+### ModemService Architecture
+- Wraps `*fldigi.Client` with health monitoring and reconnection
+- Package: `internal/app/modem_service.go`
+- Uses same lifecycle pattern as RigService: `Start(ctx)`, `Stop()`
+- Background goroutines for health check and reconnection
+
+### Lifecycle Pattern (Shared with RigService)
+- `NewModemService(xmlrpcURL, logger)` - creates service
+- `SetDefaultMode(mode)` - configures mode to ensure after connection
+- `Start(ctx)` - starts background health check and connection loops
+- `Stop()` - graceful shutdown via context cancellation and WaitGroup
+- Internal `connectionLoop` handles initial connect and reconnection
+- Internal `healthCheckLoop` probes every 5 seconds when connected
+
+### Exponential Backoff
+- `BackoffConfig` struct: InitialInterval, MaxInterval, Multiplier, MaxAttempts
+- Default: 1s initial, 30s max, 2.0 multiplier, unlimited attempts
+- Shared between RigService and ModemService via `DefaultBackoffConfig()`
+
+### Adapter Pattern for HTTP Interface
+- `modemClientAdapter` adapts `ModemService` to `http.ModemClient`
+- Maps internal types (`ModemHealth`, `ModemStatus`) to HTTP types
+- Similar adapter for `RigService` → `http.RigClient`
+
+### App Integration
+- App struct holds both `rigService` and `modemService`
+- `New()` creates both services with config values
+- `Run()` starts both services, passes adapters to HTTP server
+- Graceful shutdown stops all services in sequence
+
+### Health Monitoring
+- `ModemHealth` struct: OK, Error, Mode, LastCheck
+- Status changes logged with structured logging (slog)
+- Health transitions (OK→degraded, degraded→OK) logged appropriately
+- Mode mismatch logged but not forced (idempotent SetMode handles this)
+
+### Thread Safety
+- All public methods use `sync.RWMutex` for thread-safe access
+- `mu.RLock()` for reads, `mu.Lock()` for writes
+- Connection state, health, and status protected by mutex
+
+### Testing Patterns
+- Mock fldigi XML-RPC server using `httptest.Server`
+- Table-driven tests for multiple scenarios
+- Context cancellation tests for backoff behavior
+- Concurrent access tests verify thread safety
+
+
+## 2026-03-02 Task 9: Control Coordinator + PTT Watchdog
+
+### Package Structure
+- Package: `internal/control/` - separate from app package for clean separation
+- Defines own interfaces (RigController, ModemController) rather than depending on concrete types
+- Interfaces allow any implementation to be coordinated, not just app services
+
+### Coordinator Architecture
+- `Coordinator` struct orchestrates PTT between rig and modem with safety watchdog
+- `CoordinatorConfig` struct: PTTTimeout (default 60s)
+- State machine: RX → TX (if healthy) → RX (manual or timeout)
+- Thread-safe via `sync.RWMutex` on all state access
+
+### PTT Ordering (Critical for Hardware Safety)
+- **Enter TX**: Modem TX first, then Rig PTT - ensures modem ready before RF applied
+- **Enter RX**: Rig PTT first, then Modem TX - ensures RF stopped before modem stops
+- Rollback on failure: If rig PTT fails during TX entry, modem TX is rolled back
+
+### Watchdog Pattern
+- Background goroutine checks every 1 second
+- Tracks `lastTXStart` timestamp when entering TX
+- If `time.Since(lastTXStart) > pttTimeout`, forces RX with WARN log
+- Watchdog started in `Start(ctx)` and stopped via context in `Stop()`
+
+### Error Design
+- Sentinel errors: `ErrDegraded`, `ErrNotRunning`
+- `ErrDegraded` returned when TX attempted while rig or modem unhealthy
+- `ErrNotRunning` returned when `SetPTT()` called before `Start()`
+
+### Interface Design
+- `RigController`: `SetPTT(bool) (bool, error)`, `Health() RigHealthStatus`
+- `ModemController`: `SetTX(bool) error`, `Health() ModemHealthStatus`
+- Separate health status types (RigHealthStatus, ModemHealthStatus) for coordinator
+- Interfaces allow mocking in tests without concrete service dependencies
+
+### Testing Patterns
+- Mock implementations with sync.RWMutex for thread-safe mock state
+- Tests cover: TX blocked when degraded, TX allowed when healthy, forced RX after timeout
+- Concurrent access test: 50 goroutines × 100 operations each
+- Idempotent state transitions tested (already-in-state returns nil)
+- Lifecycle tests: Start is idempotent, Stop is idempotent, Stop without Start is safe
+
+### Lifecycle Management
+- `Start(ctx)` is idempotent - safe to call multiple times
+- `Stop()` is idempotent - safe to call multiple times or without Start
+- Stop sets internal state to RX for clean shutdown
+- WaitGroup ensures watchdog goroutine exits before Stop returns
+
+### Health Check Before TX
+- `IsHealthy()` checks both `rig.Health().OK` and `modem.Health().OK`
+- `enterTX()` checks health before attempting state change
+- Logs health state when blocking TX due to degradation
+## 2026-03-02 Task 10: Smoke/Integration Scripts
+
+### Smoke Test Script Design
+- Location: `scripts/smoke-tx500-fldigi.sh`
+- Exit codes: 0 (pass), 1 (fail), 2 (missing dependency)
+- Options: `--skip-daemon` for partial testing, `--evidence-dir` for custom output
+
+### Dependency Check Pattern
+- Use bash arrays for dependency list (rigctld, fldigi, daemon)
+- Port check uses: `nc -z` (preferred), `lsof -i`, or `/dev/tcp` fallback
+- Each dependency check includes remediation hint in output
+
+### Port Detection
+- rigctld: 4532 (TCP) - check with `\get_freq` command
+- fldigi XML-RPC: 7362 (HTTP) - check with `fldigi.version` method
+- CleanComms daemon: 8080 (HTTP) - check `/health` endpoint
+
+### Functional Check Pattern
+- PSK31 mode: query `modem.get_name` via XML-RPC
+- PTT toggle: POST to `/api/v1/rig/ptt` with `{"state":"rx"}`
+- Status endpoints: `/api/v1/rig/status`, `/api/v1/modem/status`
+
+### PTT Watchdog Test Design
+- Location: `scripts/test-ptt-watchdog.sh`
+- Tests forced RX behavior via PTT API
+- Verifies watchdog coordinator is active via health endpoint
+- Tests idempotent RX commands for safety
+- Exit code 2 when daemon unavailable (distinct from failure)
+
+### Evidence File Pattern
+- Write to `.sisyphus/evidence/task-10-*.txt`
+- Include timestamp, all check results, summary counts
+- Timestamp in ISO 8601 format: `date -u +"%Y-%m-%dT%H:%M:%SZ"`
+
+### CI/No-Hardware Considerations
+- Scripts use `--skip-daemon` option for partial testing
+- Port checks gracefully degrade when tools unavailable
+- Warnings instead of failures for degraded states (hardware not connected)
+- Explicit skip messages for unavailable checks
+
+## 2026-03-02 Task 11: Operator Evidence Pack
+
+### Evidence Checklist Script Design
+- Location: `scripts/check-evidence.sh`
+- Lists all expected evidence files from tasks 1-11
+- Checks existence and non-empty status of each file
+- Verbose mode with `--verbose` or `-v` flag
+- Exit code 0 if all files found, 1 if any missing/empty
+
+### Expected Evidence Files Pattern
+- Happy path evidence: `task-N-description.txt`
+- Error case evidence: `task-N-description-error.txt`
+- Each task should have both happy path AND error case evidence
+- Files stored in `.sisyphus/evidence/`
+
+### Evidence Pack Contents
+- Metadata: timestamp, platform, architecture, Go version
+- Evidence checklist results with file sizes
+- Environment assumptions (runtime, external deps, hardware)
+- Build and test verification output
+- Notes on missing evidence and recommendations
+
+### Environment Assumptions Documented
+- Platform: macOS (Darwin) ARM64
+- Go version requirement: 1.21+
+- External dependencies with port numbers (rigctld:4532, fldigi:7362)
+- Hardware: TX-500, DigiRig, serial port pattern
+
+### Script Output Format
+- Header with timestamp
+- Individual file status: [FOUND], [MISSING], [EMPTY]
+- Summary counts: total expected, found, empty, missing
+- Final PASS/FAIL verdict with exit code
+
+### Evidence File Naming Convention
+- Pattern: `task-{number}-{description}.{ext}`
+- Examples: `task-1-go-scaffold.txt`, `task-9-ptt-watchdog-error.txt`
+- Description uses kebab-case, matches QA scenario name

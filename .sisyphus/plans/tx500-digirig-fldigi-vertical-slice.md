@@ -267,7 +267,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `test(api): add endpoint contract tests` | Files: `internal/http/**/*_test.go`
 
-- [ ] 9. Add control coordinator + PTT watchdog
+- [x] 9. Add control coordinator + PTT watchdog
   **What to do**: Enforce ready-state ordering and auto-RX safety timeout.
   **Must NOT do**: No macro transmission engine.
   **Recommended Agent Profile**: Category `deep`; Skills `[]`; Omitted `writing`.
@@ -290,7 +290,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `feat(safety): add ptt watchdog coordinator` | Files: `internal/control/**`, `internal/app/**`
 
-- [ ] 10. Add smoke/integration scripts
+- [x] 10. Add smoke/integration scripts
   **What to do**: Create `scripts/smoke-tx500-fldigi.sh` and `scripts/test-ptt-watchdog.sh` with deterministic exit codes.
   **Must NOT do**: Do not assume CI hardware presence.
   **Recommended Agent Profile**: Category `quick`; Skills `[]`; Omitted `playwright`.
@@ -313,7 +313,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `test(smoke): add tx500 fldigi smoke scripts` | Files: `scripts/smoke-tx500-fldigi.sh`, `scripts/test-ptt-watchdog.sh`
 
-- [ ] 11. Capture operator evidence pack
+- [x] 11. Capture operator evidence pack
   **What to do**: Record command outputs and environment assumptions for API and smoke checks.
   **Must NOT do**: No fabricated outputs.
   **Recommended Agent Profile**: Category `writing`; Skills `[]`; Omitted `deep`.

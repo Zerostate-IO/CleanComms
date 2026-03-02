@@ -1,0 +1,20 @@
+========================================
+CleanComms PTT Watchdog Test
+Timestamp: 2026-03-02T17:47:55Z
+Watchdog timeout: 5s
+========================================
+
+INFO: Checking CleanComms daemon availability...
+FAIL: CleanComms daemon not listening on port 8080
+INFO:   Start with: ./cleancomms --config configs/tx500-digirig-macos.yaml
+
+
+========================================
+Summary
+========================================
+Tests passed: 0/1
+Errors: 1
+Warnings: 0
+
+NOTE: This test verifies software behavior only.
+Full watchdog timeout testing requires hardware.
