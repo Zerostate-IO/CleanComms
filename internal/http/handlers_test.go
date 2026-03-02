@@ -11,29 +11,43 @@ import (
 	"testing"
 )
 
-func newTestServer(rigClient RigClient, modemClient ModemClient) *Server {
+func newTestServer(rigClient RigClient, modemClient ModemClient, coordinator CoordinatorClient, features map[string]bool) *Server {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	}))
-	return NewServer(":0", logger, rigClient, modemClient)
+	return NewServer(":0", logger, rigClient, modemClient, coordinator, features)
+}
+
+func defaultFeatures() map[string]bool {
+	return map[string]bool{
+		"logging_enabled":      true,
+		"lookup_enabled":       true,
+		"map_enabled":          true,
+		"solar_enabled":        true,
+		"signal_id_v2_enabled": false,
+	}
 }
 
 func TestHandleHealth(t *testing.T) {
 	tests := []struct {
-		name           string
-		rigClient      RigClient
-		modemClient    ModemClient
-		expectedStatus string
-		expectedRig    string
-		expectedModem  string
+		name                string
+		rigClient           RigClient
+		modemClient         ModemClient
+		coordinator         CoordinatorClient
+		expectedStatus      string
+		expectedRig         string
+		expectedModem       string
+		expectedCoordinator string
 	}{
 		{
-			name:           "all healthy",
-			rigClient:      &StubRigClient{},
-			modemClient:    &StubModemClient{},
-			expectedStatus: "ok",
-			expectedRig:    "ok",
-			expectedModem:  "ok",
+			name:                "all healthy",
+			rigClient:           &StubRigClient{},
+			modemClient:         &StubModemClient{},
+			coordinator:         &StubCoordinatorClient{},
+			expectedStatus:      "ok",
+			expectedRig:         "ok",
+			expectedModem:       "ok",
+			expectedCoordinator: "ok",
 		},
 		{
 			name: "rig degraded",
@@ -42,32 +56,50 @@ func TestHandleHealth(t *testing.T) {
 					return HealthStatus{OK: false, Message: "connection lost"}
 				},
 			},
-			modemClient:    &StubModemClient{},
-			expectedStatus: "degraded",
-			expectedRig:    "degraded",
-			expectedModem:  "ok",
+			modemClient:         &StubModemClient{},
+			coordinator:         &StubCoordinatorClient{},
+			expectedStatus:      "degraded",
+			expectedRig:         "degraded",
+			expectedModem:       "ok",
+			expectedCoordinator: "ok",
 		},
 		{
-			name:           "nil clients",
-			rigClient:      nil,
-			modemClient:    nil,
-			expectedStatus: "degraded",
-			expectedRig:    "degraded",
-			expectedModem:  "degraded",
+			name:        "coordinator degraded",
+			rigClient:   &StubRigClient{},
+			modemClient: &StubModemClient{},
+			coordinator: &StubCoordinatorClient{
+				IsHealthyFunc: func() bool { return false },
+			},
+			expectedStatus:      "degraded",
+			expectedRig:         "ok",
+			expectedModem:       "ok",
+			expectedCoordinator: "degraded",
 		},
 		{
-			name:           "nil rig client only",
-			rigClient:      nil,
-			modemClient:    &StubModemClient{},
-			expectedStatus: "degraded",
-			expectedRig:    "degraded",
-			expectedModem:  "ok",
+			name:                "nil clients",
+			rigClient:           nil,
+			modemClient:         nil,
+			coordinator:         nil,
+			expectedStatus:      "degraded",
+			expectedRig:         "degraded",
+			expectedModem:       "degraded",
+			expectedCoordinator: "degraded",
+		},
+		{
+			name:                "nil rig client only",
+			rigClient:           nil,
+			modemClient:         &StubModemClient{},
+			coordinator:         &StubCoordinatorClient{},
+			expectedStatus:      "degraded",
+			expectedRig:         "degraded",
+			expectedModem:       "ok",
+			expectedCoordinator: "ok",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			server := newTestServer(tt.rigClient, tt.modemClient)
+			server := newTestServer(tt.rigClient, tt.modemClient, tt.coordinator, defaultFeatures())
 
 			req := httptest.NewRequest(http.MethodGet, "/health", nil)
 			rec := httptest.NewRecorder()
@@ -92,12 +124,53 @@ func TestHandleHealth(t *testing.T) {
 			if resp.Fldigi != tt.expectedModem {
 				t.Errorf("expected fldigi %q, got %q", tt.expectedModem, resp.Fldigi)
 			}
+			if resp.Coordinator != tt.expectedCoordinator {
+				t.Errorf("expected coordinator %q, got %q", tt.expectedCoordinator, resp.Coordinator)
+			}
+
+			// Verify features are included
+			if resp.Features == nil {
+				t.Error("expected features map to be non-nil")
+			}
 
 			// Verify content type
 			if ct := rec.Header().Get("Content-Type"); ct != "application/json" {
 				t.Errorf("expected Content-Type application/json, got %q", ct)
 			}
 		})
+	}
+}
+
+func TestHandleHealthFeatures(t *testing.T) {
+	features := map[string]bool{
+		"logging_enabled":      true,
+		"lookup_enabled":       false,
+		"map_enabled":          true,
+		"solar_enabled":        false,
+		"signal_id_v2_enabled": false,
+	}
+
+	server := newTestServer(&StubRigClient{}, &StubModemClient{}, &StubCoordinatorClient{}, features)
+
+	req := httptest.NewRequest(http.MethodGet, "/health", nil)
+	rec := httptest.NewRecorder()
+
+	server.handleHealth(rec, req)
+
+	var resp HealthResponse
+	if err := json.NewDecoder(rec.Body).Decode(&resp); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+
+	// Verify feature flags are correctly included
+	if resp.Features["logging_enabled"] != true {
+		t.Error("expected logging_enabled to be true")
+	}
+	if resp.Features["lookup_enabled"] != false {
+		t.Error("expected lookup_enabled to be false")
+	}
+	if resp.Features["signal_id_v2_enabled"] != false {
+		t.Error("expected signal_id_v2_enabled to be false")
 	}
 }
 
@@ -138,7 +211,7 @@ func TestHandleRigStatus(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			server := newTestServer(tt.rigClient, nil)
+			server := newTestServer(tt.rigClient, nil, &StubCoordinatorClient{}, defaultFeatures())
 
 			req := httptest.NewRequest(http.MethodGet, "/api/v1/rig/status", nil)
 			rec := httptest.NewRecorder()
@@ -179,7 +252,7 @@ func TestHandleRigStatus(t *testing.T) {
 func TestHandlePTT(t *testing.T) {
 	tests := []struct {
 		name          string
-		rigClient     RigClient
+		coordinator   CoordinatorClient
 		requestBody   any
 		expectedCode  int
 		expectedState string
@@ -187,10 +260,9 @@ func TestHandlePTT(t *testing.T) {
 	}{
 		{
 			name: "set tx",
-			rigClient: &StubRigClient{
-				SetPTTFunc: func(state bool) (bool, error) {
-					return state, nil
-				},
+			coordinator: &StubCoordinatorClient{
+				SetPTTFunc: func(tx bool) error { return nil },
+				GetPTTFunc: func() bool { return true },
 			},
 			requestBody:   PTTRequest{State: "tx"},
 			expectedCode:  http.StatusOK,
@@ -198,10 +270,9 @@ func TestHandlePTT(t *testing.T) {
 		},
 		{
 			name: "set rx",
-			rigClient: &StubRigClient{
-				SetPTTFunc: func(state bool) (bool, error) {
-					return state, nil
-				},
+			coordinator: &StubCoordinatorClient{
+				SetPTTFunc: func(tx bool) error { return nil },
+				GetPTTFunc: func() bool { return false },
 			},
 			requestBody:   PTTRequest{State: "rx"},
 			expectedCode:  http.StatusOK,
@@ -209,10 +280,8 @@ func TestHandlePTT(t *testing.T) {
 		},
 		{
 			name: "invalid state",
-			rigClient: &StubRigClient{
-				SetPTTFunc: func(state bool) (bool, error) {
-					return state, nil
-				},
+			coordinator: &StubCoordinatorClient{
+				SetPTTFunc: func(tx bool) error { return nil },
 			},
 			requestBody:   PTTRequest{State: "invalid"},
 			expectedCode:  http.StatusBadRequest,
@@ -220,34 +289,34 @@ func TestHandlePTT(t *testing.T) {
 		},
 		{
 			name:          "malformed JSON",
-			rigClient:     &StubRigClient{},
+			coordinator:   &StubCoordinatorClient{},
 			requestBody:   "not json",
 			expectedCode:  http.StatusBadRequest,
 			expectedError: "invalid_request",
 		},
 		{
-			name:          "nil client returns 503",
-			rigClient:     nil,
+			name:          "nil coordinator returns 503",
+			coordinator:   nil,
 			requestBody:   PTTRequest{State: "tx"},
 			expectedCode:  http.StatusServiceUnavailable,
 			expectedError: "service_unavailable",
 		},
 		{
-			name: "ptt error",
-			rigClient: &StubRigClient{
-				SetPTTFunc: func(state bool) (bool, error) {
-					return false, errors.New("rig not connected")
+			name: "ptt blocked due to degraded",
+			coordinator: &StubCoordinatorClient{
+				SetPTTFunc: func(tx bool) error {
+					return errors.New("system degraded: cannot enter TX mode")
 				},
 			},
 			requestBody:   PTTRequest{State: "tx"},
 			expectedCode:  http.StatusServiceUnavailable,
-			expectedError: "ptt_failed",
+			expectedError: "ptt_blocked",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			server := newTestServer(tt.rigClient, nil)
+			server := newTestServer(nil, nil, tt.coordinator, defaultFeatures())
 
 			var body bytes.Buffer
 			if str, ok := tt.requestBody.(string); ok {
@@ -323,7 +392,7 @@ func TestHandleModemStatus(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			server := newTestServer(nil, tt.modemClient)
+			server := newTestServer(nil, tt.modemClient, &StubCoordinatorClient{}, defaultFeatures())
 
 			req := httptest.NewRequest(http.MethodGet, "/api/v1/modem/status", nil)
 			rec := httptest.NewRecorder()
@@ -360,7 +429,7 @@ func TestHandleModemStatus(t *testing.T) {
 
 func TestPTTInvalidPayloadMessage(t *testing.T) {
 	// Test that invalid PTT payload includes allowed values message
-	server := newTestServer(&StubRigClient{}, nil)
+	server := newTestServer(nil, nil, &StubCoordinatorClient{}, defaultFeatures())
 
 	body := bytes.NewBufferString(`{"state":"bogus"}`)
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/rig/ptt", body)
@@ -389,7 +458,7 @@ func TestPTTInvalidPayloadMessage(t *testing.T) {
 
 func TestRouting(t *testing.T) {
 	// Test that routes are properly registered
-	server := newTestServer(&StubRigClient{}, &StubModemClient{})
+	server := newTestServer(&StubRigClient{}, &StubModemClient{}, &StubCoordinatorClient{}, defaultFeatures())
 
 	tests := []struct {
 		method string

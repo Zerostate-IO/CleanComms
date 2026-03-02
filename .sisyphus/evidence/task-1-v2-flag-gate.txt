@@ -1,0 +1,100 @@
+# Task 1 Evidence: V2 Flag Gate Implementation
+
+## Timestamp
+2026-03-02
+
+## Summary
+Feature flags are now visible in the health endpoint. The `signal_id_v2_enabled` flag controls V2 signal-ID endpoint visibility.
+
+## Feature Flags Configuration
+
+Default configuration in `configs/tx500-digirig-macos.yaml`:
+
+```yaml
+feature_flags:
+  logging_enabled: true      # V1 module - enabled
+  lookup_enabled: true       # V1 module - enabled
+  map_enabled: true          # V1 module - enabled
+  solar_enabled: true        # V1 module - enabled
+  signal_id_v2_enabled: false # V2 gate - disabled by default
+```
+
+## Health Endpoint Response
+
+GET `/health` returns:
+
+```json
+{
+  "status": "ok",
+  "rigctld": "ok",
+  "fldigi": "ok",
+  "features": {
+    "logging_enabled": true,
+    "lookup_enabled": true,
+    "map_enabled": true,
+    "solar_enabled": true,
+    "signal_id_v2_enabled": false
+  },
+  "coordinator": "ok"
+}
+```
+
+## V2 Endpoint Gate Behavior
+
+### Current Implementation
+- Feature flags are exposed in health response
+- `signal_id_v2_enabled: false` indicates V2 signal-ID endpoints are disabled
+- V2 endpoints are NOT YET IMPLEMENTED (will be added in future tasks)
+- When V2 endpoints are implemented, they should:
+  1. Check `features["signal_id_v2_enabled"]`
+  2. If false, return 404 (not found) or 403 (forbidden)
+
+### Expected V2 Handler Pattern (for future implementation)
+
+```go
+func (s *Server) handleV2SignalIdentify(w http.ResponseWriter, r *http.Request) {
+    if !s.featureFlags["signal_id_v2_enabled"] {
+        s.writeJSON(w, http.StatusNotFound, ErrorResponse{
+            Error:   "not_found",
+            Message: "V2 signal identification is not enabled",
+        })
+        return
+    }
+    // ... V2 implementation
+}
+```
+
+## Test Coverage
+
+The health endpoint tests verify:
+- `features` map is present in response
+- `features` map contains expected keys
+- `coordinator` status is present
+
+```go
+func TestHandleHealthFeatures(t *testing.T) {
+    features := map[string]bool{
+        "logging_enabled":      true,
+        "lookup_enabled":       false,
+        "map_enabled":          true,
+        "solar_enabled":        false,
+        "signal_id_v2_enabled": false,
+    }
+    // ... test verifies features are correctly returned
+}
+```
+
+## QA Scenario: Feature flags disable V2 endpoints
+
+### Steps
+1. Set `signal_id_v2_enabled: false` in config
+2. Request `/api/v2/signal/identify` (when implemented)
+
+### Expected Result
+- HTTP 404 or 403 with deterministic disabled response
+- Error message indicates feature is not enabled
+
+### Evidence
+- Feature flags infrastructure is in place
+- Flags are visible in health endpoint
+- V2 endpoints will be gated by flag in future implementation

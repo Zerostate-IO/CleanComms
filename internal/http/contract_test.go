@@ -10,7 +10,7 @@ import (
 
 // TestHealthContract verifies the health endpoint response structure.
 func TestHealthContract(t *testing.T) {
-	server := newTestServer(&StubRigClient{}, &StubModemClient{})
+	server := newTestServer(&StubRigClient{}, &StubModemClient{}, &StubCoordinatorClient{}, defaultFeatures())
 
 	req := httptest.NewRequest(http.MethodGet, "/health", nil)
 	rec := httptest.NewRecorder()
@@ -33,18 +33,24 @@ func TestHealthContract(t *testing.T) {
 	}
 
 	// Verify required fields exist
-	requiredFields := []string{"status", "rigctld", "fldigi"}
+	requiredFields := []string{"status", "rigctld", "fldigi", "features", "coordinator"}
 	for _, field := range requiredFields {
 		if _, exists := resp[field]; !exists {
 			t.Errorf("missing required field %q in health response", field)
 		}
 	}
 
-	// Verify field types are strings
-	for _, field := range requiredFields {
+	// Verify field types for string fields
+	stringFields := []string{"status", "rigctld", "fldigi", "coordinator"}
+	for _, field := range stringFields {
 		if _, ok := resp[field].(string); !ok {
 			t.Errorf("field %q should be string, got %T", field, resp[field])
 		}
+	}
+
+	// Verify features is a map
+	if _, ok := resp["features"].(map[string]any); !ok {
+		t.Errorf("field 'features' should be map, got %T", resp["features"])
 	}
 
 	t.Logf("Health response structure verified: %v", resp)
@@ -52,7 +58,7 @@ func TestHealthContract(t *testing.T) {
 
 // TestRigStatusContract verifies the rig status endpoint response structure.
 func TestRigStatusContract(t *testing.T) {
-	server := newTestServer(&StubRigClient{}, nil)
+	server := newTestServer(&StubRigClient{}, nil, &StubCoordinatorClient{}, defaultFeatures())
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/rig/status", nil)
 	rec := httptest.NewRecorder()
@@ -111,7 +117,7 @@ func TestRigStatusContract(t *testing.T) {
 
 // TestModemStatusContract verifies the modem status endpoint response structure.
 func TestModemStatusContract(t *testing.T) {
-	server := newTestServer(nil, &StubModemClient{})
+	server := newTestServer(nil, &StubModemClient{}, &StubCoordinatorClient{}, defaultFeatures())
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/modem/status", nil)
 	rec := httptest.NewRecorder()
@@ -166,7 +172,10 @@ func TestModemStatusContract(t *testing.T) {
 // TestPTTContract verifies PTT endpoint accepts valid states and rejects invalid ones.
 func TestPTTContract(t *testing.T) {
 	t.Run("accepts tx", func(t *testing.T) {
-		server := newTestServer(&StubRigClient{}, nil)
+		server := newTestServer(nil, nil, &StubCoordinatorClient{
+			SetPTTFunc: func(tx bool) error { return nil },
+			GetPTTFunc: func() bool { return true },
+		}, defaultFeatures())
 
 		body := bytes.NewBufferString(`{"state":"tx"}`)
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/rig/ptt", body)
@@ -190,7 +199,10 @@ func TestPTTContract(t *testing.T) {
 	})
 
 	t.Run("accepts rx", func(t *testing.T) {
-		server := newTestServer(&StubRigClient{}, nil)
+		server := newTestServer(nil, nil, &StubCoordinatorClient{
+			SetPTTFunc: func(tx bool) error { return nil },
+			GetPTTFunc: func() bool { return false },
+		}, defaultFeatures())
 
 		body := bytes.NewBufferString(`{"state":"rx"}`)
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/rig/ptt", body)
@@ -214,7 +226,7 @@ func TestPTTContract(t *testing.T) {
 	})
 
 	t.Run("rejects invalid state with 400", func(t *testing.T) {
-		server := newTestServer(&StubRigClient{}, nil)
+		server := newTestServer(nil, nil, &StubCoordinatorClient{}, defaultFeatures())
 
 		invalidStates := []string{"TX", "RX", "transmit", "receive", "1", "0", "true", "false", ""}
 		for _, state := range invalidStates {
@@ -251,7 +263,7 @@ func TestPTTContract(t *testing.T) {
 	})
 
 	t.Run("rejects malformed JSON with 400", func(t *testing.T) {
-		server := newTestServer(&StubRigClient{}, nil)
+		server := newTestServer(nil, nil, &StubCoordinatorClient{}, defaultFeatures())
 
 		body := bytes.NewBufferString(`not json`)
 		req := httptest.NewRequest(http.MethodPost, "/api/v1/rig/ptt", body)

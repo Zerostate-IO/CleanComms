@@ -8,9 +8,11 @@ import (
 
 // HealthResponse represents the health check response.
 type HealthResponse struct {
-	Status  string `json:"status"`
-	Rigctld string `json:"rigctld"`
-	Fldigi  string `json:"fldigi"`
+	Status      string          `json:"status"`
+	Rigctld     string          `json:"rigctld"`
+	Fldigi      string          `json:"fldigi"`
+	Features    map[string]bool `json:"features"`
+	Coordinator string          `json:"coordinator"`
 }
 
 // PTTRequest represents the PTT control request.
@@ -33,6 +35,7 @@ type ErrorResponse struct {
 func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 	rigHealth := "ok"
 	modemHealth := "ok"
+	coordinatorHealth := "ok"
 	overallStatus := "ok"
 
 	// Check rigctld health if client is configured
@@ -57,10 +60,23 @@ func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 		overallStatus = "degraded"
 	}
 
+	// Check coordinator health if configured
+	if s.coordinator != nil {
+		if !s.coordinator.IsHealthy() {
+			coordinatorHealth = "degraded"
+			overallStatus = "degraded"
+		}
+	} else {
+		coordinatorHealth = "degraded"
+		overallStatus = "degraded"
+	}
+
 	resp := HealthResponse{
-		Status:  overallStatus,
-		Rigctld: rigHealth,
-		Fldigi:  modemHealth,
+		Status:      overallStatus,
+		Rigctld:     rigHealth,
+		Fldigi:      modemHealth,
+		Features:    s.featureFlags,
+		Coordinator: coordinatorHealth,
 	}
 
 	s.writeJSON(w, http.StatusOK, resp)
@@ -82,10 +98,10 @@ func (s *Server) handleRigStatus(w http.ResponseWriter, r *http.Request) {
 
 // handlePTT handles POST /api/v1/rig/ptt requests.
 func (s *Server) handlePTT(w http.ResponseWriter, r *http.Request) {
-	if s.rigClient == nil {
+	if s.coordinator == nil {
 		s.writeJSON(w, http.StatusServiceUnavailable, ErrorResponse{
 			Error:   "service_unavailable",
-			Message: "rig client not configured",
+			Message: "coordinator not configured",
 		})
 		return
 	}
@@ -114,10 +130,11 @@ func (s *Server) handlePTT(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newState, err := s.rigClient.SetPTT(pttState)
-	if err != nil {
+	// Route PTT through coordinator (not direct rig access)
+	if err := s.coordinator.SetPTT(pttState); err != nil {
+		// Check for degraded state
 		s.writeJSON(w, http.StatusServiceUnavailable, ErrorResponse{
-			Error:   "ptt_failed",
+			Error:   "ptt_blocked",
 			Message: err.Error(),
 		})
 		return
@@ -126,7 +143,7 @@ func (s *Server) handlePTT(w http.ResponseWriter, r *http.Request) {
 	resp := PTTResponse{
 		State: "rx",
 	}
-	if newState {
+	if s.coordinator.GetPTT() {
 		resp.State = "tx"
 	}
 
@@ -219,9 +236,38 @@ func (c *StubModemClient) Health() HealthStatus {
 
 // Ensure stubs implement interfaces.
 var (
-	_ RigClient   = (*StubRigClient)(nil)
-	_ ModemClient = (*StubModemClient)(nil)
+	_ RigClient       = (*StubRigClient)(nil)
+	_ ModemClient     = (*StubModemClient)(nil)
+	_ CoordinatorClient = (*StubCoordinatorClient)(nil)
 )
+
+// StubCoordinatorClient is a stub implementation of CoordinatorClient for testing.
+type StubCoordinatorClient struct {
+	SetPTTFunc    func(bool) error
+	GetPTTFunc    func() bool
+	IsHealthyFunc func() bool
+}
+
+func (c *StubCoordinatorClient) SetPTT(tx bool) error {
+	if c.SetPTTFunc != nil {
+		return c.SetPTTFunc(tx)
+	}
+	return nil
+}
+
+func (c *StubCoordinatorClient) GetPTT() bool {
+	if c.GetPTTFunc != nil {
+		return c.GetPTTFunc()
+	}
+	return false
+}
+
+func (c *StubCoordinatorClient) IsHealthy() bool {
+	if c.IsHealthyFunc != nil {
+		return c.IsHealthyFunc()
+	}
+	return true
+}
 
 // ErrNotImplemented is returned when a stub method is not implemented.
 var ErrNotImplemented = errors.New("not implemented")

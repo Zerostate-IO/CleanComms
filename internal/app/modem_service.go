@@ -410,6 +410,31 @@ func (s *ModemService) EnsureMode(mode string) error {
 	s.logger.Info("mode set successfully", "mode", mode)
 	return nil
 }
+// SetTX sets the transmit state on the modem.
+func (s *ModemService) SetTX(tx bool) error {
+	s.mu.RLock()
+	connected := s.connected
+	s.mu.RUnlock()
+
+	if !connected {
+		return errors.New("fldigi: not connected")
+	}
+
+	s.logger.Info("setting modem TX state", "tx", tx)
+
+	if err := s.client.SetTX(tx); err != nil {
+		s.logger.Error("failed to set TX state", "tx", tx, "error", err)
+		return err
+	}
+
+	// Update cached status
+	s.mu.Lock()
+	s.status.TX = tx
+	s.mu.Unlock()
+
+	return nil
+}
+
 
 // IsConnected returns whether the service is currently connected.
 func (s *ModemService) IsConnected() bool {

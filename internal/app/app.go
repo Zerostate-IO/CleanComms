@@ -5,8 +5,10 @@ import (
 	"context"
 	"log/slog"
 	"os"
+	"time"
 
 	"github.com/Zerostate-IO/CleanComms/internal/config"
+	"github.com/Zerostate-IO/CleanComms/internal/control"
 	"github.com/Zerostate-IO/CleanComms/internal/http"
 )
 
@@ -16,6 +18,7 @@ type App struct {
 	logger       *slog.Logger
 	rigService   *RigService
 	modemService *ModemService
+	coordinator  *control.Coordinator
 	httpServer   *http.Server
 }
 
@@ -32,11 +35,30 @@ func New(cfg *config.Config) *App {
 	modemService := NewModemService(cfg.Fldigi.XMLRPCAddr, logger)
 	modemService.SetDefaultMode(cfg.Fldigi.DefaultMode)
 
+	// Create adapters for coordinator (implement control.RigController and control.ModemController)
+	rigControllerAdapter := &rigControllerAdapter{service: rigService}
+	modemControllerAdapter := &modemControllerAdapter{service: modemService}
+
+	// Create coordinator with PTT timeout from config
+	pttTimeout := time.Duration(cfg.Safety.PTTTimeoutSeconds) * time.Second
+	if pttTimeout <= 0 {
+		pttTimeout = 60 * time.Second // default
+	}
+	coordinator := control.NewCoordinator(
+		rigControllerAdapter,
+		modemControllerAdapter,
+		logger,
+		control.CoordinatorConfig{
+			PTTTimeout: pttTimeout,
+		},
+	)
+
 	return &App{
 		config:       cfg,
 		logger:       logger,
 		rigService:   rigService,
 		modemService: modemService,
+		coordinator:  coordinator,
 	}
 }
 
@@ -58,10 +80,30 @@ func (a *App) Run(ctx context.Context) error {
 	// Start modem service (background connection with health checks and mode ensure)
 	a.modemService.Start(ctx)
 
+	// Start coordinator (watchdog for PTT safety)
+	a.coordinator.Start(ctx)
+
+	// Build feature flags map from config
+	features := map[string]bool{
+		"logging_enabled":      a.config.FeatureFlags.LoggingEnabled,
+		"lookup_enabled":       a.config.FeatureFlags.LookupEnabled,
+		"map_enabled":          a.config.FeatureFlags.MapEnabled,
+		"solar_enabled":        a.config.FeatureFlags.SolarEnabled,
+		"signal_id_v2_enabled": a.config.FeatureFlags.SignalIdV2Enabled,
+	}
+
 	// Create HTTP server with service adapters
 	rigAdapter := &rigClientAdapter{service: a.rigService}
 	modemAdapter := &modemClientAdapter{service: a.modemService}
-	a.httpServer = http.NewServer(a.config.Server.HTTPAddr, a.logger, rigAdapter, modemAdapter)
+	coordinatorAdapter := &coordinatorClientAdapter{coordinator: a.coordinator}
+	a.httpServer = http.NewServer(
+		a.config.Server.HTTPAddr,
+		a.logger,
+		rigAdapter,
+		modemAdapter,
+		coordinatorAdapter,
+		features,
+	)
 
 	a.logger.Info("CleanComms daemon initialized",
 		"rigctld_status", "connecting",
@@ -89,6 +131,9 @@ func (a *App) Run(ctx context.Context) error {
 	if err := a.httpServer.Shutdown(ctx); err != nil {
 		a.logger.Error("HTTP server shutdown error", "error", err)
 	}
+
+	// Stop coordinator first (ensures PTT is released)
+	a.coordinator.Stop()
 
 	if err := a.rigService.Stop(); err != nil {
 		a.logger.Error("Rig service shutdown error", "error", err)
@@ -126,4 +171,56 @@ func (a *rigClientAdapter) Health() http.HealthStatus {
 		OK:      h.OK,
 		Message: h.Error,
 	}
+}
+
+// rigControllerAdapter adapts RigService to control.RigController interface.
+// rigControllerAdapter adapts RigService to control.RigController interface.
+type rigControllerAdapter struct {
+	service *RigService
+}
+
+func (a *rigControllerAdapter) SetPTT(state bool) (bool, error) {
+	return a.service.SetPTT(state)
+}
+
+func (a *rigControllerAdapter) Health() control.RigHealthStatus {
+	h := a.service.Health()
+	return control.RigHealthStatus{
+		OK:    h.OK,
+		Error: h.Error,
+	}
+}
+
+// modemControllerAdapter adapts ModemService to control.ModemController interface.
+type modemControllerAdapter struct {
+	service *ModemService
+}
+
+func (a *modemControllerAdapter) SetTX(tx bool) error {
+	return a.service.SetTX(tx)
+}
+
+func (a *modemControllerAdapter) Health() control.ModemHealthStatus {
+	h := a.service.Health()
+	return control.ModemHealthStatus{
+		OK:    h.OK,
+		Error: h.Error,
+	}
+}
+
+// coordinatorClientAdapter adapts control.Coordinator to http.CoordinatorClient interface.
+type coordinatorClientAdapter struct {
+	coordinator *control.Coordinator
+}
+
+func (a *coordinatorClientAdapter) SetPTT(tx bool) error {
+	return a.coordinator.SetPTT(tx)
+}
+
+func (a *coordinatorClientAdapter) GetPTT() bool {
+	return a.coordinator.GetPTT()
+}
+
+func (a *coordinatorClientAdapter) IsHealthy() bool {
+	return a.coordinator.IsHealthy()
 }

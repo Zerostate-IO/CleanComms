@@ -28,6 +28,15 @@ type ModemClient interface {
 	Health() HealthStatus
 }
 
+// CoordinatorClient defines the interface for PTT coordination operations.
+type CoordinatorClient interface {
+	// SetPTT sets the PTT state through the coordinator.
+	SetPTT(tx bool) error
+	// GetPTT returns the current PTT state.
+	GetPTT() bool
+	// IsHealthy returns true if coordinator reports healthy state.
+	IsHealthy() bool
+}
 // RigStatus represents the current state of the radio.
 type RigStatus struct {
 	Frequency int64  `json:"frequency"`
@@ -51,18 +60,22 @@ type HealthStatus struct {
 
 // Server represents the HTTP API server.
 type Server struct {
-	server      *http.Server
-	logger      *slog.Logger
-	rigClient   RigClient
-	modemClient ModemClient
+	server          *http.Server
+	logger          *slog.Logger
+	rigClient       RigClient
+	modemClient     ModemClient
+	coordinator     CoordinatorClient
+	featureFlags    map[string]bool
 }
 
 // NewServer creates a new HTTP server instance.
-func NewServer(addr string, logger *slog.Logger, rigClient RigClient, modemClient ModemClient) *Server {
+func NewServer(addr string, logger *slog.Logger, rigClient RigClient, modemClient ModemClient, coordinator CoordinatorClient, features map[string]bool) *Server {
 	s := &Server{
-		logger:      logger,
-		rigClient:   rigClient,
-		modemClient: modemClient,
+		logger:       logger,
+		rigClient:    rigClient,
+		modemClient:  modemClient,
+		coordinator:  coordinator,
+		featureFlags: features,
 	}
 
 	mux := http.NewServeMux()

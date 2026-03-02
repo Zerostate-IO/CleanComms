@@ -1,0 +1,126 @@
+# Task 1 Evidence: Coordinator and Feature Flags Implementation
+
+## Timestamp
+2026-03-02
+
+## Summary
+Successfully wired the safety coordinator into the app runtime and added config-backed feature flags for V1 modules and V2 signal-ID gates.
+
+## Files Modified
+
+### 1. internal/config/schema.go
+- Added `FeatureFlags` struct with fields:
+  - `LoggingEnabled` (bool)
+  - `LookupEnabled` (bool)
+  - `MapEnabled` (bool)
+  - `SolarEnabled` (bool)
+  - `SignalIdV2Enabled` (bool)
+- Added `FeatureFlags` field to `Config` struct
+
+### 2. internal/app/app.go
+- Added `coordinator` field to `App` struct
+- Created adapters for `control.RigController` and `control.ModemController` interfaces:
+  - `rigControllerAdapter` - adapts RigService to control.RigController
+  - `modemControllerAdapter` - adapts ModemService to control.ModemController
+  - `coordinatorClientAdapter` - adapts control.Coordinator to http.CoordinatorClient
+- Initialized Coordinator in `New()` with `SafetyConfig.PTTTimeoutSeconds`
+- Started Coordinator in `Run()` before HTTP server
+- Stopped Coordinator in shutdown sequence (before services)
+- Added `SetTX()` method to ModemService (required by ModemController interface)
+
+### 3. internal/http/server.go
+- Added `CoordinatorClient` interface with methods:
+  - `SetPTT(tx bool) error`
+  - `GetPTT() bool`
+  - `IsHealthy() bool`
+- Added `coordinator` and `featureFlags` fields to `Server` struct
+- Updated `NewServer()` to accept `CoordinatorClient` and `map[string]bool` features
+
+### 4. internal/http/handlers.go
+- Extended `HealthResponse` with:
+  - `Features map[string]bool` - shows enabled/disabled flags
+  - `Coordinator string` - shows coordinator health status ("ok" or "degraded")
+- Updated `handleHealth()` to check coordinator health and include features
+- Updated `handlePTT()` to route through CoordinatorClient instead of direct RigClient
+- Added `StubCoordinatorClient` for testing
+
+### 5. configs/tx500-digirig-macos.yaml
+- Added `feature_flags` section with defaults:
+  - V1 modules (logging, lookup, map, solar): all enabled (true)
+  - V2 signal-id: disabled (false)
+
+## Test Results
+
+```
+$ go test ./...
+?   	github.com/Zerostate-IO/CleanComms/cmd/cleancomms	[no test files]
+ok  	github.com/Zerostate-IO/CleanComms/internal/app	(cached)
+?   	github.com/Zerostate-IO/CleanComms/internal/config	[no test files]
+ok  	github.com/Zerostate-IO/CleanComms/internal/control	(cached)
+ok  	github.com/Zerostate-IO/CleanComms/internal/fldigi	(cached)
+ok  	github.com/Zerostate-IO/CleanComms/internal/http	0.011s
+ok  	github.com/Zerostate-IO/CleanComms/internal/rigctld	(cached)
+```
+
+## Build Verification
+
+```
+$ go build ./...
+BUILD PASSED
+```
+
+## Health Endpoint Response Structure
+
+The `/health` endpoint now returns:
+
+```json
+{
+  "status": "ok|degraded",
+  "rigctld": "ok|degraded",
+  "fldigi": "ok|degraded",
+  "features": {
+    "logging_enabled": true,
+    "lookup_enabled": true,
+    "map_enabled": true,
+    "solar_enabled": true,
+    "signal_id_v2_enabled": false
+  },
+  "coordinator": "ok|degraded"
+}
+```
+
+## PTT Flow
+
+PTT requests now route through the coordinator:
+1. POST `/api/v1/rig/ptt` → `handlePTT()`
+2. `handlePTT()` → `coordinator.SetPTT(tx)`
+3. `coordinator.SetPTT()` checks health:
+   - If degraded → returns `ErrDegraded` → HTTP 503
+   - If healthy → coordinates PTT with proper ordering:
+     - Enter TX: modem first, then rig
+     - Exit TX: rig first, then modem
+
+## QA Scenarios
+
+### Scenario 1: Coordinator guards TX when unhealthy
+When modem is unreachable:
+- `coordinator.IsHealthy()` returns false
+- POST `/api/v1/rig/ptt {"state":"tx"}` returns 503 with error:
+  ```json
+  {
+    "error": "ptt_blocked",
+    "message": "system degraded: cannot enter TX mode"
+  }
+  ```
+
+### Scenario 2: Feature flags visibility
+Feature flags are visible in health response under `features` key.
+V2 signal-id endpoint is disabled by default (`signal_id_v2_enabled: false`).
+
+## Acceptance Criteria
+- [x] Coordinator starts with App and guards PTT operations
+- [x] PTT requests route through Coordinator (not direct rig access)
+- [x] Feature flags control V1 module visibility and V2 signal-ID gates
+- [x] Health endpoint includes `features` payload showing enabled/disabled flags
+- [x] `go test ./...` passes
+- [x] Coordinator status visible in health response

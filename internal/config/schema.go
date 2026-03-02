@@ -2,11 +2,13 @@
 package config
 
 // Config represents the top-level configuration structure for CleanComms.
+// Config represents the top-level configuration structure for CleanComms.
 type Config struct {
-	Server  ServerConfig  `yaml:"server"`
-	Rigctld RigctldConfig `yaml:"rigctld"`
-	Fldigi  FldigiConfig  `yaml:"fldigi"`
-	Safety  SafetyConfig  `yaml:"safety"`
+	Server       ServerConfig  `yaml:"server"`
+	Rigctld      RigctldConfig `yaml:"rigctld"`
+	Fldigi       FldigiConfig  `yaml:"fldigi"`
+	Safety       SafetyConfig  `yaml:"safety"`
+	FeatureFlags FeatureFlags  `yaml:"feature_flags"`
 }
 
 // ServerConfig holds HTTP server settings.
@@ -32,4 +34,13 @@ type FldigiConfig struct {
 // SafetyConfig holds safety-related settings.
 type SafetyConfig struct {
 	PTTTimeoutSeconds int `yaml:"ptt_timeout_seconds"`
+}
+
+// FeatureFlags holds feature flag settings for V1 modules and V2 gates.
+type FeatureFlags struct {
+	LoggingEnabled    bool `yaml:"logging_enabled"`
+	LookupEnabled     bool `yaml:"lookup_enabled"`
+	MapEnabled        bool `yaml:"map_enabled"`
+	SolarEnabled      bool `yaml:"solar_enabled"`
+	SignalIdV2Enabled bool `yaml:"signal_id_v2_enabled"`
 }
