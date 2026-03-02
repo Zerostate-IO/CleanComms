@@ -1,0 +1,91 @@
+=== Task 5: Rig Service Integration Evidence ===
+Timestamp: 2026-03-02T19:11:16Z
+
+=== Build Verification ===
+Build: PASS
+
+=== Test Results ===
+=== RUN   TestNewModemService
+--- PASS: TestNewModemService (0.00s)
+=== RUN   TestModemService_Connect_Success
+--- PASS: TestModemService_Connect_Success (0.00s)
+=== RUN   TestModemService_Connect_Backoff
+--- PASS: TestModemService_Connect_Backoff (0.15s)
+=== RUN   TestModemService_Connect_ContextCancellation
+--- PASS: TestModemService_Connect_ContextCancellation (0.15s)
+=== RUN   TestModemService_Health
+--- PASS: TestModemService_Health (0.00s)
+=== RUN   TestModemService_Status
+--- PASS: TestModemService_Status (0.00s)
+=== RUN   TestModemService_Status_NotConnected
+--- PASS: TestModemService_Status_NotConnected (0.00s)
+=== RUN   TestModemService_EnsureMode
+--- PASS: TestModemService_EnsureMode (0.00s)
+=== RUN   TestModemService_EnsureMode_NotConnected
+--- PASS: TestModemService_EnsureMode_NotConnected (0.00s)
+=== RUN   TestModemService_StartStop
+--- PASS: TestModemService_StartStop (0.20s)
+=== RUN   TestModemService_HealthCheckLoop
+--- PASS: TestModemService_HealthCheckLoop (0.50s)
+=== RUN   TestModemService_SetDefaultMode
+--- PASS: TestModemService_SetDefaultMode (0.20s)
+=== RUN   TestModemService_ReconnectAfterFailure
+--- PASS: TestModemService_ReconnectAfterFailure (0.10s)
+=== RUN   TestModemService_InterfaceCompliance
+--- PASS: TestModemService_InterfaceCompliance (0.00s)
+=== RUN   TestModemService_ConcurrentAccess
+--- PASS: TestModemService_ConcurrentAccess (0.02s)
+=== RUN   TestModemClientAdapter
+--- PASS: TestModemClientAdapter (0.00s)
+=== RUN   TestNewRigService
+--- PASS: TestNewRigService (0.00s)
+=== RUN   TestRigService_Connect_Success
+--- PASS: TestRigService_Connect_Success (0.00s)
+=== RUN   TestRigService_Connect_Backoff
+--- PASS: TestRigService_Connect_Backoff (0.15s)
+=== RUN   TestRigService_Connect_ContextCancellation
+--- PASS: TestRigService_Connect_ContextCancellation (0.15s)
+=== RUN   TestRigService_Health
+--- PASS: TestRigService_Health (0.00s)
+=== RUN   TestRigService_Status
+--- PASS: TestRigService_Status (0.00s)
+=== RUN   TestRigService_Status_NotConnected
+--- PASS: TestRigService_Status_NotConnected (0.00s)
+=== RUN   TestRigService_SetPTT
+--- PASS: TestRigService_SetPTT (0.00s)
+=== RUN   TestRigService_SetPTT_NotConnected
+--- PASS: TestRigService_SetPTT_NotConnected (0.00s)
+=== RUN   TestRigService_StartStop
+--- PASS: TestRigService_StartStop (0.20s)
+=== RUN   TestRigService_HealthCheckLoop
+--- PASS: TestRigService_HealthCheckLoop (0.50s)
+=== RUN   TestDefaultBackoffConfig
+--- PASS: TestDefaultBackoffConfig (0.00s)
+=== RUN   TestBackoffExponentialGrowth
+=== RUN   TestBackoffExponentialGrowth/three_attempts
+--- PASS: TestBackoffExponentialGrowth (0.03s)
+=== RUN   TestRigService_ReconnectAfterFailure
+--- PASS: TestRigService_ReconnectAfterFailure (0.10s)
+=== RUN   TestRigService_InterfaceCompliance
+--- PASS: TestRigService_InterfaceCompliance (0.00s)
+=== RUN   TestRigService_ConcurrentAccess
+--- PASS: TestRigService_ConcurrentAccess (0.02s)
+=== RUN   TestRigService_Health_Transitions
+=== RUN   TestRigService_Health_Transitions/initial_state
+--- PASS: TestRigService_Health_Transitions (0.00s)
+=== RUN   TestRigService_LoggingOnStatusChanges
+--- PASS: TestRigService_LoggingOnStatusChanges (0.10s)
+ok  	github.com/Zerostate-IO/CleanComms/internal/app	(cached)
+
+=== All Tests ===
+?   	github.com/Zerostate-IO/CleanComms/cmd/cleancomms	[no test files]
+ok  	github.com/Zerostate-IO/CleanComms/internal/app	(cached)
+?   	github.com/Zerostate-IO/CleanComms/internal/config	[no test files]
+ok  	github.com/Zerostate-IO/CleanComms/internal/control	(cached)
+ok  	github.com/Zerostate-IO/CleanComms/internal/fldigi	(cached)
+ok  	github.com/Zerostate-IO/CleanComms/internal/http	(cached)
+ok  	github.com/Zerostate-IO/CleanComms/internal/rigctld	(cached)
+
+=== Files Created ===
+-rw-r--r--@ 1 legend  staff  15640 Mar  2 09:20 internal/app/rig_service_test.go
+-rw-r--r--@ 1 legend  staff   7792 Mar  2 09:05 internal/app/rig_service.go

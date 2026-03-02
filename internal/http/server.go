@@ -65,16 +65,20 @@ type Server struct {
 	rigClient       RigClient
 	modemClient     ModemClient
 	coordinator     CoordinatorClient
+	loggingClient   LoggingClient
+	lookupClient    LookupClient
 	featureFlags    map[string]bool
 }
 
 // NewServer creates a new HTTP server instance.
-func NewServer(addr string, logger *slog.Logger, rigClient RigClient, modemClient ModemClient, coordinator CoordinatorClient, features map[string]bool) *Server {
+func NewServer(addr string, logger *slog.Logger, rigClient RigClient, modemClient ModemClient, coordinator CoordinatorClient, loggingClient LoggingClient, lookupClient LookupClient, features map[string]bool) *Server {
 	s := &Server{
 		logger:       logger,
 		rigClient:    rigClient,
 		modemClient:  modemClient,
 		coordinator:  coordinator,
+		loggingClient: loggingClient,
+		lookupClient: lookupClient,
 		featureFlags: features,
 	}
 
@@ -103,6 +107,13 @@ func (s *Server) registerRoutes(mux *http.ServeMux) {
 
 	// Modem status endpoint
 	mux.HandleFunc("GET /api/v1/modem/status", s.handleModemStatus)
+
+	// Logging endpoints
+	mux.HandleFunc("POST /api/v1/log", s.handleLogCreate)
+	mux.HandleFunc("GET /api/v1/log", s.handleLogList)
+
+	// Lookup endpoint
+	mux.HandleFunc("GET /api/v1/lookup/", s.handleLookup)
 }
 
 // Start starts the HTTP server.

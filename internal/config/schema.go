@@ -8,6 +8,7 @@ type Config struct {
 	Rigctld      RigctldConfig `yaml:"rigctld"`
 	Fldigi       FldigiConfig  `yaml:"fldigi"`
 	Safety       SafetyConfig  `yaml:"safety"`
+	Lookup       LookupConfig  `yaml:"lookup"`
 	FeatureFlags FeatureFlags  `yaml:"feature_flags"`
 }
 
@@ -34,6 +35,13 @@ type FldigiConfig struct {
 // SafetyConfig holds safety-related settings.
 type SafetyConfig struct {
 	PTTTimeoutSeconds int `yaml:"ptt_timeout_seconds"`
+}
+
+// LookupConfig holds callsign lookup settings.
+type LookupConfig struct {
+	HamQTHUsername string `yaml:"hamqth_username"`
+	HamQTHPassword string `yaml:"hamqth_password"`
+	CacheTTLHours  int    `yaml:"cache_ttl_hours"` // Default: 24
 }
 
 // FeatureFlags holds feature flag settings for V1 modules and V2 gates.

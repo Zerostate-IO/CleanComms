@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "region": "north-america",
+  "region_code": "NA",
+  "version": "2024-01-15",
+  "source": "ARRL",
+  "source_url": "https://www.arrl.org/band-plan",
+  "bands": [
+    {
+      "name": "160m",
+      "start_hz": 1800000,
+      "end_hz": 2000000,
+      "modes": ["CW", "SSB", "LSB", "USB", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8", "WSPR", "JT65", "JT9", "AM"],
+      "license_class": ["general", "advanced", "extra"],
+      "notes": "Shared with LORAN. 1.800-1.810 MHz Extra only CW. LSB voice below 2 MHz per convention."
+    },
+    {
+      "name": "80m",
+      "start_hz": 3500000,
+      "end_hz": 4000000,
+      "modes": ["CW", "SSB", "LSB", "USB", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8", "WSPR", "JT65", "JT9", "AM"],
+      "license_class": ["technician", "general", "advanced", "extra"],
+      "notes": "3.500-3.525 Extra only CW, 3.525-3.600 CW/Data, 3.600-3.700 General phone, 3.700-4.000 all license phone. LSB voice convention."
+    },
+    {
+      "name": "60m",
+      "start_hz": 5330500,
+      "end_hz": 5403500,
+      "modes": ["SSB", "USB", "CW", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8"],
+      "license_class": ["technician", "general", "advanced", "extra"],
+      "power_limit_watts": 100,
+      "notes": "Five discrete channels: 5.3305, 5.3465, 5.357, 5.3715, 5.4035 MHz. USB voice, 60m WRC-23 expanded. Primary users have priority."
+    },
+    {
+      "name": "40m",
+      "start_hz": 7000000,
+      "end_hz": 7300000,
+      "modes": ["CW", "SSB", "LSB", "USB", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8", "WSPR", "JT65", "JT9", "AM"],
+      "license_class": ["technician", "general", "advanced", "extra"],
+      "notes": "7.000-7.125 CW/Data only, 7.125-7.300 phone. LSB voice convention. Shared with shortwave broadcast outside ITU Region 2."
+    },
+    {
+      "name": "30m",
+      "start_hz": 10100000,
+      "end_hz": 10150000,
+      "modes": ["CW", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8", "WSPR", "JT65", "JT9"],
+      "license_class": ["general", "advanced", "extra"],
+      "power_limit_watts": 200,
+      "notes": "WARC band. No phone emissions. Secondary allocation - must not interfere with fixed services."
+    },
+    {
+      "name": "20m",
+      "start_hz": 14000000,
+      "end_hz": 14350000,
+      "modes": ["CW", "SSB", "USB", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8", "WSPR", "JT65", "JT9", "AM"],
+      "license_class": ["technician", "general", "advanced", "extra"],
+      "notes": "14.000-14.150 CW/Data, 14.150-14.350 phone. USB voice convention. Primary HF DX band."
+    },
+    {
+      "name": "17m",
+      "start_hz": 18068000,
+      "end_hz": 18168000,
+      "modes": ["CW", "SSB", "USB", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8", "WSPR", "JT65", "JT9", "AM"],
+      "license_class": ["general", "advanced", "extra"],
+      "notes": "WARC band. 18.068-18.100 CW/Data, 18.100-18.168 phone. USB voice convention."
+    },
+    {
+      "name": "15m",
+      "start_hz": 21000000,
+      "end_hz": 21450000,
+      "modes": ["CW", "SSB", "USB", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8", "WSPR", "JT65", "JT9", "AM"],
+      "license_class": ["technician", "general", "advanced", "extra"],
+      "notes": "21.000-21.150 CW/Data, 21.150-21.450 phone. USB voice convention. Good daytime band."
+    },
+    {
+      "name": "12m",
+      "start_hz": 24890000,
+      "end_hz": 24990000,
+      "modes": ["CW", "SSB", "USB", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8", "WSPR", "JT65", "JT9", "AM"],
+      "license_class": ["general", "advanced", "extra"],
+      "notes": "WARC band. 24.890-24.920 CW/Data, 24.920-24.990 phone. USB voice convention. Often closed during solar minimum."
+    },
+    {
+      "name": "10m",
+      "start_hz": 28000000,
+      "end_hz": 29700000,
+      "modes": ["CW", "SSB", "USB", "AM", "FM", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8", "WSPR", "JT65", "JT9", "SSTV", "FAX"],
+      "license_class": ["technician", "general", "advanced", "extra"],
+      "notes": "28.000-28.300 CW/Data, 28.300-28.600 phone, 28.600-29.700 all modes including FM. USB voice convention. FM repeater segment 29.5-29.7 MHz."
+    }
+  ],
+  "notes": "Based on ARRL Band Plan and FCC Part 97 regulations. License classes shown are US allocations. LSB voice convention below 10 MHz, USB above 10 MHz."
+}

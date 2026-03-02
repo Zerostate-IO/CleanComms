@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Zerostate-IO/CleanComms/schemas/bandplan.schema.json",
+  "title": "Amateur Radio Bandplan",
+  "description": "Schema for regional amateur radio bandplan definitions including frequency ranges, modes, and privileges.",
+  "type": "object",
+  "required": ["schema_version", "region", "version", "bands"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Schema version in semver-minor format",
+      "examples": ["1.0"]
+    },
+    "region": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Geographic region for this bandplan",
+      "examples": ["north-america", "europe", "asia-pacific"]
+    },
+    "region_code": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 4,
+      "description": "Short code for the region",
+      "examples": ["NA", "EU", "AP"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Version date in ISO format",
+      "examples": ["2024-01-15"]
+    },
+    "source": {
+      "type": "string",
+      "description": "Authoritative source for this bandplan",
+      "examples": ["ARRL", "IARU"]
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to authoritative source"
+    },
+    "bands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/band"
+      },
+      "description": "List of amateur bands in this bandplan"
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about this bandplan"
+    }
+  },
+  "$defs": {
+    "band": {
+      "type": "object",
+      "required": ["name", "start_hz", "end_hz", "modes"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Band name (wavelength designation)",
+          "examples": ["160m", "80m", "40m", "20m", "10m"]
+        },
+        "start_hz": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Lower frequency bound in Hz"
+        },
+        "end_hz": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Upper frequency bound in Hz"
+        },
+        "modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["CW", "SSB", "LSB", "USB", "AM", "FM", "RTTY", "DATA", "FT8", "FT4", "PSK31", "JS8", "WSPR", "JT65", "JT9", "SSTV", "FAX"]
+          },
+          "description": "Allowed emission modes"
+        },
+        "license_class": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["technician", "general", "advanced", "extra", "novice"]
+          },
+          "description": "License classes with access to this band segment"
+        },
+        "power_limit_watts": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Maximum power output in watts"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Band-specific notes"
+        }
+      }
+    }
+  }
+}

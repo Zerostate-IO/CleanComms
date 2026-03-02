@@ -1,0 +1,11 @@
+=== CleanComms Data Validation ===
+
+Using jsonschema for full schema validation
+
+--- Bandplans ---
+Validating bandplan: north-america.json... [0;32mOK[0m (10 bands)
+
+--- Frequencies ---
+Validating frequencies: common-na.json... [0;32mOK[0m (61 entries)
+
+[0;32m=== All data files validated successfully ===[0m

@@ -10,8 +10,9 @@ import (
 	"github.com/Zerostate-IO/CleanComms/internal/config"
 	"github.com/Zerostate-IO/CleanComms/internal/control"
 	"github.com/Zerostate-IO/CleanComms/internal/http"
+	"github.com/Zerostate-IO/CleanComms/internal/lookup"
+	"github.com/Zerostate-IO/CleanComms/internal/storage"
 )
-
 // App represents the CleanComms daemon application.
 type App struct {
 	config       *config.Config
@@ -19,6 +20,9 @@ type App struct {
 	rigService   *RigService
 	modemService *ModemService
 	coordinator  *control.Coordinator
+	loggingStore *storage.SQLiteStore
+	loggingSvc   *storage.LoggingService
+	lookupSvc    *lookup.Service
 	httpServer   *http.Server
 }
 
@@ -53,15 +57,46 @@ func New(cfg *config.Config) *App {
 		},
 	)
 
+	// Create logging service if enabled
+	var loggingStore *storage.SQLiteStore
+	var loggingSvc *storage.LoggingService
+	if cfg.FeatureFlags.LoggingEnabled {
+		storeCfg := storage.DefaultSQLiteConfig()
+		storeCfg.Path = "data/cleancomms.db"
+		var err error
+		loggingStore, err = storage.NewSQLiteStore(storeCfg)
+		if err != nil {
+			logger.Error("failed to create logging store", "error", err)
+		} else {
+			loggingCfg := storage.DefaultLoggingConfig()
+			loggingSvc = storage.NewLoggingService(loggingStore, logger, loggingCfg)
+		}
+	}
+
+	// Create lookup service if enabled
+	var lookupSvc *lookup.Service
+	if cfg.FeatureFlags.LookupEnabled {
+		lookupCfg := lookup.ServiceConfig{
+			HamQTHUsername: cfg.Lookup.HamQTHUsername,
+			HamQTHPassword: cfg.Lookup.HamQTHPassword,
+		}
+		if cfg.Lookup.CacheTTLHours > 0 {
+			lookupCfg.CacheTTL = time.Duration(cfg.Lookup.CacheTTLHours) * time.Hour
+		}
+		lookupSvc = lookup.NewService(lookupCfg, logger)
+	}
+
 	return &App{
 		config:       cfg,
 		logger:       logger,
 		rigService:   rigService,
 		modemService: modemService,
 		coordinator:  coordinator,
+		loggingStore: loggingStore,
+		loggingSvc:   loggingSvc,
+		lookupSvc:    lookupSvc,
 	}
 }
-
 // Run starts the CleanComms daemon.
 func (a *App) Run(ctx context.Context) error {
 	a.logger.Info("CleanComms daemon starting",
@@ -83,6 +118,11 @@ func (a *App) Run(ctx context.Context) error {
 	// Start coordinator (watchdog for PTT safety)
 	a.coordinator.Start(ctx)
 
+	// Start logging service if enabled
+	if a.loggingSvc != nil {
+		a.loggingSvc.Start(ctx)
+	}
+
 	// Build feature flags map from config
 	features := map[string]bool{
 		"logging_enabled":      a.config.FeatureFlags.LoggingEnabled,
@@ -96,15 +136,29 @@ func (a *App) Run(ctx context.Context) error {
 	rigAdapter := &rigClientAdapter{service: a.rigService}
 	modemAdapter := &modemClientAdapter{service: a.modemService}
 	coordinatorAdapter := &coordinatorClientAdapter{coordinator: a.coordinator}
+	
+	// Create logging client adapter if service is available
+	var loggingAdapter http.LoggingClient
+	if a.loggingSvc != nil {
+		loggingAdapter = http.NewLoggingClientAdapter(a.loggingSvc)
+	}
+
+	// Create lookup client adapter if service is available
+	var lookupAdapter http.LookupClient
+	if a.lookupSvc != nil {
+		lookupAdapter = &lookupClientAdapter{service: a.lookupSvc}
+	}
+
 	a.httpServer = http.NewServer(
 		a.config.Server.HTTPAddr,
 		a.logger,
 		rigAdapter,
 		modemAdapter,
 		coordinatorAdapter,
+		loggingAdapter,
+		lookupAdapter,
 		features,
 	)
-
 	a.logger.Info("CleanComms daemon initialized",
 		"rigctld_status", "connecting",
 		"fldigi_status", "connecting",
@@ -141,6 +195,13 @@ func (a *App) Run(ctx context.Context) error {
 
 	if err := a.modemService.Stop(); err != nil {
 		a.logger.Error("Modem service shutdown error", "error", err)
+	}
+
+	// Stop logging service
+	if a.loggingSvc != nil {
+		if err := a.loggingSvc.Stop(); err != nil {
+			a.logger.Error("Logging service shutdown error", "error", err)
+		}
 	}
 
 	return nil
@@ -223,4 +284,17 @@ func (a *coordinatorClientAdapter) GetPTT() bool {
 
 func (a *coordinatorClientAdapter) IsHealthy() bool {
 	return a.coordinator.IsHealthy()
+}
+
+// lookupClientAdapter adapts lookup.Service to http.LookupClient interface.
+type lookupClientAdapter struct {
+	service *lookup.Service
+}
+
+func (a *lookupClientAdapter) Lookup(ctx context.Context, callsign string) (*lookup.CallsignInfo, error) {
+	return a.service.Lookup(ctx, callsign)
+}
+
+func (a *lookupClientAdapter) IsEnabled() bool {
+	return a.service.IsEnabled()
 }

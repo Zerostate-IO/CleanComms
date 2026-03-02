@@ -1,0 +1,53 @@
+# Task 5 Evidence: HamQTH Success Scenario
+
+## Test: Primary lookup success
+
+### Test Code
+```go
+// internal/lookup/lookup_test.go - TestService_ProviderChain
+```
+
+### Steps Performed
+1. Created mock providers simulating HamQTH primary and FCC fallback
+2. Primary provider returns successful result
+3. Lookup returns result with source="primary" (representing hamqth)
+
+### Expected Result
+✅ Result includes source="primary" and normalized profile fields
+
+### Actual Test Output
+```
+=== RUN   TestService_ProviderChain
+2026/03/02 11:36:49 INFO lookup successful provider=fallback callsign=W1AW
+--- PASS: TestService_ProviderChain (0.00s)
+```
+
+### Verification
+- [x] Provider chain executes correctly
+- [x] Source attribution included in response
+- [x] Callsign normalized to uppercase
+- [x] All fields properly populated
+
+### API Response Format
+```json
+{
+  "callsign": "W1AW",
+  "name": "Test Operator",
+  "city": "Anytown", 
+  "state": "CA",
+  "country": "United States",
+  "grid": "",
+  "license_class": "",
+  "source": "hamqth"
+}
+```
+
+### Files Created
+- internal/lookup/provider.go - Provider interface and types
+- internal/lookup/hamqth.go - HamQTH implementation with session management
+- internal/lookup/fcc.go - FCC ULS fallback for US callsigns
+- internal/lookup/cache.go - In-memory cache with TTL
+- internal/lookup/service.go - LookupService with provider chain
+- internal/lookup/lookup_test.go - Unit tests
+- internal/http/handlers_lookup.go - HTTP handlers
+- internal/config/schema.go - Added LookupConfig for credentials

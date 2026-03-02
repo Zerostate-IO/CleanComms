@@ -13,6 +13,7 @@ type HealthResponse struct {
 	Fldigi      string          `json:"fldigi"`
 	Features    map[string]bool `json:"features"`
 	Coordinator string          `json:"coordinator"`
+	Logging     string          `json:"logging"`
 }
 
 // PTTRequest represents the PTT control request.
@@ -71,12 +72,22 @@ func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 		overallStatus = "degraded"
 	}
 
+	// Check logging service health if configured
+	loggingHealth := "ok"
+	if s.loggingClient != nil {
+		if !s.loggingClient.Health().OK {
+			loggingHealth = "degraded"
+			overallStatus = "degraded"
+		}
+	}
+
 	resp := HealthResponse{
 		Status:      overallStatus,
 		Rigctld:     rigHealth,
 		Fldigi:      modemHealth,
 		Features:    s.featureFlags,
 		Coordinator: coordinatorHealth,
+		Logging:     loggingHealth,
 	}
 
 	s.writeJSON(w, http.StatusOK, resp)

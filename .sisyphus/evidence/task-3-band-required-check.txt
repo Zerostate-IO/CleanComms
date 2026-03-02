@@ -1,0 +1,94 @@
+=== Mandatory Band Requirement Check ===
+
+Checking for required bands: 20m, 40m, 80m
+
+✓ 20m: PRESENT
+✓ 40m: PRESENT
+✓ 80m: PRESENT
+
+=== Band Details ===
+{
+  "name": "80m",
+  "start_hz": 3500000,
+  "end_hz": 4000000,
+  "modes": [
+    "CW",
+    "SSB",
+    "LSB",
+    "USB",
+    "RTTY",
+    "DATA",
+    "FT8",
+    "FT4",
+    "PSK31",
+    "JS8",
+    "WSPR",
+    "JT65",
+    "JT9",
+    "AM"
+  ],
+  "license_class": [
+    "technician",
+    "general",
+    "advanced",
+    "extra"
+  ],
+  "notes": "3.500-3.525 Extra only CW, 3.525-3.600 CW/Data, 3.600-3.700 General phone, 3.700-4.000 all license phone. LSB voice convention."
+}
+{
+  "name": "40m",
+  "start_hz": 7000000,
+  "end_hz": 7300000,
+  "modes": [
+    "CW",
+    "SSB",
+    "LSB",
+    "USB",
+    "RTTY",
+    "DATA",
+    "FT8",
+    "FT4",
+    "PSK31",
+    "JS8",
+    "WSPR",
+    "JT65",
+    "JT9",
+    "AM"
+  ],
+  "license_class": [
+    "technician",
+    "general",
+    "advanced",
+    "extra"
+  ],
+  "notes": "7.000-7.125 CW/Data only, 7.125-7.300 phone. LSB voice convention. Shared with shortwave broadcast outside ITU Region 2."
+}
+{
+  "name": "20m",
+  "start_hz": 14000000,
+  "end_hz": 14350000,
+  "modes": [
+    "CW",
+    "SSB",
+    "USB",
+    "RTTY",
+    "DATA",
+    "FT8",
+    "FT4",
+    "PSK31",
+    "JS8",
+    "WSPR",
+    "JT65",
+    "JT9",
+    "AM"
+  ],
+  "license_class": [
+    "technician",
+    "general",
+    "advanced",
+    "extra"
+  ],
+  "notes": "14.000-14.150 CW/Data, 14.150-14.350 phone. USB voice convention. Primary HF DX band."
+}
+
+Result: PASS - All mandatory bands present

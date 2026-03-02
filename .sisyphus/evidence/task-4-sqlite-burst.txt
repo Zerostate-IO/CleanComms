@@ -1,0 +1,7 @@
+=== RUN   TestLoggingService_BurstLoad
+time=2026-03-02T11:36:06.525-08:00 level=INFO msg="logging service started" buffer_size=2000 batch_size=100 flush_interval=50ms
+    logging_test.go:249: Burst load of 1000 entries completed in 952.375µs
+time=2026-03-02T11:36:07.030-08:00 level=INFO msg="logging service stopped"
+--- PASS: TestLoggingService_BurstLoad (0.51s)
+PASS
+ok  	github.com/Zerostate-IO/CleanComms/internal/storage	(cached)

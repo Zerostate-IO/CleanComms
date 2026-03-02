@@ -143,7 +143,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(core): wire coordinator and feature flags` | Files: `internal/app/*`, `internal/config/*`, `internal/http/*`
 
-- [ ] 2. Scaffold frontend workspace shell
+- [x] 2. Scaffold frontend workspace shell
 
   **What to do**: Create frontend project scaffold and implement baseline app shell with collapsible sidebar, workspace tab strip, and explicit Activate control.
   **Must NOT do**: Do not auto-apply tab selection to live radio state.
@@ -181,7 +181,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(ui): scaffold operator workspace shell` | Files: `frontend/**`
 
-- [ ] 3. Create NA bandplan and common-frequency datasets
+- [x] 3. Create NA bandplan and common-frequency datasets
 
   **What to do**: Add canonical datasets for North America bandplans and common calling/operating frequencies with schema validation.
   **Must NOT do**: Do not hardcode frequencies in UI components.
@@ -218,7 +218,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(data): add NA bandplan and frequency datasets` | Files: `data/bandplans/*`, `data/frequencies/*`
 
-- [ ] 4. Implement SQLite WAL logging store
+- [x] 4. Implement SQLite WAL logging store
 
   **What to do**: Create local logging store with WAL mode, async writes, retention controls, and separate tables for events and user profile data.
   **Must NOT do**: Do not block UI/API writes on external lookups.
@@ -255,7 +255,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(storage): add sqlite wal logging subsystem` | Files: `internal/storage/**`, `internal/http/**`
 
-- [ ] 5. Add lookup adapters and cache layer (HamQTH + FCC fallback)
+- [x] 5. Add lookup adapters and cache layer (HamQTH + FCC fallback)
 
   **What to do**: Implement callsign lookup provider chain with HamQTH primary, FCC fallback, cache TTLs, and source attribution.
   **Must NOT do**: Do not leak provider credentials or block user logging path.

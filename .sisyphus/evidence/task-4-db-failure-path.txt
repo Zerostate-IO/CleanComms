@@ -1,0 +1,4 @@
+=== RUN   TestLoggingService_UnavailableDB
+--- PASS: TestLoggingService_UnavailableDB (0.00s)
+PASS
+ok  	github.com/Zerostate-IO/CleanComms/internal/storage	0.011s

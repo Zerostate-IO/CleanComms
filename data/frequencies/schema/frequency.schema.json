@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Zerostate-IO/CleanComms/schemas/frequency.schema.json",
+  "title": "Common Amateur Radio Frequencies",
+  "description": "Schema for common/calling frequency datasets for amateur radio operations.",
+  "type": "object",
+  "required": ["schema_version", "region", "version", "frequencies"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Schema version in semver-minor format",
+      "examples": ["1.0"]
+    },
+    "region": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Geographic region for these frequencies",
+      "examples": ["north-america", "europe", "asia-pacific"]
+    },
+    "region_code": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 4,
+      "description": "Short code for the region",
+      "examples": ["NA", "EU", "AP"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Version date in ISO format",
+      "examples": ["2024-01-15"]
+    },
+    "source": {
+      "type": "string",
+      "description": "Primary source for these frequencies",
+      "examples": ["ARRL", "IARU", "community"]
+    },
+    "frequencies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/frequency_entry"
+      },
+      "description": "List of common/calling frequencies"
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about this frequency list"
+    }
+  },
+  "$defs": {
+    "frequency_entry": {
+      "type": "object",
+      "required": ["frequency_hz", "mode", "band", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "frequency_hz": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Frequency in Hz"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["CW", "SSB", "LSB", "USB", "AM", "FM", "RTTY", "DATA", "FT8", "FT4", "PSK31", "PSK63", "JS8", "WSPR", "JT65", "JT9", "SSTV", "FAX", "OLIVIA", "CONTESTIA", "MFSK"],
+          "description": "Operating mode"
+        },
+        "band": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Band name (wavelength designation)",
+          "examples": ["160m", "80m", "40m", "20m", "10m"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable description of this frequency usage"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["calling", "digital", "cw", "voice", "emergency", "beacon", "repeater", "satellite", "experimental"],
+          "description": "Category of frequency usage"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Additional tags for filtering"
+        },
+        "dial_offset_hz": {
+          "type": "integer",
+          "description": "Offset from displayed frequency for USB/LSB modes"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional notes"
+        }
+      }
+    }
+  }
+}

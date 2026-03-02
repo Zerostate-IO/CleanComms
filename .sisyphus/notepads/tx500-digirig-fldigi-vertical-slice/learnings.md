@@ -444,3 +444,67 @@
 - Build: must succeed (exit 0)
 - Smoke scripts: must run and report gracefully (exit non-zero is expected)
 - All evidence files must be referenced in audit report
+## 2026-03-02 Task 5: Rig Service Integration
+
+### Service Wrapper Pattern
+- RigService wraps `*rigctld.Client` with health monitoring and reconnection
+- Package: `internal/app/rig_service.go`
+- Same BackoffConfig pattern used for ModemService
+- Start(ctx) / Stop() lifecycle with context cancellation
+
+### RigService Structure
+- Fields: client, logger, health, status, connected, reconnecting
+- Configuration: host, port, healthInterval, backoffConfig
+- Lifecycle: ctx, cancel, wg (sync.WaitGroup for goroutine coordination)
+- Health interval: 5 seconds (default)
+
+### Exponential Backoff Configuration
+- BackoffConfig struct: InitialInterval (1s), MaxInterval (30s), Multiplier (2.0), MaxAttempts (0=unlimited)
+- Backoff sequence: 1s → 2s → 4s → 8s → 16s → 30s (capped)
+- All retry failures logged with attempt count and next retry interval
+- Context cancellation honored between retry attempts
+
+### Health Monitoring
+- RigHealth struct: OK, Error, LastCheck
+- performHealthCheck() uses client.Ping() to verify connection
+- Health status updated on every health check cycle
+- Connection loss triggers automatic reconnection attempt
+
+### Connection State Management
+- connected bool tracks current connection state
+- reconnecting bool prevents multiple concurrent reconnect attempts
+- Background connectionLoop monitors state and initiates reconnect
+- Reconnection runs in separate goroutine to avoid blocking health checks
+
+### Status Retrieval
+- Status() fetches live values: Frequency, Mode, PTT from rigctld
+- Returns disconnected status if not connected
+- Caches last known status internally for efficiency
+- All errors during status fetch logged but don't fail the call
+
+### Adapter Pattern for HTTP Interface
+- rigClientAdapter adapts RigService to http.RigClient interface
+- Maps RigHealth → http.HealthStatus (Error → Message field mapping)
+- Maps RigStatus → http.RigStatus (direct field mapping)
+- Allows RigService to be passed to http.NewServer()
+
+### Thread Safety
+- All public methods use `sync.RWMutex` for thread-safe access
+- `mu.RLock()` for reads (Health, Status, IsConnected)
+- `mu.Lock()` for writes (Connect, performHealthCheck)
+- Concurrent access tested with 10 goroutines × 10 operations
+
+### Testing Approach
+- mockRigctldServer pattern: TCP server on random port with response map
+- Tests for: Connect success, backoff timing, context cancellation
+- Health transition tests verify OK→degraded state changes
+- Start/Stop lifecycle tests verify goroutine cleanup
+- Benchmark tests for Health() and Status() methods
+- Mock server records requests for verification
+
+### App Integration
+- App struct holds `rigService *RigService`
+- `New()` creates RigService with config.Rigctld.Host/Port
+- `Run()` calls rigService.Start(ctx) to begin background loops
+- HTTP server receives rigClientAdapter wrapping the service
+- Graceful shutdown: HTTP server first, then rigService.Stop()

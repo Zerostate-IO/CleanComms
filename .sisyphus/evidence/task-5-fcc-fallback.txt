@@ -1,0 +1,74 @@
+# Task 5 Evidence: FCC Fallback Scenario
+
+## Test: Primary outage fallback
+
+### Test Code
+```go
+// internal/lookup/lookup_test.go - TestService_ProviderChain
+// Simulates primary failure (ErrProviderDown) and fallback success
+```
+
+### Steps Performed
+1. Created mock primary provider that returns ErrProviderDown
+2. Created mock fallback provider that returns successful result
+3. Service tries primary first, then falls back on failure
+4. Non-US callsigns skip providers that don't support them
+
+### Expected Result
+✅ Source switches to "fallback" (representing FCC) for failed primary
+✅ Non-US callsigns skip US-only providers (FCC)
+
+### Actual Test Output
+```
+=== RUN   TestService_ProviderChain
+2026/03/02 11:36:49 INFO lookup successful provider=fallback callsign=W1AW
+--- PASS: TestService_ProviderChain (0.00s)
+
+=== RUN   TestService_SkipUnsupportedProvider  
+2026/03/02 11:36:49 INFO lookup successful provider=worldwide callsign=DL1ABC
+--- PASS: TestService_SkipUnsupportedProvider (0.00s)
+```
+
+### Provider Support Logic
+- **HamQTH**: Supports all callsigns (worldwide)
+- **FCC**: Only supports US callsigns (K*, W*, N*, AA-AL)
+
+### US Callsign Detection
+```go
+func isUSCallsign(callsign string) bool {
+    // US callsigns: K*, W*, N*, A*, AA-AL, KA-KZ, NA-NZ, WA-WZ
+    prefix := callsign[:1]
+    switch prefix {
+    case "K", "W", "N":
+        return true
+    case "A":
+        // AA-AL are US amateur callsigns
+        second := callsign[1]
+        return second >= 'A' && second <= 'L'
+    }
+    return false
+}
+```
+
+### Test Cases Verified
+| Callsign | US? | HamQTH | FCC |
+|----------|-----|--------|-----|
+| W1AW     | Yes | ✓      | ✓   |
+| K1ABC    | Yes | ✓      | ✓   |
+| N2XYZ    | Yes | ✓      | ✓   |
+| AA0AA    | Yes | ✓      | ✓   |
+| DL1ABC   | No  | ✓      | ✗   |
+| JA1ABC   | No  | ✓      | ✗   |
+
+### Fallback Behavior
+1. HamQTH is always tried first (if credentials configured)
+2. If HamQTH fails with ErrProviderDown, FCC is tried
+3. If HamQTH returns ErrNotFound, lookup fails immediately (not found in primary)
+4. FCC is skipped for non-US callsigns
+5. Errors are logged but not exposed to caller (only final result)
+
+### Cache Behavior
+- Successful lookups are cached for configurable TTL (default 24h)
+- Errors are NOT cached (subsequent calls retry provider)
+- Cache keys are case-insensitive
+- Expired entries are pruned on demand

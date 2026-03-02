@@ -1,0 +1,498 @@
+{
+  "schema_version": "1.0",
+  "region": "north-america",
+  "region_code": "NA",
+  "version": "2024-01-15",
+  "source": "ARRL",
+  "frequencies": [
+    {
+      "frequency_hz": 1840000,
+      "mode": "FT8",
+      "band": "160m",
+      "description": "FT8 digital mode",
+      "category": "digital",
+      "tags": ["ft8", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 1838000,
+      "mode": "PSK31",
+      "band": "160m",
+      "description": "PSK31 digital mode",
+      "category": "digital",
+      "tags": ["psk31", "digital"]
+    },
+    {
+      "frequency_hz": 1836000,
+      "mode": "RTTY",
+      "band": "160m",
+      "description": "RTTY digital mode",
+      "category": "digital",
+      "tags": ["rtty", "digital"]
+    },
+    {
+      "frequency_hz": 3573000,
+      "mode": "FT8",
+      "band": "80m",
+      "description": "FT8 digital mode primary",
+      "category": "digital",
+      "tags": ["ft8", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 3575000,
+      "mode": "FT4",
+      "band": "80m",
+      "description": "FT4 digital mode",
+      "category": "digital",
+      "tags": ["ft4", "digital", "contest"]
+    },
+    {
+      "frequency_hz": 3580000,
+      "mode": "PSK31",
+      "band": "80m",
+      "description": "PSK31 digital mode calling",
+      "category": "digital",
+      "tags": ["psk31", "digital"]
+    },
+    {
+      "frequency_hz": 3583000,
+      "mode": "RTTY",
+      "band": "80m",
+      "description": "RTTY digital mode",
+      "category": "digital",
+      "tags": ["rtty", "digital"]
+    },
+    {
+      "frequency_hz": 3582000,
+      "mode": "JS8",
+      "band": "80m",
+      "description": "JS8Call operating frequency",
+      "category": "digital",
+      "tags": ["js8", "js8call", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 3568600,
+      "mode": "WSPR",
+      "band": "80m",
+      "description": "WSPR beacon frequency",
+      "category": "beacon",
+      "tags": ["wspr", "beacon", "propagation"]
+    },
+    {
+      "frequency_hz": 3550000,
+      "mode": "CW",
+      "band": "80m",
+      "description": "CW calling frequency",
+      "category": "cw",
+      "tags": ["cw", "morse"]
+    },
+    {
+      "frequency_hz": 3850000,
+      "mode": "SSB",
+      "band": "80m",
+      "description": "SSB calling frequency",
+      "category": "voice",
+      "tags": ["ssb", "voice", "lsb"]
+    },
+    {
+      "frequency_hz": 5357000,
+      "mode": "FT8",
+      "band": "60m",
+      "description": "FT8 on channel 3 (5.357 MHz)",
+      "category": "digital",
+      "tags": ["ft8", "digital", "60m-channel"]
+    },
+    {
+      "frequency_hz": 7074000,
+      "mode": "FT8",
+      "band": "40m",
+      "description": "FT8 digital mode primary",
+      "category": "digital",
+      "tags": ["ft8", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 7047500,
+      "mode": "FT4",
+      "band": "40m",
+      "description": "FT4 digital mode",
+      "category": "digital",
+      "tags": ["ft4", "digital", "contest"]
+    },
+    {
+      "frequency_hz": 7035000,
+      "mode": "PSK31",
+      "band": "40m",
+      "description": "PSK31 digital mode calling",
+      "category": "digital",
+      "tags": ["psk31", "digital"]
+    },
+    {
+      "frequency_hz": 7040000,
+      "mode": "RTTY",
+      "band": "40m",
+      "description": "RTTY digital mode",
+      "category": "digital",
+      "tags": ["rtty", "digital"]
+    },
+    {
+      "frequency_hz": 7078000,
+      "mode": "JS8",
+      "band": "40m",
+      "description": "JS8Call operating frequency",
+      "category": "digital",
+      "tags": ["js8", "js8call", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 7038600,
+      "mode": "WSPR",
+      "band": "40m",
+      "description": "WSPR beacon frequency",
+      "category": "beacon",
+      "tags": ["wspr", "beacon", "propagation"]
+    },
+    {
+      "frequency_hz": 7030000,
+      "mode": "CW",
+      "band": "40m",
+      "description": "CW calling frequency (Novice/Tech subband)",
+      "category": "cw",
+      "tags": ["cw", "morse"]
+    },
+    {
+      "frequency_hz": 7150000,
+      "mode": "SSB",
+      "band": "40m",
+      "description": "SSB calling frequency",
+      "category": "voice",
+      "tags": ["ssb", "voice", "lsb"]
+    },
+    {
+      "frequency_hz": 10136000,
+      "mode": "FT8",
+      "band": "30m",
+      "description": "FT8 digital mode",
+      "category": "digital",
+      "tags": ["ft8", "digital", "weak-signal", "warc"]
+    },
+    {
+      "frequency_hz": 10140000,
+      "mode": "FT4",
+      "band": "30m",
+      "description": "FT4 digital mode",
+      "category": "digital",
+      "tags": ["ft4", "digital", "contest", "warc"]
+    },
+    {
+      "frequency_hz": 10142000,
+      "mode": "PSK31",
+      "band": "30m",
+      "description": "PSK31 digital mode",
+      "category": "digital",
+      "tags": ["psk31", "digital", "warc"]
+    },
+    {
+      "frequency_hz": 10130000,
+      "mode": "JS8",
+      "band": "30m",
+      "description": "JS8Call operating frequency",
+      "category": "digital",
+      "tags": ["js8", "js8call", "digital", "weak-signal", "warc"]
+    },
+    {
+      "frequency_hz": 10138700,
+      "mode": "WSPR",
+      "band": "30m",
+      "description": "WSPR beacon frequency",
+      "category": "beacon",
+      "tags": ["wspr", "beacon", "propagation", "warc"]
+    },
+    {
+      "frequency_hz": 10116000,
+      "mode": "CW",
+      "band": "30m",
+      "description": "CW segment center",
+      "category": "cw",
+      "tags": ["cw", "morse", "warc"]
+    },
+    {
+      "frequency_hz": 14074000,
+      "mode": "FT8",
+      "band": "20m",
+      "description": "FT8 digital mode primary",
+      "category": "digital",
+      "tags": ["ft8", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 14080000,
+      "mode": "FT4",
+      "band": "20m",
+      "description": "FT4 digital mode",
+      "category": "digital",
+      "tags": ["ft4", "digital", "contest"]
+    },
+    {
+      "frequency_hz": 14070000,
+      "mode": "PSK31",
+      "band": "20m",
+      "description": "PSK31 digital mode calling",
+      "category": "digital",
+      "tags": ["psk31", "digital"]
+    },
+    {
+      "frequency_hz": 14080000,
+      "mode": "RTTY",
+      "band": "20m",
+      "description": "RTTY digital mode",
+      "category": "digital",
+      "tags": ["rtty", "digital"]
+    },
+    {
+      "frequency_hz": 14078000,
+      "mode": "JS8",
+      "band": "20m",
+      "description": "JS8Call operating frequency",
+      "category": "digital",
+      "tags": ["js8", "js8call", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 14095600,
+      "mode": "WSPR",
+      "band": "20m",
+      "description": "WSPR beacon frequency",
+      "category": "beacon",
+      "tags": ["wspr", "beacon", "propagation"]
+    },
+    {
+      "frequency_hz": 14060000,
+      "mode": "CW",
+      "band": "20m",
+      "description": "CW calling frequency",
+      "category": "cw",
+      "tags": ["cw", "morse"]
+    },
+    {
+      "frequency_hz": 14195000,
+      "mode": "SSB",
+      "band": "20m",
+      "description": "SSB calling frequency",
+      "category": "voice",
+      "tags": ["ssb", "voice", "usb"]
+    },
+    {
+      "frequency_hz": 18100000,
+      "mode": "FT8",
+      "band": "17m",
+      "description": "FT8 digital mode",
+      "category": "digital",
+      "tags": ["ft8", "digital", "weak-signal", "warc"]
+    },
+    {
+      "frequency_hz": 18104000,
+      "mode": "FT4",
+      "band": "17m",
+      "description": "FT4 digital mode",
+      "category": "digital",
+      "tags": ["ft4", "digital", "contest", "warc"]
+    },
+    {
+      "frequency_hz": 18102000,
+      "mode": "JS8",
+      "band": "17m",
+      "description": "JS8Call operating frequency",
+      "category": "digital",
+      "tags": ["js8", "js8call", "digital", "weak-signal", "warc"]
+    },
+    {
+      "frequency_hz": 18104600,
+      "mode": "WSPR",
+      "band": "17m",
+      "description": "WSPR beacon frequency",
+      "category": "beacon",
+      "tags": ["wspr", "beacon", "propagation", "warc"]
+    },
+    {
+      "frequency_hz": 18095000,
+      "mode": "CW",
+      "band": "17m",
+      "description": "CW segment",
+      "category": "cw",
+      "tags": ["cw", "morse", "warc"]
+    },
+    {
+      "frequency_hz": 18130000,
+      "mode": "SSB",
+      "band": "17m",
+      "description": "SSB calling frequency",
+      "category": "voice",
+      "tags": ["ssb", "voice", "usb", "warc"]
+    },
+    {
+      "frequency_hz": 21074000,
+      "mode": "FT8",
+      "band": "15m",
+      "description": "FT8 digital mode primary",
+      "category": "digital",
+      "tags": ["ft8", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 21140000,
+      "mode": "FT4",
+      "band": "15m",
+      "description": "FT4 digital mode",
+      "category": "digital",
+      "tags": ["ft4", "digital", "contest"]
+    },
+    {
+      "frequency_hz": 21070000,
+      "mode": "PSK31",
+      "band": "15m",
+      "description": "PSK31 digital mode calling",
+      "category": "digital",
+      "tags": ["psk31", "digital"]
+    },
+    {
+      "frequency_hz": 21078000,
+      "mode": "JS8",
+      "band": "15m",
+      "description": "JS8Call operating frequency",
+      "category": "digital",
+      "tags": ["js8", "js8call", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 21094600,
+      "mode": "WSPR",
+      "band": "15m",
+      "description": "WSPR beacon frequency",
+      "category": "beacon",
+      "tags": ["wspr", "beacon", "propagation"]
+    },
+    {
+      "frequency_hz": 21060000,
+      "mode": "CW",
+      "band": "15m",
+      "description": "CW calling frequency",
+      "category": "cw",
+      "tags": ["cw", "morse"]
+    },
+    {
+      "frequency_hz": 21295000,
+      "mode": "SSB",
+      "band": "15m",
+      "description": "SSB calling frequency",
+      "category": "voice",
+      "tags": ["ssb", "voice", "usb"]
+    },
+    {
+      "frequency_hz": 24915000,
+      "mode": "FT8",
+      "band": "12m",
+      "description": "FT8 digital mode",
+      "category": "digital",
+      "tags": ["ft8", "digital", "weak-signal", "warc"]
+    },
+    {
+      "frequency_hz": 24919000,
+      "mode": "FT4",
+      "band": "12m",
+      "description": "FT4 digital mode",
+      "category": "digital",
+      "tags": ["ft4", "digital", "contest", "warc"]
+    },
+    {
+      "frequency_hz": 24922000,
+      "mode": "JS8",
+      "band": "12m",
+      "description": "JS8Call operating frequency",
+      "category": "digital",
+      "tags": ["js8", "js8call", "digital", "weak-signal", "warc"]
+    },
+    {
+      "frequency_hz": 24924600,
+      "mode": "WSPR",
+      "band": "12m",
+      "description": "WSPR beacon frequency",
+      "category": "beacon",
+      "tags": ["wspr", "beacon", "propagation", "warc"]
+    },
+    {
+      "frequency_hz": 24906000,
+      "mode": "CW",
+      "band": "12m",
+      "description": "CW segment",
+      "category": "cw",
+      "tags": ["cw", "morse", "warc"]
+    },
+    {
+      "frequency_hz": 24950000,
+      "mode": "SSB",
+      "band": "12m",
+      "description": "SSB calling frequency",
+      "category": "voice",
+      "tags": ["ssb", "voice", "usb", "warc"]
+    },
+    {
+      "frequency_hz": 28074000,
+      "mode": "FT8",
+      "band": "10m",
+      "description": "FT8 digital mode primary",
+      "category": "digital",
+      "tags": ["ft8", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 28180000,
+      "mode": "FT4",
+      "band": "10m",
+      "description": "FT4 digital mode",
+      "category": "digital",
+      "tags": ["ft4", "digital", "contest"]
+    },
+    {
+      "frequency_hz": 28070000,
+      "mode": "PSK31",
+      "band": "10m",
+      "description": "PSK31 digital mode calling",
+      "category": "digital",
+      "tags": ["psk31", "digital"]
+    },
+    {
+      "frequency_hz": 28078000,
+      "mode": "JS8",
+      "band": "10m",
+      "description": "JS8Call operating frequency",
+      "category": "digital",
+      "tags": ["js8", "js8call", "digital", "weak-signal"]
+    },
+    {
+      "frequency_hz": 28124600,
+      "mode": "WSPR",
+      "band": "10m",
+      "description": "WSPR beacon frequency",
+      "category": "beacon",
+      "tags": ["wspr", "beacon", "propagation"]
+    },
+    {
+      "frequency_hz": 28060000,
+      "mode": "CW",
+      "band": "10m",
+      "description": "CW calling frequency",
+      "category": "cw",
+      "tags": ["cw", "morse"]
+    },
+    {
+      "frequency_hz": 28395000,
+      "mode": "SSB",
+      "band": "10m",
+      "description": "SSB calling frequency",
+      "category": "voice",
+      "tags": ["ssb", "voice", "usb"]
+    },
+    {
+      "frequency_hz": 29600000,
+      "mode": "FM",
+      "band": "10m",
+      "description": "FM simplex calling frequency",
+      "category": "voice",
+      "tags": ["fm", "voice", "simplex"]
+    }
+  ],
+  "notes": "Based on ARRL Band Plan and common operating practices. FT8 frequencies per WSJT-X defaults. LSB voice convention below 10 MHz, USB above 10 MHz."
+}
