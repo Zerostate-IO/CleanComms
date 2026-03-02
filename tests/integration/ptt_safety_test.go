@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/zerostate-io/cleancomms/internal/control"
+	"github.com/Zerostate-IO/CleanComms/internal/control"
 )
 
 // mockRigController implements control.RigController for testing.
@@ -111,6 +111,32 @@ func newTestCoordinator() (*control.Coordinator, *mockRigController, *mockModemC
 	return c, rig, modem
 }
 
+type orderTrackingRig struct {
+	*mockRigController
+	order   *[]string
+	orderMu *sync.Mutex
+}
+
+func (o *orderTrackingRig) SetPTT(state bool) (bool, error) {
+	o.orderMu.Lock()
+	*o.order = append(*o.order, "rig_ptt")
+	o.orderMu.Unlock()
+	return o.mockRigController.SetPTT(state)
+}
+
+type orderTrackingModem struct {
+	*mockModemController
+	order   *[]string
+	orderMu *sync.Mutex
+}
+
+func (o *orderTrackingModem) SetTX(tx bool) error {
+	o.orderMu.Lock()
+	*o.order = append(*o.order, "modem_tx")
+	o.orderMu.Unlock()
+	return o.mockModemController.SetTX(tx)
+}
+
 // TestPTTSafety_TXBlockedWhenCoordinatorDegraded verifies that TX is blocked
 // when the coordinator is in a degraded state (either rig or modem unhealthy).
 // This is a safety-critical test to prevent accidental transmission.
@@ -200,7 +226,7 @@ func TestPTTSafety_TXBlockedWhenCoordinatorDegraded(t *testing.T) {
 // TestPTTSafety_GracefulDegradationDuringTX verifies that if degradation
 // occurs while in TX mode, subsequent PTT requests are blocked.
 func TestPTTSafety_GracefulDegradationDuringTX(t *testing.T) {
-	c, rig, modem := newTestCoordinator()
+	c, rig, _ := newTestCoordinator()
 	c.Start(context.Background())
 	defer c.Stop()
 
@@ -282,31 +308,27 @@ func TestPTTSafety_ConcurrentDegradation(t *testing.T) {
 // TestPTTSafety_TransitionOrder verifies that modem TX is set before rig PTT
 // to ensure the audio path is ready before RF is applied.
 func TestPTTSafety_TransitionOrder(t *testing.T) {
-	c, rig, modem := newTestCoordinator()
-	c.Start(context.Background())
-	defer c.Stop()
-
 	// Track order of operations
 	order := make([]string, 0, 2)
 	orderMu := sync.Mutex{}
 
-	// Wrap modem SetTX to track order
-	originalModemSetTX := modem.SetTX
-	modem.SetTX = func(tx bool) error {
-		orderMu.Lock()
-		order = append(order, "modem_tx")
-		orderMu.Unlock()
-		return originalModemSetTX(tx)
+	rig := &orderTrackingRig{
+		mockRigController: &mockRigController{health: control.RigHealthStatus{OK: true}},
+		order:             &order,
+		orderMu:           &orderMu,
+	}
+	modem := &orderTrackingModem{
+		mockModemController: &mockModemController{health: control.ModemHealthStatus{OK: true}},
+		order:               &order,
+		orderMu:             &orderMu,
 	}
 
-	// Wrap rig SetPTT to track order
-	originalRigSetPTT := rig.SetPTT
-	rig.SetPTT = func(state bool) (bool, error) {
-		orderMu.Lock()
-		order = append(order, "rig_ptt")
-		orderMu.Unlock()
-		return originalRigSetPTT(state)
-	}
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
+	config := control.CoordinatorConfig{PTTTimeout: 2 * time.Second}
+	c := control.NewCoordinator(rig, modem, logger, config)
+
+	c.Start(context.Background())
+	defer c.Stop()
 
 	// Enter TX
 	err := c.SetPTT(true)
