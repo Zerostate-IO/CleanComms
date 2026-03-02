@@ -13,6 +13,17 @@ import (
 	"github.com/Zerostate-IO/CleanComms/internal/lookup"
 	"github.com/Zerostate-IO/CleanComms/internal/storage"
 )
+
+// resolveBindAddr determines the bind address based on config.
+// Fail-closed: defaults to localhost-only; remote requires explicit IP.
+func resolveBindAddr(cfg *config.Config) string {
+	// If remote mode is enabled with explicit bind, use it
+	if cfg.Remote.Enabled && cfg.Remote.Bind != "" {
+		return cfg.Remote.Bind
+	}
+	// Default to localhost-only (fail-closed)
+	return cfg.Server.HTTPAddr
+}
 // App represents the CleanComms daemon application.
 type App struct {
 	config       *config.Config
@@ -108,6 +119,30 @@ func (a *App) Run(ctx context.Context) error {
 		"fldigi_addr", a.config.Fldigi.XMLRPCAddr,
 		"default_mode", a.config.Fldigi.DefaultMode,
 	)
+	// Log policy configuration (kill switches)
+	a.logger.Info("policy configuration",
+		"ai_enabled", a.config.Policy.AIEnabled,
+		"remote_access_enabled", a.config.Policy.RemoteAccessEnabled,
+		"auto_apply_suggestions", a.config.Policy.AutoApplySuggestions,
+	)
+
+	// Enforce policy: block V2 AI features if not explicitly enabled
+	if a.config.FeatureFlags.SignalIdV2Enabled && !a.config.Policy.AIEnabled {
+		a.logger.Warn("signal_id_v2_enabled is true but ai_enabled policy is false; disabling signal_id_v2")
+		a.config.FeatureFlags.SignalIdV2Enabled = false
+	}
+
+	// Enforce policy: block remote access if not explicitly enabled
+	if a.config.Remote.Enabled && !a.config.Policy.RemoteAccessEnabled {
+		a.logger.Warn("remote.enabled is true but remote_access_enabled policy is false; disabling remote")
+		a.config.Remote.Enabled = false
+	}
+
+	// Enforce policy: auto_apply_suggestions must ALWAYS be false (hardcoded safety)
+	if a.config.Policy.AutoApplySuggestions {
+		a.logger.Error("auto_apply_suggestions must be false; forcing to false for safety")
+		a.config.Policy.AutoApplySuggestions = false
+	}
 
 	// Start rig service (background connection with health checks)
 	a.rigService.Start(ctx)
@@ -149,14 +184,19 @@ func (a *App) Run(ctx context.Context) error {
 		lookupAdapter = &lookupClientAdapter{service: a.lookupSvc}
 	}
 
-	a.httpServer = http.NewServer(
-		a.config.Server.HTTPAddr,
+	// Resolve bind address (fail-closed: localhost-only by default)
+	bindAddr := resolveBindAddr(a.config)
+	a.logger.Info("binding HTTP server", "addr", bindAddr, "remote_enabled", a.config.Remote.Enabled)
+
+a.httpServer = http.NewServer(
+		bindAddr,
 		a.logger,
 		rigAdapter,
 		modemAdapter,
 		coordinatorAdapter,
 		loggingAdapter,
 		lookupAdapter,
+		nil, // aiClient - V2 feature disabled by default
 		features,
 	)
 	a.logger.Info("CleanComms daemon initialized",

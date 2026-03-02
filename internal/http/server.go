@@ -67,19 +67,21 @@ type Server struct {
 	coordinator     CoordinatorClient
 	loggingClient   LoggingClient
 	lookupClient    LookupClient
+	aiClient        AIClient
 	featureFlags    map[string]bool
 }
 
 // NewServer creates a new HTTP server instance.
-func NewServer(addr string, logger *slog.Logger, rigClient RigClient, modemClient ModemClient, coordinator CoordinatorClient, loggingClient LoggingClient, lookupClient LookupClient, features map[string]bool) *Server {
+func NewServer(addr string, logger *slog.Logger, rigClient RigClient, modemClient ModemClient, coordinator CoordinatorClient, loggingClient LoggingClient, lookupClient LookupClient, aiClient AIClient, features map[string]bool) *Server {
 	s := &Server{
-		logger:       logger,
-		rigClient:    rigClient,
-		modemClient:  modemClient,
-		coordinator:  coordinator,
+		logger:        logger,
+		rigClient:     rigClient,
+		modemClient:   modemClient,
+		coordinator:   coordinator,
 		loggingClient: loggingClient,
-		lookupClient: lookupClient,
-		featureFlags: features,
+		lookupClient:  lookupClient,
+		aiClient:      aiClient,
+		featureFlags:  features,
 	}
 
 	mux := http.NewServeMux()
@@ -114,6 +116,12 @@ func (s *Server) registerRoutes(mux *http.ServeMux) {
 
 	// Lookup endpoint
 	mux.HandleFunc("GET /api/v1/lookup/", s.handleLookup)
+
+	// V2 AI endpoints (feature-gated)
+	mux.HandleFunc("POST /api/v2/signal/classify", s.handleClassifySignal)
+	mux.HandleFunc("POST /api/v2/signal/killswitch", s.handleKillSwitch)
+	mux.HandleFunc("GET /api/v2/signal/killswitch", s.handleGetKillSwitch)
+	mux.HandleFunc("GET /api/v2/signal/queue", s.handleQueueStats)
 }
 
 // Start starts the HTTP server.

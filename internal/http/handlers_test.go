@@ -15,7 +15,7 @@ func newTestServer(rigClient RigClient, modemClient ModemClient, coordinator Coo
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	}))
-	return NewServer(":0", logger, rigClient, modemClient, coordinator, nil, nil, features)
+	return NewServer(":0", logger, rigClient, modemClient, coordinator, nil, nil, nil, features)
 }
 
 func defaultFeatures() map[string]bool {

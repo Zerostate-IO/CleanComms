@@ -1,0 +1,481 @@
+/**
+ * Solar Panel Styles
+ * 
+ * Industrial/Radio aesthetic for solar conditions display
+ * Clear propagation quality indicators
+ * Offline/cached states with visual feedback
+ */
+
+/* ============================================
+   SOLAR PANEL CONTAINER
+   ============================================ */
+
+.solar-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.solar-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.solar-panel__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.solar-panel__icon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-warning);
+}
+
+.solar-panel__title-text {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+/* ============================================
+   STATUS INDICATOR
+   ============================================ */
+
+.solar-panel__status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.solar-panel__status-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.solar-panel__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.solar-panel__status-label {
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.solar-panel__status-age {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  padding: 1px 4px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+}
+
+.solar-panel__source {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.solar-panel__source-label {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+}
+
+.solar-panel__source-value {
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  color: var(--text-secondary);
+  padding: 1px 4px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+
+.solar-panel__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-xl);
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+}
+
+.solar-panel__loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border-accent);
+  border-top-color: var(--accent-warning);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   ERROR STATE
+   ============================================ */
+
+.solar-panel__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  color: var(--accent-danger);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.solar-panel__error svg {
+  width: 32px;
+  height: 32px;
+}
+
+.solar-panel__retry-btn {
+  padding: var(--space-xs) var(--space-md);
+  background: var(--accent-danger);
+  color: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: var(--transition-fast);
+}
+
+.solar-panel__retry-btn:hover {
+  filter: brightness(1.1);
+}
+
+/* ============================================
+   PROPAGATION SUMMARY
+   ============================================ */
+
+.solar-panel__summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-md);
+  background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.solar-panel__summary-label {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.solar-panel__summary-status {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: var(--space-xs) 0;
+}
+
+.solar-panel__summary-desc {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   METRICS GRID
+   ============================================ */
+
+.solar-panel__metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+}
+
+.solar-metric {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.solar-metric--k-index {
+  grid-column: 1 / -1;
+}
+
+.solar-metric__icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.solar-metric__icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+}
+
+.solar-metric__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.solar-metric__label {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.solar-metric__value {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+}
+
+.solar-metric__number {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.solar-metric__unit {
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  color: var(--text-muted);
+}
+
+.solar-metric__quality {
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.solar-metric__description {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   K-INDEX BARS
+   ============================================ */
+
+.solar-k-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  padding: var(--space-xs);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+}
+
+.solar-k-bars__label {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  padding: 0 2px;
+}
+
+.solar-k-bars__graph {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 40px;
+}
+
+.solar-k-bars__bar {
+  width: 4px;
+  background: var(--border-accent);
+  border-radius: 1px;
+  transition: background-color 0.3s ease;
+}
+
+.solar-k-bars__bar--active {
+  background: var(--accent-primary);
+}
+
+/* ============================================
+   QUICK REFERENCE
+   ============================================ */
+
+.solar-panel__reference {
+  padding: var(--space-sm);
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-default);
+}
+
+.solar-panel__reference-title {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-xs);
+}
+
+.solar-panel__reference-grid {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.solar-panel__reference-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.solar-panel__ref-label {
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 1px 4px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+}
+
+.solar-panel__ref-range {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+.solar-panel__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border-muted);
+}
+
+.solar-panel__footer-label {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.solar-panel__footer-time {
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   COMPACT MODE
+   ============================================ */
+
+.solar-panel--compact {
+  padding: var(--space-xs);
+}
+
+.solar-panel__compact-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.solar-panel__compact-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.solar-panel__compact-label {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.solar-panel__compact-value {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1600px) {
+  .solar-panel__metrics {
+    grid-template-columns: 1fr;
+  }
+  
+  .solar-metric--k-index {
+    grid-column: 1;
+  }
+  
+  .solar-metric__number {
+    font-size: 1.125rem;
+  }
+  
+  .solar-panel__summary-status {
+    font-size: 1.25rem;
+  }
+}

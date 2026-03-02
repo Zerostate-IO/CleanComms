@@ -27,3 +27,26 @@ feature_flags:
   map_enabled: true
   solar_enabled: true
   signal_id_v2_enabled: false
+
+# VPN-only remote access (fail-closed)
+# Security provided by VPN; no TLS/auth at app layer.
+# bind must be explicit IP - never use 0.0.0.0
+remote:
+  enabled: false
+  bind: ""  # e.g., "10.8.0.2:8080" for VPN access
+
+# Policy configuration (fail-closed defaults)
+# All V2 and remote features must be EXPLICITLY enabled.
+# Default state is DISABLED for security.
+policy:
+  # AI/ML features (V2 signal classification, etc.)
+  # Set to true ONLY if you understand the implications.
+  ai_enabled: false
+
+  # Remote access via VPN
+  # Set to true ONLY if you have VPN properly configured.
+  remote_access_enabled: false
+
+  # Auto-apply AI suggestions - ALWAYS false for safety.
+  # This is a kill switch; suggestions must be manually reviewed.
+  auto_apply_suggestions: false

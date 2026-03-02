@@ -551,7 +551,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(ui): add grid-map and solar context panels` | Files: `frontend/src/features/map/**`, `frontend/src/features/solar/**`
 
-- [ ] 13. Add V2 signal-ID contracts and async service lane
+- [x] 13. Add V2 signal-ID contracts and async service lane
 
   **What to do**: Implement V2 service interfaces (`AIService`, `http.AIClient`), versioned message contracts, async inference queue, join timeout, and kill switch flags.
   **Must NOT do**: Do not make V1 control path synchronous on V2 inference.
@@ -589,7 +589,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(v2): add async signal-id contracts and service lane` | Files: `internal/ai/**`, `internal/http/**`, `internal/config/**`
 
-- [ ] 14. Build V2 advisory UI for top-N hypotheses and correction loop
+- [x] 14. Build V2 advisory UI for top-N hypotheses and correction loop
 
   **What to do**: Add non-modal advisory panel with top-N hypotheses, confidence hierarchy, inline correction chits, reversible optimize actions, and profile policy controls.
   **Must NOT do**: Do not auto-apply AI suggestions to live rig settings.
@@ -626,7 +626,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(ui-v2): add advisory signal-id interaction model` | Files: `frontend/src/features/signal-id/**`
 
-- [ ] 15. Policy, compliance, and privacy hardening
+- [x] 15. Policy, compliance, and privacy hardening
 
   **What to do**: Implement profile-based V2 policy presets, compliance language surfaces, log redaction defaults, retention controls, and audit events.
   **Must NOT do**: Do not weaken default policy for new profiles.
@@ -663,7 +663,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(policy): add profile-based compliance and privacy controls` | Files: `internal/policy/**`, `frontend/src/features/policy/**`
 
-- [ ] 16. End-to-end integration and rollout gates
+- [x] 16. End-to-end integration and rollout gates
 
   **What to do**: Add integration tests and rollout gate checks (shadow, assist, canary thresholds), then validate full V1+V2 stack with deterministic evidence.
   **Must NOT do**: Do not mark rollout gate pass if V1 latency/reliability regresses.
@@ -700,7 +700,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `chore(verify): add rollout gates and end-to-end validation` | Files: `scripts/**`, `.sisyphus/evidence/**`, `frontend/tests/**`
 
-- [ ] 17. Add VPN-only remote UI access mode (V2)
+- [x] 17. Add VPN-only remote UI access mode (V2)
 
   **What to do**: Add explicit network access mode in config and HTTP middleware guardrails for VPN-only remote operation.
   **Must NOT do**: Do not expose remote mode through permissive bind defaults.
