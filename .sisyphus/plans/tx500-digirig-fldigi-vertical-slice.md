@@ -175,7 +175,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `feat(api): add health and control endpoints` | Files: `internal/http/**`, `cmd/cleancomms/**`
 
-- [ ] 5. Integrate rigctld lifecycle in app service
+- [x] 5. Integrate rigctld lifecycle in app service
   **What to do**: Add startup probe, reconnect/backoff, and degraded-state mapping.
   **Must NOT do**: No hidden retries without surfaced status.
   **Recommended Agent Profile**: Category `unspecified-high`; Skills `[]`; Omitted `writing`.
@@ -198,7 +198,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `feat(core): integrate rigctld dependency lifecycle` | Files: `internal/app/**`
 
-- [ ] 6. Integrate fldigi lifecycle in app service
+- [x] 6. Integrate fldigi lifecycle in app service
   **What to do**: Add modem probe/reconnect and PSK31 ensure path at startup.
   **Must NOT do**: Do not force transmit at startup.
   **Recommended Agent Profile**: Category `unspecified-high`; Skills `[]`; Omitted `deep`.
@@ -221,7 +221,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `feat(modem): integrate fldigi dependency lifecycle` | Files: `internal/app/**`
 
-- [ ] 7. Write macOS setup/runbook
+- [x] 7. Write macOS setup/runbook
   **What to do**: Add `docs/setup/tx500-digirig-macos.md` with cabling, serial/audio checks, startup sequence, and troubleshooting.
   **Must NOT do**: Do not claim automation exists for audio routing.
   **Recommended Agent Profile**: Category `writing`; Skills `[]`; Omitted `unspecified-high`.
@@ -244,7 +244,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `docs(setup): add tx500 digirig fldigi macos runbook` | Files: `docs/setup/tx500-digirig-macos.md`
 
-- [ ] 8. Add minimal API contract tests
+- [x] 8. Add minimal API contract tests
   **What to do**: Implement endpoint tests for health/rig/modem/PTT plus invalid payload checks.
   **Must NOT do**: No heavy framework migration.
   **Recommended Agent Profile**: Category `quick`; Skills `[]`; Omitted `deep`.

@@ -1,0 +1,69 @@
+# Task 8: API Contract Tests - Evidence
+
+## Date: 2026-03-02
+
+## Files Created
+- `internal/http/contract_test.go` (277 lines)
+
+## Tests Implemented
+
+### TestHealthContract
+- Verifies health endpoint returns JSON with Content-Type
+- Checks required fields: status, rigctld, fldigi
+- Validates field types are strings
+
+### TestRigStatusContract  
+- Verifies rig status endpoint returns JSON with Content-Type
+- Checks required fields: frequency (numeric), mode (string), ptt (bool), connected (bool)
+
+### TestModemStatusContract
+- Verifies modem status endpoint returns JSON with Content-Type
+- Checks required fields: mode (string), tx (bool), connected (bool)
+
+### TestPTTContract
+- Accepts "tx" state → returns 200 with state="tx"
+- Accepts "rx" state → returns 200 with state="rx"
+- Rejects invalid states with 400:
+  - Tested: TX, RX, transmit, receive, 1, 0, true, false, ""
+  - Error code: "invalid_state"
+  - Message: "state must be 'tx' or 'rx'"
+- Rejects malformed JSON with 400, error code: "invalid_request"
+
+## Test Run Output
+
+```
+=== RUN   TestHealthContract
+    contract_test.go:50: Health response structure verified: map[fldigi:ok rigctld:ok status:ok]
+--- PASS: TestHealthContract (0.00s)
+=== RUN   TestRigStatusContract
+    contract_test.go:109: Rig status response structure verified: map[connected:true frequency:1.407e+07 mode:USB ptt:false]
+--- PASS: TestRigStatusContract (0.00s)
+=== RUN   TestModemStatusContract
+    contract_test.go:163: Modem status response structure verified: map[connected:true mode:PSK31 tx:false]
+--- PASS: TestModemStatusContract (0.00s)
+=== RUN   TestPTTContract
+=== RUN   TestPTTContract/accepts_tx
+=== RUN   TestPTTContract/accepts_rx
+=== RUN   TestPTTContract/rejects_invalid_state_with_400
+[... all 10 invalid state subtests PASS ...]
+=== RUN   TestPTTContract/rejects_malformed_JSON_with_400
+--- PASS: TestPTTContract (0.00s)
+PASS
+```
+
+## Verification Command
+```bash
+go test ./internal/http/... -run "HealthContract|RigStatusContract|ModemStatusContract|PTTContract" -v
+```
+
+## All HTTP Tests Pass
+```bash
+go test ./internal/http/... -v
+# Result: PASS
+```
+
+## Notes
+- No external dependencies added
+- Follows existing test patterns from handlers_test.go
+- Uses map[string]any for contract verification (type-agnostic field checking)
+- JSON numbers decode as float64 in Go's encoding/json

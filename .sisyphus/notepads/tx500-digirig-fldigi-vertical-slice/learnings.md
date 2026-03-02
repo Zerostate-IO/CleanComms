@@ -136,3 +136,94 @@
 - Returns appropriate XML-RPC response based on method
 - Simulates connection refused by using closed port
 - Simulates timeout with delayed response
+
+## 2026-03-02 Task 7: macOS Setup Runbook
+
+### Documentation Structure
+- docs/setup/ directory created for setup guides
+- Runbook includes: prerequisites, port map, step-by-step setup, verification, troubleshooting matrix
+
+### Port Assignments (Fixed)
+- rigctld: 4532 (TCP)
+- fldigi XML-RPC: 7362 (HTTP)
+- CleanComms: 8080 (HTTP)
+
+### TX-500 + DigiRig Setup Notes
+- Serial port pattern: `/dev/cu.usbserial-xxx`
+- Hamlib model ID: 2054
+- Baud rate: 9600 (fixed per TX-500 spec)
+- Audio routing is MANUAL on macOS - no automation
+- fldigi XML-RPC endpoint: `http://127.0.0.1:7362/RPC2` (note the /RPC2 path)
+
+### Common Issues Documented
+- Serial port in use by other apps
+- Audio device selection in macOS
+- XML-RPC not enabled in fldigi
+- PTT wiring/configuration
+- USB power management causing port drops
+
+## 2026-03-02 Task 8: API Contract Tests
+
+### Contract Testing Approach
+- Use `map[string]any` to decode JSON responses for type-agnostic field verification
+- Check field presence with `if _, exists := resp[field]; !exists`
+- Check field types with type assertions: `val.(string)`, `val.(bool)`, `val.(float64)`
+- JSON numbers always decode as `float64` in Go's encoding/json
+
+### Contract Test Structure
+- Separate test file: `contract_test.go` alongside implementation
+- Each endpoint gets its own contract test function
+- Verify: Content-Type header, required fields, field types
+- PTT contract tests valid and invalid inputs in subtests
+
+### PTT Validation Testing
+- Valid states: "tx", "rx" (case-sensitive, lowercase only)
+- Invalid states tested: "TX", "RX", "transmit", "receive", "1", "0", "true", "false", ""
+- Error response structure: `{"error":"invalid_state","message":"state must be 'tx' or 'rx'"}`
+- Malformed JSON returns: `{"error":"invalid_request","message":"failed to parse request body"}`
+
+### Response Structures Verified
+- HealthResponse: status (string), rigctld (string), fldigi (string)
+- RigStatus: frequency (int64→float64 in JSON), mode (string), ptt (bool), connected (bool)
+- ModemStatus: mode (string), tx (bool), connected (bool)
+- PTTResponse: state (string)
+- ErrorResponse: error (string), message (string, optional)
+
+## 2026-03-02 Task 6: Modem Service Integration
+
+### Service Wrapper Pattern (Following RigService)
+- ModemService wraps fldigi.Client with health monitoring and reconnection
+- Same BackoffConfig as RigService (shared from same package)
+- Start(ctx) / Stop() lifecycle with context cancellation
+- Background health check goroutine every 5 seconds
+- Connection loop handles auto-reconnect on connection loss
+
+### ModemService Structure
+- Fields: client, logger, health, status, connected, reconnecting
+- Configuration: xmlrpcAddr, defaultMode, healthInterval, backoffConfig
+- Lifecycle: ctx, cancel, wg (sync.WaitGroup for goroutine coordination)
+
+### Health Monitoring
+- ModemHealth struct: OK, Error, Mode, LastCheck
+- performHealthCheck() probes fldigi via Ping(), GetMode(), GetTX()
+- Health degraded logs when transition from OK→not OK
+- Health restored logs when transition from not OK→OK
+
+### Mode Management
+- SetDefaultMode(string) sets the desired mode after connection
+- EnsureMode(string) sets mode idempotently - returns nil if already set
+- Mode is ensured after initial connection AND after reconnection
+- DO NOT force transmit at startup - only set mode
+
+### Adapter Pattern for HTTP Interface
+- modemClientAdapter adapts ModemService to http.ModemClient interface
+- Adapter converts internal types to HTTP types (ModemStatus → http.ModemStatus)
+- Allows ModemService to be passed to http.NewServer()
+
+### Testing Approach (Following RigService Tests)
+- mockFldigiServer using httptest.Server with XML-RPC handler
+- Handler parses XML methodCall and returns appropriate XML-RPC response
+- Tests for: Connect success, backoff, context cancellation, health, status, EnsureMode
+- Tests for Start/Stop lifecycle, health check loop, default mode setting
+- Concurrent access test verifies thread safety
+- Benchmark tests for Health() and Status() methods

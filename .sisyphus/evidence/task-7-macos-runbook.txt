@@ -1,0 +1,41 @@
+Task 7: macOS Setup Runbook - Evidence
+
+Created: 2026-03-02
+
+## Deliverable
+- File: docs/setup/tx500-digirig-macos.md
+- Lines: 304
+
+## Verification Results
+
+### Key Sections Present
+✓ Port 4532 (rigctld) - documented
+✓ Port 7362 (fldigi XML-RPC) - documented
+✓ Port 8080 (CleanComms) - documented
+✓ PSK31 configuration - documented
+✓ rigctld startup command - documented
+✓ Troubleshooting matrix - documented
+
+### Content Includes
+✓ Hardware prerequisites (TX-500, DigiRig, cables)
+✓ Software prerequisites (Hamlib, fldigi - assume installed)
+✓ Serial port identification (ls /dev/cu.*)
+✓ Audio setup (manual, no automation claims)
+✓ rigctld startup: rigctld -m 2054 -r /dev/cu.usbserial-xxx -s 9600 -t 4532
+✓ fldigi PSK31 configuration
+✓ CleanComms daemon startup
+✓ Verification steps (curl endpoints)
+✓ Troubleshooting matrix (11 common issues)
+✓ Port map table
+✓ DigiRig reference link
+
+### Compliance
+✓ No audio automation claims
+✓ No installation instructions (assumed installed)
+✓ No code files created
+
+## Acceptance Criteria Met
+```bash
+grep -E "4532|7362|8080|PSK31|rigctld|troubleshooting" docs/setup/tx500-digirig-macos.md
+```
+All patterns found in document.
