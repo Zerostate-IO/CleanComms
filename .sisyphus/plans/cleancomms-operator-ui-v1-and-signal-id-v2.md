@@ -477,7 +477,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(logs): add operator logging ui and retention` | Files: `frontend/src/features/logs/**`, `internal/storage/**`
 
-- [ ] 11. Build callsign phonebook + lookup enrichment UI
+- [x] 11. Build callsign phonebook + lookup enrichment UI
 
   **What to do**: Create phonebook with notes, source attribution, cache freshness, and profile-configurable policy behavior for lookup/decode assist.
   **Must NOT do**: Do not expose sensitive notes without explicit reveal controls.
