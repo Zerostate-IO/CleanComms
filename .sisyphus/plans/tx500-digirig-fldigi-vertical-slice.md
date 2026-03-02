@@ -106,7 +106,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `feat(core): scaffold cleancomms daemon runtime` | Files: `cmd/cleancomms/**`, `internal/config/**`, `configs/tx500-digirig-macos.yaml`
 
-- [ ] 2. Add rigctld client (TX-500)
+- [x] 2. Add rigctld client (TX-500)
   **What to do**: Implement `internal/rigctld` connect/status/freq/mode/PTT functions with robust error mapping.
   **Must NOT do**: Do not spawn rigctld.
   **Recommended Agent Profile**: Category `unspecified-high`; Skills `[]`; Omitted `frontend-ui-ux`.
@@ -129,7 +129,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `feat(radio): add rigctld tx-500 client` | Files: `internal/rigctld/**`
 
-- [ ] 3. Add fldigi XML-RPC client (PSK31)
+- [x] 3. Add fldigi XML-RPC client (PSK31)
   **What to do**: Implement `internal/fldigi` client for detect, mode set/get, tx/rx calls.
   **Must NOT do**: No audio routing automation.
   **Recommended Agent Profile**: Category `unspecified-high`; Skills `[]`; Omitted `playwright`.
@@ -152,7 +152,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `feat(modem): add fldigi xmlrpc client` | Files: `internal/fldigi/**`
 
-- [ ] 4. Expose minimal HTTP API
+- [x] 4. Expose minimal HTTP API
   **What to do**: Implement `/health`, `/api/v1/rig/status`, `/api/v1/rig/ptt`, `/api/v1/modem/status`.
   **Must NOT do**: No auth/session subsystem.
   **Recommended Agent Profile**: Category `quick`; Skills `[]`; Omitted `deep`.
