@@ -1,0 +1,421 @@
+/**
+ * Spectrum/Waterfall Display Styles
+ * 
+ * Industrial radio aesthetic with dark theme.
+ * High-contrast signal visualization optimized for readability.
+ */
+
+/* ─────────────────────────────────────────────────────────────────
+   Spectrum Display
+   ───────────────────────────────────────────────────────────────── */
+
+.spectrum-display {
+  position: relative;
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+}
+
+.spectrum-display--disconnected {
+  opacity: 0.7;
+}
+
+.spectrum-display__canvas {
+  display: block;
+  width: 100%;
+  height: calc(100% - 28px);
+  cursor: crosshair;
+}
+
+.spectrum-display__axis {
+  height: 28px;
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-muted);
+}
+
+/* Status states */
+.spectrum-display__error,
+.spectrum-display__loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  background: rgba(10, 14, 20, 0.9);
+  z-index: 10;
+}
+
+.spectrum-display__error svg {
+  width: 32px;
+  height: 32px;
+  color: var(--accent-danger);
+}
+
+.spectrum-display__error span {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.spectrum-display__retry {
+  padding: var(--space-xs) var(--space-md);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  transition: var(--transition-fast);
+}
+
+.spectrum-display__retry:hover {
+  background: var(--accent-secondary);
+  transform: translateY(-1px);
+}
+
+/* Loading spinner */
+.spectrum-display__spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border-accent);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spectrum-spin 0.8s linear infinite;
+}
+
+@keyframes spectrum-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Frequency tooltip */
+.spectrum-display__tooltip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: var(--text-accent);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Signal markers */
+.spectrum-display__markers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.spectrum-display__markers svg {
+  pointer-events: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Waterfall Display
+   ───────────────────────────────────────────────────────────────── */
+
+.waterfall-display {
+  position: relative;
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+}
+
+.waterfall-display--disconnected {
+  opacity: 0.7;
+}
+
+.waterfall-display__canvas {
+  display: block;
+  width: 100%;
+  height: calc(100% - 28px);
+  cursor: crosshair;
+}
+
+.waterfall-display__axis {
+  height: 28px;
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-muted);
+}
+
+/* Status states */
+.waterfall-display__error,
+.waterfall-display__loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  background: rgba(10, 14, 20, 0.9);
+  z-index: 10;
+}
+
+.waterfall-display__error svg {
+  width: 32px;
+  height: 32px;
+  color: var(--accent-danger);
+}
+
+.waterfall-display__error span {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.waterfall-display__retry {
+  padding: var(--space-xs) var(--space-md);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  transition: var(--transition-fast);
+}
+
+.waterfall-display__retry:hover {
+  background: var(--accent-secondary);
+  transform: translateY(-1px);
+}
+
+.waterfall-display__spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border-accent);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spectrum-spin 0.8s linear infinite;
+}
+
+/* Color scale legend */
+.waterfall-display__legend {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-xs);
+  background: rgba(10, 14, 20, 0.8);
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+}
+
+.waterfall-display__legend-gradient {
+  width: 12px;
+  height: 60px;
+  background: linear-gradient(
+    to bottom,
+    #f0f921 0%,
+    #f89540 25%,
+    #cb4778 50%,
+    #7e03a8 75%,
+    #0d0887 100%
+  );
+  border-radius: 2px;
+}
+
+.waterfall-display__legend-labels {
+  display: flex;
+  flex-direction: column;
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+}
+
+.waterfall-display__legend-labels span:last-child {
+  text-align: right;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Frequency Axis
+   ───────────────────────────────────────────────────────────────── */
+
+.frequency-axis {
+  width: 100%;
+  height: 28px;
+  overflow: hidden;
+}
+
+.frequency-axis__svg {
+  display: block;
+}
+
+.frequency-axis__line {
+  stroke: var(--border-accent);
+  stroke-width: 1;
+}
+
+.frequency-axis__tick-mark {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.frequency-axis__tick--center .frequency-axis__tick-mark {
+  stroke: var(--text-primary);
+  stroke-width: 2;
+}
+
+.frequency-axis__tick-label {
+  fill: var(--text-secondary);
+  font-family: var(--font-display);
+  font-size: 10px;
+}
+
+.frequency-axis__tick--center .frequency-axis__tick-label {
+  fill: var(--text-primary);
+  font-weight: 600;
+}
+
+.frequency-axis__center-line {
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+
+.frequency-axis__tuned-line {
+  stroke: var(--accent-danger);
+  stroke-width: 2;
+}
+
+.frequency-axis__tuned-marker {
+  fill: var(--accent-danger);
+}
+
+.frequency-axis__band-edge-line {
+  stroke: var(--accent-warning);
+  stroke-width: 1;
+  stroke-dasharray: 4 2;
+}
+
+.frequency-axis__band-label {
+  fill: var(--accent-warning);
+  font-family: var(--font-display);
+  font-size: 9px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Signal Markers
+   ───────────────────────────────────────────────────────────────── */
+
+.signal-marker-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.signal-marker__rect {
+  fill: var(--accent-primary);
+  opacity: 0.6;
+  transition: var(--transition-fast);
+}
+
+.signal-marker--active .signal-marker__rect {
+  fill: var(--accent-success);
+  opacity: 0.8;
+}
+
+.signal-marker--hovered .signal-marker__rect {
+  opacity: 1;
+}
+
+.signal-marker__active-dot {
+  fill: var(--accent-success);
+  filter: drop-shadow(0 0 4px var(--accent-success));
+}
+
+.signal-marker__hover-highlight {
+  fill: none;
+  stroke: var(--accent-primary);
+  stroke-width: 2;
+  opacity: 0.5;
+}
+
+/* Tooltip */
+.signal-marker__tooltip-bg {
+  fill: var(--bg-elevated);
+  stroke: var(--border-accent);
+  stroke-width: 1;
+}
+
+.signal-marker__tooltip-text {
+  fill: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 10px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Waterfall Panel
+   ───────────────────────────────────────────────────────────────── */
+
+.waterfall-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.waterfall-panel__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.waterfall-panel__label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.waterfall-panel__select {
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.waterfall-panel__select:hover {
+  border-color: var(--accent-primary);
+}
+
+.waterfall-panel__select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(0, 212, 170, 0.2);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Responsive Adjustments
+   ───────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1600px) {
+  .waterfall-display__legend {
+    display: none;
+  }
+  
+  .frequency-axis__tick-label {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .spectrum-display__tooltip {
+    font-size: 10px;
+  }
+}

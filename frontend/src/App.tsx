@@ -1,7 +1,9 @@
 import { useState, useCallback } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { TabStrip } from './components/TabStrip';
 import { WorkspaceContent } from './components/WorkspaceContent';
+import { SetupPage } from './features/setup/SetupPage';
 import type { WorkspaceTab } from './types';
 import './styles/App.css';
 
@@ -64,4 +66,17 @@ function App() {
   );
 }
 
-export default App;
+// Main app with routing
+function AppWithRouter() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/setup" element={<SetupPage />} />
+        <Route path="/" element={<App />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default AppWithRouter;

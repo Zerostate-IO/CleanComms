@@ -403,7 +403,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(ui): implement operate workflow controls` | Files: `frontend/src/features/operate/**`
 
-- [ ] 9. Add spectrum/waterfall foundation UI
+- [x] 9. Add spectrum/waterfall foundation UI
 
   **What to do**: Add spectrum/waterfall display component foundation with click-to-tune hooks and placeholder adapters for engine-fed streams.
   **Must NOT do**: Do not claim native IQ ingest exists in V1.

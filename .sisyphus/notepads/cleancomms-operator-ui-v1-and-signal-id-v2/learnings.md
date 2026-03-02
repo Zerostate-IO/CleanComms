@@ -305,3 +305,380 @@ lookup:
 - `internal/lookup/service.go` (163 lines)
 - `internal/lookup/lookup_test.go` (372 lines)
 - `internal/http/handlers_lookup.go` (128 lines)
+
+
+
+## Task 7: Intent + Operating Profile Flow (2026-03-02)
+
+### Feature Module Structure
+- `frontend/src/features/intent/` - Self-contained feature module
+- `types.ts` - All TypeScript types for the feature
+- `hooks.ts` - Custom hooks for state management
+- `IntentPage.tsx` - Main page component
+- `IntentSelector.tsx` - Listen/Broadcast toggle
+- `ModeFamilySelector.tsx` - Mode family and frequency selection
+- `ProfileManager.tsx` - Profile CRUD operations
+- `index.ts` - Public exports
+
+### Intent Types
+- `IntentType`: 'listen' | 'broadcast'
+- `ModeFamily`: 'digital' | 'cw' | 'ssb'
+- `OperatingProfile`: Full profile with id, name, config, timestamps
+
+### Explicit Activation Pattern (Extended from Task 2)
+- `focused` state: UI selection only, does NOT change radio state
+- `active` state: The config currently controlling the live radio
+- `pending` derived state: Tracks differences between focused and active
+- `activate()` function: The ONLY way to move focused → active
+- Pending alert shows all pending changes with Activate button
+
+### Pending State Detection
+```typescript
+const pending: PendingState = useMemo(() => {
+  const intentChanged = focused.intent !== active.intent;
+  const modeChanged = focused.mode !== active.mode;
+  // ...check all fields
+  return {
+    intent: intentChanged ? focused.intent : undefined,
+    hasChanges: intentChanged || modeChanged || /* ... */,
+  };
+}, [focused, active]);
+```
+
+### Profile Persistence
+- Uses localStorage with key `cleancomms-operating-profiles`
+- `useProfiles` hook manages CRUD operations
+- Profiles include: id, name, intent, modeFamily, mode, frequency, notes, tags, timestamps
+- Automatic persistence on profile changes
+
+### Band-Aware SSB Recommendations
+- Convention: LSB below 10 MHz, USB above 10 MHz
+- `suggestSSBMode(frequencyHz)` helper returns correct mode
+- Warning shown when selected SSB mode doesn't match convention
+- Auto-adjusts SSB mode when frequency changes
+
+### Mode Family Organization
+- **Digital**: FT8, FT4, PSK31, RTTY, JS8, WSPR
+- **CW**: Morse code (single mode with tone setting)
+- **SSB**: USB/LSB (auto-selected based on band)
+
+### Frequency Presets by Mode Family
+- Each mode family has quick-select frequency presets
+- Presets stored as constant arrays with freq (Hz) and label
+- Clicking preset updates frequency AND SSB mode if applicable
+
+### CSS Architecture for Feature
+- `frontend/src/styles/Intent.css` - 900+ lines of styles
+- Uses CSS custom properties from index.css
+- BEM naming convention (e.g., `.intent-page__header`)
+- Responsive breakpoint at 1400px
+
+### Playwright Test Patterns
+- Test suite: `Intent and Operating Profile Flow`
+- Tests skip if intent page not available (graceful degradation)
+- Profile persistence test verifies localStorage across reloads
+- Intent safety tests verify pending state behavior
+
+### Files Created
+- `frontend/src/features/intent/types.ts` (185 lines)
+- `frontend/src/features/intent/hooks.ts` (322 lines)
+- `frontend/src/features/intent/IntentSelector.tsx` (75 lines)
+- `frontend/src/features/intent/ModeFamilySelector.tsx` (246 lines)
+- `frontend/src/features/intent/ProfileManager.tsx` (277 lines)
+- `frontend/src/features/intent/IntentPage.tsx` (181 lines)
+- `frontend/src/features/intent/index.ts` (50 lines)
+- `frontend/src/styles/Intent.css` (943 lines)
+- `frontend/tests/intent.spec.ts` (412 lines)
+
+### Evidence Files
+- `.sisyphus/evidence/task-7-operating-profile-create.md`
+- `.sisyphus/evidence/task-7-intent-safety.md`
+
+## Task 9: Spectrum/Waterfall Foundation UI (2026-03-02)
+
+### Feature Package Structure
+- `frontend/src/features/spectrum/` - Self-contained spectrum feature
+- `types.ts` - TypeScript interfaces for spectrum data, markers, config
+- `mockStream.ts` - Synthetic data generator for development/testing
+- `hooks.ts` - Custom React hooks for stream subscription, waterfall history
+- `FrequencyAxis.tsx` - SVG-based frequency scale with tick marks
+- `SignalMarker.tsx` - Clickable signal overlay with hover states
+- `SpectrumDisplay.tsx` - Canvas-based spectrum visualization
+- `WaterfallDisplay.tsx` - Scrolling time-frequency display
+- `index.ts` - Feature exports
+
+### Canvas Rendering Best Practices
+- Use `requestAnimationFrame` for smooth 60fps updates
+- Handle device pixel ratio (DPR) for crisp rendering on high-DPI displays
+- Use `ResizeObserver` for responsive canvas sizing
+- Clear and redraw on each frame (no partial updates)
+- Pre-compute color lookup tables for performance
+
+### Stream Adapter Pattern
+```typescript
+interface SpectrumStreamAdapter {
+  subscribe: (callback: (data: SpectrumData) => void) => () => void;
+  isAvailable: () => boolean;
+  start?: () => void;
+  stop?: () => void;
+}
+```
+- Subscribe returns unsubscribe function (cleanup pattern)
+- `isAvailable()` check before subscribing prevents errors
+- Optional `start/stop` for manual control
+
+### Click-to-Tune Implementation
+- Convert canvas click coordinates to frequency:
+  - `normalizedX = clickX / canvasWidth` (0-1)
+  - `offset = (normalizedX - 0.5) * span` (-span/2 to +span/2)
+  - `frequency = centerFrequency + offset`
+- Crosshair cursor indicates tunable area
+- Frequency tooltip on hover for feedback
+
+### Waterfall Color Mapping
+- Normalize bins to 0-255 range for color lookup
+- Pre-compute color LUT at component mount
+- Interpolate between palette stops (plasma, viridis, heat, grayscale)
+- ImageData API for efficient pixel-level rendering
+
+### Graceful Fallback Pattern
+1. Check `adapter` exists → empty state if null
+2. Check `adapter.isAvailable()` → error state if false
+3. Subscribe to stream → loading state until first data
+4. Display data → normal operation
+- Never crash or throw on stream failure
+- Always provide retry mechanism
+
+### TypeScript Strict Mode Handling
+- Unused parameters: prefix with `_` or remove
+- Unused imports: remove from import statement
+- Null checks: use optional chaining or explicit guards
+
+### Playwright Test Patterns
+- Conditional testing: check element exists before interacting
+- `isVisible().catch(() => false)` for graceful optional checks
+- Test both success and error states
+- Verify accessibility (aria-labels, roles)
+
+### Files Created
+- `frontend/src/features/spectrum/types.ts` (232 lines)
+- `frontend/src/features/spectrum/mockStream.ts` (236 lines)
+- `frontend/src/features/spectrum/hooks.ts` (350 lines)
+- `frontend/src/features/spectrum/FrequencyAxis.tsx` (204 lines)
+- `frontend/src/features/spectrum/SignalMarker.tsx` (195 lines)
+- `frontend/src/features/spectrum/SpectrumDisplay.tsx` (418 lines)
+- `frontend/src/features/spectrum/WaterfallDisplay.tsx` (308 lines)
+- `frontend/src/features/spectrum/index.ts` (55 lines)
+- `frontend/src/styles/Spectrum.css` (422 lines)
+- `frontend/tests/spectrum.spec.ts` (385 lines)
+
+
+
+## Task 8: Build Operate Workflow (2026-03-02)
+
+### Feature Module Structure
+- `frontend/src/features/operate/` - Self-contained operate feature
+- `types.ts` - RadioMode, PTTState, RigStatus, HealthResponse, QuickChannel types
+- `hooks.ts` - API hooks with safety checks
+- `FrequencyControl.tsx` - Frequency input/tuning with validation
+- `ModeControl.tsx` - Mode selection (USB, LSB, CW, RTTY, PKT, FM, AM)
+- `PTTControl.tsx` - PTT button with coordinator safety checks
+- `QuickChannels.tsx` - Quick frequency/mode selection buttons
+- `OperatePage.tsx` - Main console combining all controls
+
+### PTT Safety Implementation
+- `canTransmit()` checks all safety conditions before TX:
+  - Control disabled check
+  - Blocked state check (from coordinator)
+  - Health status unknown
+  - System unhealthy
+  - Coordinator unavailable
+- PTT blocked returns 503 with `ptt_blocked` error code
+- Visual states: Green=RX, Red=TX, Gray=Blocked
+- TX timeout countdown with warning animations
+
+### Frequency Control Design
+- Direct input with MHz display and kHz precision
+- Up/Down tuning buttons (100Hz, 1kHz, 10kHz, 100kHz steps)
+- Band limit validation (1.8-30 MHz default)
+- Band name display (160m, 80m, 60m, 40m, 30m, 20m, 17m, 15m, 12m, 10m, OOB)
+- Error messages auto-clear after 2 seconds
+
+### Mode Control Organization
+- Modes grouped by category: Voice, CW, Digital
+- Active mode highlighted with category-specific color
+- Mode changes blocked while transmitting
+- Categories: voice (USB/LSB/FM/AM), cw (CW), digital (RTTY/PKT)
+
+### Quick Channels
+- Pre-defined common frequencies for North America
+- One-click sets both frequency and mode
+- Channels grouped by band (80m, 40m, 20m, etc.)
+- Active channel highlighted
+- Channel changes blocked while transmitting
+
+### API Integration Pattern
+```typescript
+// Polling hooks with configurable intervals
+useRigStatus(pollInterval: number = 1000)
+useHealthStatus(pollInterval: number = 2000)
+
+// Mutation hooks with loading/error state
+useSetFrequency()
+useSetMode()
+usePTTControl()
+```
+
+### Health Status Integration
+- `/health` endpoint polled every 2 seconds
+- TX blocked if `status !== 'ok'` or `coordinator !== 'ok'`
+- Blocked reason derived from specific component failures:
+  - Rig control unavailable
+  - Modem unavailable
+  - Coordinator unhealthy
+
+### Keyboard Shortcuts
+- Space bar: Hold for PTT (toggle mode)
+- Arrow Up/Down: Tune frequency
+- Shortcuts disabled when TX blocked
+
+### Visual Design (Industrial/Radio Aesthetic)
+- Dark theme with cyan accent (--accent-primary: #00d4aa)
+- JetBrains Mono for display text
+- PTT button animations: pulse for TX, warning/critical for timeout
+- Color-coded health indicator
+- Status bar with system health summary
+
+### Test Coverage
+- `operate.spec.ts` with mock API responses
+- Safe mode switch and PTT tests
+- Invalid frequency boundary tests
+- Quick channel selection tests
+- Keyboard shortcut tests
+- Responsive layout tests
+
+### Files Created
+- `frontend/src/features/operate/types.ts` (133 lines)
+- `frontend/src/features/operate/hooks.ts` (346 lines)
+- `frontend/src/features/operate/FrequencyControl.tsx` (242 lines)
+- `frontend/src/features/operate/ModeControl.tsx` (124 lines)
+- `frontend/src/features/operate/PTTControl.tsx` (244 lines)
+- `frontend/src/features/operate/QuickChannels.tsx` (172 lines)
+- `frontend/src/features/operate/OperatePage.tsx` (225 lines)
+- `frontend/src/styles/Operate.css` (956 lines)
+- `frontend/tests/operate.spec.ts` (430 lines)
+
+### Evidence Files
+- `.sisyphus/evidence/task-8-operate-safe-switch.md`
+- `.sisyphus/evidence/task-8-band-boundary-failure.md`
+### Evidence Files
+- `.sisyphus/evidence/task-8-operate-safe-switch.md`
+- `.sisyphus/evidence/task-8-band-boundary-failure.md`
+
+
+## Task 6: Guided Setup Flow (2026-03-02)
+
+### Feature Module Structure
+- `frontend/src/features/setup/` - Self-contained setup feature
+- `types.ts` - TypeScript interfaces for radio catalog, setup profile, validation
+- `hooks.ts` - Custom hooks for catalog loading, profile persistence, step navigation
+- `RadioSelector.tsx` - Radio card grid with capability badges
+- `SerialConfig.tsx` - Serial port configuration with radio-specific recommendations
+- `AudioConfig.tsx` - Audio routing and PTT method selection
+- `SetupPage.tsx` - Step wizard with validation and review
+
+### Radio Catalog Loading
+- Fetch from `public/data/radios/catalog/*.json`
+- Graceful handling of missing catalog files (filter out null entries)
+- Sort by support tier (Tier 1 first) then manufacturer
+- Use `useRadioCatalog` hook for loading state management
+
+### Capability-Aware UI Pattern
+```typescript
+// Extract capabilities from selected radio
+const capabilities = useRadioCapabilities(radio, profileName);
+
+// Use to disable/enable controls
+<CapabilityBadge 
+  label="USB Audio" 
+  supported={!!capabilities?.audio?.usb_audio}
+/>
+
+// PTT methods show explanation when unavailable
+{!available && (
+  <span className="unavailable-note">
+    This radio does not support {label}
+  </span>
+)}
+```
+
+### Step Wizard Pattern
+- 4 steps: Radio → Serial → Audio → Review
+- Step indicator with active/completed states
+- `canProceed()` validation before allowing next step
+- Back button always enabled (no validation on backward navigation)
+- Review step has its own navigation (Back + Save buttons)
+
+### Profile Persistence
+- localStorage key: `cleancomms-setup`
+- `useSetupProfile` hook manages state and persistence
+- Auto-saves on every profile change
+- Loads saved profile on mount
+
+### Validation Architecture
+```typescript
+interface ValidationErrors {
+  radioModelCode?: string;
+  'serialConfig.path'?: string;
+  'audioConfig.inputDeviceId'?: string;
+  // ... nested field paths
+}
+
+const validateStep = useCallback((step: SetupStep): ValidationErrors => {
+  // Return errors object, empty = valid
+}, [profile, selectedRadio]);
+```
+- Dot-notation keys for nested fields
+- Clear errors on field change
+- Conditional validation (audio only required if radio supports USB audio)
+
+### Routing with react-router-dom
+```typescript
+// In App.tsx
+<BrowserRouter>
+  <Routes>
+    <Route path="/setup" element={<SetupPage />} />
+    <Route path="/" element={<App />} />
+  </Routes>
+</BrowserRouter>
+```
+- Installed react-router-dom@latest
+- Setup page at `/setup`, main app at `/`
+- Tests navigate to `/setup` directly
+
+### Mock Data Pattern
+- Serial ports: Mock detection (would require backend in production)
+- Audio devices: Use Web Audio API `navigator.mediaDevices.enumerateDevices()`
+- Request permission before enumerating audio devices
+
+### CSS Design for Setup
+- Wizard layout with centered container (max-width: 900px)
+- Radio cards in responsive grid (auto-fill, min 380px)
+- Capability badges with supported/unsupported visual states
+- Tier badges: Tier 1 (cyan), Tier 2 (warning yellow)
+- Step indicator with connectors and completion checkmarks
+
+### Files Created
+- `frontend/src/features/setup/types.ts` (162 lines)
+- `frontend/src/features/setup/hooks.ts` (390 lines)
+- `frontend/src/features/setup/RadioSelector.tsx` (237 lines)
+- `frontend/src/features/setup/SerialConfig.tsx` (253 lines)
+- `frontend/src/features/setup/AudioConfig.tsx` (284 lines)
+- `frontend/src/features/setup/SetupPage.tsx` (391 lines)
+- `frontend/src/styles/Setup.css` (855 lines)
+- `frontend/tests/setup.spec.ts` (285 lines)
+
+### Evidence Files
+- `.sisyphus/evidence/task-6-capability-aware-setup.md`
+- `.sisyphus/evidence/task-6-validation-failure.md`
+
