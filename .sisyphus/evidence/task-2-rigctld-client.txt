@@ -1,0 +1,65 @@
+# Task 2: rigctld Client Implementation
+
+**Date**: 2026-03-02
+**Status**: COMPLETE
+
+## Files Created
+
+- `internal/rigctld/errors.go` - Error types and rigctld error code mapping
+- `internal/rigctld/commands.go` - Command builder and response parser
+- `internal/rigctld/client.go` - TCP client with all required functions
+- `internal/rigctld/client_test.go` - Unit tests with mock server
+
+## API Summary
+
+### Client Functions
+- `NewClient(host string, port int) *Client` - Create client instance
+- `Connect() error` - Establish TCP connection
+- `Disconnect() error` - Close connection
+- `IsConnected() bool` - Check connection state
+- `SetTimeout(d time.Duration)` - Configure timeout
+- `Ping() error` - Health check via chk_vfo
+- `GetFrequency() (int, error)` - Get VFO frequency in Hz
+- `SetFrequency(hz int) error` - Set VFO frequency
+- `GetMode() (string, error)` - Get current mode (USB, LSB, etc.)
+- `SetMode(mode string) error` - Set mode with default passband
+- `GetPTT() (bool, error)` - Get PTT state (true=TX, false=RX)
+- `SetPTT(tx bool) error` - Set PTT state
+
+### Error Types
+- `ErrNotConnected` - Client not connected
+- `ErrConnectionRefused` - rigctld not running
+- `ErrTimeout` - Operation timed out
+- `ErrMalformedResponse` - Invalid response format
+- `ErrCommandFailed` - rigctld returned error code
+- `CommandError` - Wrapped error with command context
+
+## Verification
+
+```
+$ go test ./internal/rigctld/... -v
+=== RUN   TestBuildSetFreq
+--- PASS: TestBuildSetFreq (0.00s)
+... (22 more tests)
+PASS
+ok  	github.com/Zerostate-IO/CleanComms/internal/rigctld	0.010s
+
+$ go build ./...
+(success, no errors)
+```
+
+## Test Coverage
+
+- Command builder tests
+- Response parser tests (freq, mode, PTT, error codes)
+- Client connection lifecycle tests
+- Connection refused handling
+- All API function tests with mock server
+- Error classification helpers
+
+## Notes
+
+- Uses stdlib only (`net`, `bufio`, `sync`, `time`)
+- Default timeout: 5 seconds
+- Thread-safe via mutex
+- get_mode returns two lines (mode + passband)

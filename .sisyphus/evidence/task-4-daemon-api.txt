@@ -1,0 +1,79 @@
+## Task 4: Expose Minimal HTTP API - Evidence
+
+**Date:** 2026-03-02
+**Status:** COMPLETE
+
+### Files Created
+- `internal/http/server.go` - HTTP server setup with routing
+- `internal/http/handlers.go` - Request handlers and stub clients
+- `internal/http/handlers_test.go` - Comprehensive handler tests
+
+### Endpoints Implemented
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/health` | Health check with dependency status |
+| GET | `/api/v1/rig/status` | Current radio status (frequency, mode, PTT) |
+| POST | `/api/v1/rig/ptt` | Set PTT state (tx/rx) |
+| GET | `/api/v1/modem/status` | Current modem status (mode, TX state) |
+
+### Test Results
+```
+=== RUN   TestHandleHealth
+=== RUN   TestHandleHealth/all_healthy
+=== RUN   TestHandleHealth/rig_degraded
+=== RUN   TestHandleHealth/nil_clients
+=== RUN   TestHandleHealth/nil_rig_client_only
+--- PASS: TestHandleHealth (0.00s)
+=== RUN   TestHandleRigStatus
+--- PASS: TestHandleRigStatus (0.00s)
+=== RUN   TestHandlePTT
+--- PASS: TestHandlePTT (0.00s)
+=== RUN   TestHandleModemStatus
+--- PASS: TestHandleModemStatus (0.00s)
+=== RUN   TestPTTInvalidPayloadMessage
+--- PASS: TestPTTInvalidPayloadMessage (0.00s)
+=== RUN   TestRouting
+--- PASS: TestRouting (0.00s)
+PASS
+ok  	github.com/Zerostate-IO/CleanComms/internal/http	0.011s
+```
+
+### API Response Examples
+
+**GET /health**
+```json
+{"status":"ok","rigctld":"ok","fldigi":"ok"}
+```
+
+**GET /api/v1/rig/status**
+```json
+{"frequency":14070000,"mode":"USB","ptt":false,"connected":true}
+```
+
+**POST /api/v1/rig/ptt** (Request: `{"state":"tx"}`)
+```json
+{"state":"tx"}
+```
+
+**POST /api/v1/rig/ptt** (Invalid state)
+```json
+{"error":"invalid_state","message":"state must be 'tx' or 'rx'"}
+```
+
+**GET /api/v1/modem/status**
+```json
+{"mode":"PSK31","tx":false,"connected":true}
+```
+
+### Design Decisions
+1. **Interface-based dependency injection**: RigClient and ModemClient interfaces allow parallel development with Tasks 5/6
+2. **Stub implementations**: Included StubRigClient and StubModemClient for testing and development
+3. **Graceful degradation**: Health endpoint reports "degraded" status for missing/unhealthy dependencies
+4. **Stdlib only**: Used net/http with no external frameworks as required
+5. **Validation**: PTT endpoint validates state is exactly "tx" or "rx", returns 400 with helpful message
+
+### Verification Commands
+```bash
+go build ./...              # Build succeeds
+go test ./internal/http/... -v  # All 15 test cases pass
+```

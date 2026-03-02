@@ -1,0 +1,19 @@
+# CleanComms Configuration for TX-500 with DigiRig on macOS
+# This is the first vertical slice configuration for development.
+
+server:
+  http_addr: "127.0.0.1:8080"
+
+rigctld:
+  host: "127.0.0.1"
+  port: 4532
+  model_id: 2054  # TX-500 Hamlib model ID
+  serial_port: "/dev/cu.usbserial-xxx"  # Override per setup
+  baud_rate: 9600  # TX-500 fixed rate per Hamlib tx500.c
+
+fldigi:
+  xmlrpc_addr: "http://127.0.0.1:7362"
+  default_mode: "PSK31"
+
+safety:
+  ptt_timeout_seconds: 60  # Watchdog timeout

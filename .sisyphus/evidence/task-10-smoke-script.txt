@@ -1,0 +1,27 @@
+========================================
+CleanComms TX-500 + fldigi Smoke Test
+Timestamp: 2026-03-02T17:54:41Z
+========================================
+
+INFO: Checking rigctld on port 4532...
+FAIL: rigctld not listening on port 4532
+INFO:   Start with: rigctld -m 2054 -r /dev/cu.usbserial-xxx -s 9600 -t 4532
+INFO: Checking fldigi XML-RPC on port 7362...
+FAIL: fldigi XML-RPC not listening on port 7362
+INFO:   Start fldigi and enable XML-RPC in Configure > UI > XML-RPC
+INFO: Checking CleanComms daemon on port 8080...
+FAIL: CleanComms daemon not listening on port 8080
+INFO:   Start with: ./cleancomms --config configs/tx500-digirig-macos.yaml
+INFO: Checking fldigi modem mode...
+SKIP: PSK31 mode check (fldigi not available)
+SKIP: PTT toggle test (daemon not available)
+SKIP: Rig status check (daemon not available)
+SKIP: Modem status check (daemon not available)
+
+
+========================================
+Summary
+========================================
+Checks passed: 0/7
+Errors: 3
+Warnings: 0

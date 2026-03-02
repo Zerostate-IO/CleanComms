@@ -1,0 +1,79 @@
+# Task 9: Control Coordinator + PTT Watchdog
+
+## Completed: 2026-03-02
+
+## Files Created
+
+- `internal/control/coordinator.go` - Control coordinator with PTT watchdog (332 lines)
+- `internal/control/coordinator_test.go` - Comprehensive tests (504 lines)
+
+## Functionality Implemented
+
+### Coordinator Struct
+- `NewCoordinator(rig, modem, logger, config) *Coordinator` - Constructor with configurable timeout
+- `SetPTT(tx bool) error` - Blocks if degraded, enforces ready-state ordering
+- `GetPTT() bool` - Returns current PTT state
+- `GetState() CoordinatorState` - Returns state machine state (RX/TX)
+- `IsHealthy() bool` - Returns true if both rig and modem are healthy
+- `Start(ctx)` / `Stop()` - Lifecycle management
+
+### State Machine
+- StateRX (initial) → StateTX (if healthy) → StateRX (manual or timeout)
+- Thread-safe via sync.RWMutex
+
+### PTT Ordering
+1. **Enter TX**: Modem TX first, then Rig PTT (modem ready before RF applied)
+2. **Enter RX**: Rig PTT first, then Modem TX (RF stopped before modem stops)
+3. Rollback on failure: If rig PTT fails, modem TX is rolled back
+
+### Background Watchdog
+- Checks every 1 second
+- Tracks last TX timestamp
+- Forces RX after configurable timeout (default 60s)
+- Logs safety event with WARN level when forced
+
+### Error Handling
+- `ErrDegraded` - TX blocked because rig or modem is unhealthy
+- `ErrNotRunning` - SetPTT called before Start()
+
+## Test Coverage
+
+All tests pass:
+- TestNewCoordinator - Constructor and defaults
+- TestSetPTT_BlockedWhenDegraded - TX blocked when rig/modem degraded
+- TestSetPTT_AllowedWhenHealthy - Normal TX/RX cycle
+- TestSetPTT_RollbackOnRigFailure - Rollback on rig failure
+- TestSetPTT_NotRunning - Error when not started
+- TestForcedRX_AfterTimeout - Watchdog forces RX after timeout
+- TestManualRX_BeforeTimeout - Manual RX works before timeout
+- TestConcurrentAccess - Thread safety under concurrent load
+- TestStartStop_Lifecycle - Idempotent start/stop, RX on stop
+- TestContext_Cancellation - Context cancellation stops coordinator
+- TestIdempotentStateTransitions - Already-in-state returns nil
+- TestIsHealthy - Health aggregation
+- TestStateString - String representation
+
+## Verification Commands
+
+```bash
+go build ./...
+go test ./internal/control/... -v
+```
+
+## Interface Design
+
+The coordinator defines its own interfaces rather than depending on concrete types:
+
+```go
+type RigController interface {
+    SetPTT(state bool) (bool, error)
+    Health() RigHealthStatus
+}
+
+type ModemController interface {
+    SetTX(tx bool) error
+    Health() ModemHealthStatus
+}
+```
+
+This allows the coordinator to work with any implementation that satisfies these interfaces, including mocks for testing.

@@ -1,0 +1,43 @@
+# CleanComms Go Scaffold Evidence
+Timestamp: 2026-03-02T16:34:07Z
+
+## go test ./...
+Exit Status: 0
+
+?   	github.com/Zerostate-IO/CleanComms/cmd/cleancomms	[no test files]
+?   	github.com/Zerostate-IO/CleanComms/internal/app	[no test files]
+?   	github.com/Zerostate-IO/CleanComms/internal/config	[no test files]
+
+## go build ./...
+Exit Status: 0
+
+
+
+## Files Created
+-rw-r--r--@ 1 legend  staff  1505 Mar  2 08:31 cmd/cleancomms/main.go
+-rw-r--r--@ 1 legend  staff   497 Mar  2 08:31 configs/tx500-digirig-macos.yaml
+-rw-r--r--@ 1 legend  staff    86 Mar  2 08:32 go.mod
+-rw-r--r--@ 1 legend  staff  1237 Mar  2 08:33 internal/app/app.go
+-rw-r--r--@ 1 legend  staff   462 Mar  2 08:32 internal/app/version.go
+-rw-r--r--@ 1 legend  staff  1643 Mar  2 08:31 internal/config/config.go
+-rw-r--r--@ 1 legend  staff  1025 Mar  2 08:31 internal/config/schema.go
+
+## Invalid Config Test
+2026/03/02 08:34:08 ERROR failed to load configuration error="failed to read config file \"nonexistent.yaml\": open nonexistent.yaml: no such file or directory"
+Exit Status: 1
+
+## Version Flag Test
+CleanComms 0.0.0-dev (commit: unknown, built: unknown)
+Exit Status: 0
+
+## Bug Fix: Nil Pointer Dereference (2026-03-02)
+Issue: Logger created with nil io.Writer caused panic on startup
+Fix: Changed `nil` to `os.Stdout` in slog.NewTextHandler
+File: internal/app/app.go
+
+### Verification After Fix
+time=2026-03-02T08:36:49.667-08:00 level=INFO msg="CleanComms daemon starting" http_addr=127.0.0.1:8080 rigctld_host=127.0.0.1 rigctld_port=4532 rigctld_model=2054 serial_port=/dev/cu.usbserial-xxx
+time=2026-03-02T08:36:49.667-08:00 level=INFO msg="CleanComms daemon initialized (placeholder - no connections yet)"
+Daemon started successfully (PID: 63978)
+Daemon killed gracefully
+

@@ -1,0 +1,75 @@
+# Task 3: fldigi XML-RPC Client - Evidence
+
+## Summary
+Implemented fldigi XML-RPC client using stdlib net/http with manual XML encoding/decoding.
+
+## Files Created/Modified
+- `internal/fldigi/client.go` - XML-RPC client implementation (stdlib only)
+- `internal/fldigi/client_test.go` - Unit tests with mock HTTP server
+- Deleted `internal/fldigi/methods.go` - Methods consolidated into client.go
+- `go.mod` - Removed external github.com/kolo/xmlrpc dependency
+
+## API Methods Implemented
+- `NewClient(xmlrpcURL string) *Client` - Create client with optional URL (defaults to http://127.0.0.1:7362/RPC2)
+- `Ping() error` - Health check via fldigi.version()
+- `GetVersion() (string, error)` - Get fldigi version
+- `GetMode() (string, error)` - Get current modem mode via modem.get_name()
+- `SetMode(mode string) error` - Set modem mode idempotently via modem.set_by_name()
+- `GetTX() (bool, error)` - Get transmit state via main.get_tx()
+- `SetTX(tx bool) error` - Set transmit state via main.set_tx()
+- `GetFrequency() (int, error)` - Get carrier frequency via frequency.get()
+- `SetFrequency(hz int) error` - Set carrier frequency via frequency.set()
+
+## Test Results
+```
+=== RUN   TestNewClient
+--- PASS: TestNewClient (0.00s)
+=== RUN   TestNewClientWithTimeout
+--- PASS: TestNewClientWithTimeout (0.00s)
+=== RUN   TestGetVersion
+--- PASS: TestGetVersion (0.00s)
+=== RUN   TestPing
+--- PASS: TestPing (0.00s)
+=== RUN   TestGetMode
+--- PASS: TestGetMode (0.00s)
+=== RUN   TestSetMode
+--- PASS: TestSetMode (0.00s)
+=== RUN   TestGetTX
+--- PASS: TestGetTX (0.00s)
+=== RUN   TestSetTX
+--- PASS: TestSetTX (0.00s)
+=== RUN   TestGetFrequency
+--- PASS: TestGetFrequency (0.00s)
+=== RUN   TestSetFrequency
+--- PASS: TestSetFrequency (0.00s)
+=== RUN   TestConnectionRefused
+--- PASS: TestConnectionRefused (0.00s)
+=== RUN   TestXMLRPCFault
+--- PASS: TestXMLRPCFault (0.00s)
+=== RUN   TestModeIdempotency
+--- PASS: TestModeIdempotency (0.00s)
+=== RUN   TestTXToggle
+--- PASS: TestTXToggle (0.00s)
+=== RUN   TestErrorTypes
+--- PASS: TestErrorTypes (0.00s)
+=== RUN   TestTimeout
+--- PASS: TestTimeout (2.00s)
+PASS
+ok  	github.com/Zerostate-IO/CleanComms/internal/fldigi	2.020s
+```
+
+## Design Decisions
+1. **Stdlib only**: Used encoding/xml and net/http instead of external XML-RPC library
+2. **Mutex protection**: All client methods are thread-safe via sync.Mutex
+3. **Idempotent SetMode**: Checks current mode before setting to avoid unnecessary calls
+4. **Error wrapping**: ConnectionError and FaultError types for error classification
+5. **5s default timeout**: Matches rigctld client pattern
+
+## XML-RPC Methods Used
+- `fldigi.version()` → string
+- `modem.get_name()` → string
+- `modem.set_by_name(name)` → int
+- `main.get_tx()` → int (0=RX, 1=TX)
+- `main.set_tx(state)` → int
+- `frequency.get()` → int
+- `frequency.set(hz)` → int
