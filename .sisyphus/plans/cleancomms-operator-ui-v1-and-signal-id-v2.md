@@ -292,7 +292,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(lookup): add hamqth primary with fcc fallback` | Files: `internal/lookup/**`, `internal/http/**`
 
-- [ ] 6. Build guided Setup flow
+- [x] 6. Build guided Setup flow
 
   **What to do**: Implement Step 1 workflow for radio/setup profile selection, capability-aware controls, and profile persistence.
   **Must NOT do**: Do not expose unsupported rig features as enabled controls.
@@ -329,7 +329,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(ui): add guided radio setup flow` | Files: `frontend/src/features/setup/**`
 
-- [ ] 7. Build Intent + Operating Profile flow
+- [x] 7. Build Intent + Operating Profile flow
 
   **What to do**: Implement Step 2 workflow (listen/broadcast intent, mode family, profile presets) using Unified Operating Profile schema.
   **Must NOT do**: Do not directly key profile semantics to a single mode engine.
@@ -366,7 +366,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(ui): add intent and operating profile flow` | Files: `frontend/src/features/intent/**`
 
-- [ ] 8. Build Operate workflow (mode/frequency/channel switching)
+- [x] 8. Build Operate workflow (mode/frequency/channel switching)
 
   **What to do**: Implement Step 3 operator console with mode controls, frequency controls, quick channel actions, and explicit apply semantics.
   **Must NOT do**: Do not bypass coordinator safety checks when toggling TX/PTT.
@@ -440,7 +440,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(ui): add spectrum waterfall foundation` | Files: `frontend/src/features/spectrum/**`
 
-- [ ] 10. Build logging UX + retention controls
+- [x] 10. Build logging UX + retention controls
 
   **What to do**: Implement log entry/history UI with fast writes, local filtering, and retention policy controls tied to SQLite store.
   **Must NOT do**: Do not send logs to remote services by default.
@@ -514,7 +514,7 @@ T17 -> T16
 
   **Commit**: YES | Message: `feat(ui): add callsign phonebook and lookup enrichment` | Files: `frontend/src/features/phonebook/**`, `internal/lookup/**`
 
-- [ ] 12. Build grid/map and solar context panels
+- [x] 12. Build grid/map and solar context panels
 
   **What to do**: Add map/grid panel and solar panel with offline/degraded behavior, cache windows, and clear data source labeling.
   **Must NOT do**: Do not fail core operator flows when context providers are unavailable.
@@ -744,10 +744,10 @@ T17 -> T16
   **Commit**: YES | Message: `feat(network): add vpn-only remote ui mode` | Files: `internal/config/**`, `internal/http/**`, `internal/app/**`, `configs/**`
 
 ## Final Verification Wave (4 parallel agents, ALL must APPROVE)
-- [ ] F1. Plan Compliance Audit — oracle
-- [ ] F2. Code Quality Review — unspecified-high
-- [ ] F3. Real Manual QA — unspecified-high (+ playwright if UI)
-- [ ] F4. Scope Fidelity Check — deep
+- [x] F1. Plan Compliance Audit — oracle
+- [x] F2. Code Quality Review — unspecified-high
+- [x] F3. Real Manual QA — unspecified-high (+ playwright if UI)
+- [x] F4. Scope Fidelity Check — deep
 
 ## Commit Strategy
 - Commit A: contracts + scaffold + datasets
