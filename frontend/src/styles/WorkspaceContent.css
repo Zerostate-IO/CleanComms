@@ -1,0 +1,239 @@
+.workspace-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: var(--space-lg);
+  gap: var(--space-lg);
+}
+
+.workspace-content--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.workspace-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+.workspace-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.workspace-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.workspace-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.meta-item {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+}
+
+.meta-item--mode {
+  color: var(--accent-primary);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.meta-item--freq {
+  color: var(--text-secondary);
+}
+
+.workspace-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-accent);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.workspace-notice svg {
+  width: 18px;
+  height: 18px;
+  color: var(--accent-warning);
+  flex-shrink: 0;
+}
+
+.workspace-notice strong {
+  color: var(--text-primary);
+}
+
+.workspace-notice--active {
+  background: rgba(0, 212, 170, 0.1);
+  border-color: var(--accent-primary);
+}
+
+.workspace-notice--active svg {
+  color: var(--accent-success);
+}
+
+.workspace-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto 1fr;
+  gap: var(--space-md);
+  min-height: 0;
+}
+
+.panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel--waterfall {
+  grid-column: span 2;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-muted);
+  background: var(--bg-tertiary);
+}
+
+.panel-header h2 {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.panel-status {
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.05em;
+}
+
+.panel-status--connected {
+  background: rgba(63, 185, 80, 0.2);
+  color: var(--accent-success);
+}
+
+.panel-content {
+  padding: var(--space-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xs) 0;
+}
+
+.status-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.status-value {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.status-value--rx {
+  color: var(--accent-success);
+}
+
+.status-value--tx {
+  color: var(--accent-danger);
+}
+
+.panel-content--waterfall {
+  align-items: center;
+  justify-content: center;
+}
+
+.waterfall-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+}
+
+.waterfall-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 1600px) {
+  .workspace-content {
+    padding: var(--space-md);
+    gap: var(--space-md);
+  }
+  
+  .workspace-title {
+    font-size: 1.25rem;
+  }
+  
+  .workspace-notice {
+    font-size: 0.8125rem;
+    padding: var(--space-xs) var(--space-sm);
+  }
+}
+
+@media (max-width: 1400px) {
+  .workspace-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+  
+  .workspace-notice {
+    width: 100%;
+  }
+  
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .panel--waterfall {
+    grid-column: span 1;
+  }
+}
