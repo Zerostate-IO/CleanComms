@@ -1,6 +1,6 @@
 ========================================
 CleanComms TX-500 + fldigi Smoke Test
-Timestamp: 2026-03-02T17:51:48Z
+Timestamp: 2026-03-02T17:54:41Z
 ========================================
 
 INFO: Checking rigctld on port 4532...

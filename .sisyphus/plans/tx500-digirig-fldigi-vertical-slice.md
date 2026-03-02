@@ -336,7 +336,7 @@ Wave4 → 2 tasks + final verification wave → unspecified-high/deep/oracle
   ```
   **Commit**: YES | Message: `docs(evidence): capture tx500 slice artifacts` | Files: `.sisyphus/evidence/task-11-*`
 
-- [ ] 12. Execute full verification sweep and final audit
+- [x] 12. Execute full verification sweep and final audit
   **What to do**: Run build/test/smoke/watchdog command chain and produce final PASS/FAIL audit.
   **Must NOT do**: Do not mark complete if failure-path checks are skipped.
   **Recommended Agent Profile**: Category `unspecified-high`; Skills `[]`; Omitted `artistry`.

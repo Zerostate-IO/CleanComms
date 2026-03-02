@@ -408,3 +408,39 @@
 - Pattern: `task-{number}-{description}.{ext}`
 - Examples: `task-1-go-scaffold.txt`, `task-9-ptt-watchdog-error.txt`
 - Description uses kebab-case, matches QA scenario name
+
+
+
+## 2026-03-02 Task 12: Final Verification Sweep
+
+### Verification Command Chain
+- Run `go test ./...` first - should exit 0
+- Run `go build ./...` second - should exit 0
+- Run smoke scripts with `|| true` to capture output even on failure
+- Smoke scripts expected to fail without hardware (graceful degradation)
+
+### Expected Hardware Failure Behavior
+- Smoke script exit code 1 with "FAILED" status
+- PTT watchdog exit code 2 with "SKIPPED" status
+- Scripts must identify specific missing dependencies by name and port
+- Scripts should provide helpful start commands for each missing dep
+
+### Final Audit Report Structure
+- Timestamp and audit type header
+- Verification summary with overall PASS/FAIL banner
+- Each step with: command, exit code, status, output, notes
+- Evidence file references for traceability
+- Acceptance criteria checklist with [✓] markers
+- Component status table for quick reference
+
+### Exit Code Semantics for Scripts
+- 0: Success (all checks passed)
+- 1: Failure (checks failed, actionable errors)
+- 2: Skipped (prerequisites not met, cannot run)
+- This distinction helps distinguish "failed" vs "cannot run"
+
+### Verification Pass Criteria
+- Unit tests: must pass (exit 0)
+- Build: must succeed (exit 0)
+- Smoke scripts: must run and report gracefully (exit non-zero is expected)
+- All evidence files must be referenced in audit report

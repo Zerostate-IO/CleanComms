@@ -1,6 +1,6 @@
 ========================================
 CleanComms PTT Watchdog Test
-Timestamp: 2026-03-02T17:47:55Z
+Timestamp: 2026-03-02T17:54:41Z
 Watchdog timeout: 5s
 ========================================
 
